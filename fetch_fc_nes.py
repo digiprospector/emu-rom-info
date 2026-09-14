@@ -442,23 +442,34 @@ class BilibiliMatcher:
         self.external_map: Dict[str, Dict[str, Any]] = {}
         self.external_normalized_map: Dict[str, Dict[str, Any]] = {}
 
-        # 1. 优先加载用户可编辑的外部 YAML 映射配置
+        # 1. 优先加载用户可编辑的外部 YAML 调整配置中的视频规则 (格式: 游戏中文名/ID: 视频章节名)
         ext_rules = load_external_video_mapping(yaml_mapping_path)
-        for raw_title, target_val in ext_rules.items():
-            # 目标值优先识别为游戏 ID，其次为游戏中文名、英文名、日文名
-            target_game = self.game_by_id.get(target_val) or self.game_by_title_zh.get(target_val)
+        for game_ident, chapter_val in ext_rules.items():
+            # 优先识别目标游戏 (ID、中文名、英文名、日文名)
+            target_game = self.game_by_id.get(game_ident) or self.game_by_title_zh.get(game_ident)
             if not target_game:
                 for g in self.games:
-                    if target_val in (g.get("title_en"), g.get("title_ja")):
+                    if game_ident in (g.get("title_en"), g.get("title_ja")):
                         target_game = g
                         break
+
+            # 容错反向兼容：如果 game_ident 未识别为游戏，而 chapter_val 识别为游戏
+            if not target_game and isinstance(chapter_val, str):
+                rev_game = self.game_by_id.get(chapter_val) or self.game_by_title_zh.get(chapter_val)
+                if rev_game:
+                    target_game = rev_game
+                    chapter_val = game_ident
+
             if target_game:
-                self.external_map[raw_title] = target_game
-                norm_key = normalize_text(raw_title)
-                if norm_key:
-                    self.external_normalized_map[norm_key] = target_game
+                chapters = [chapter_val] if isinstance(chapter_val, str) else list(chapter_val)
+                for ch in chapters:
+                    ch_str = str(ch).strip()
+                    self.external_map[ch_str] = target_game
+                    norm_key = normalize_text(ch_str)
+                    if norm_key:
+                        self.external_normalized_map[norm_key] = target_game
             else:
-                logger.warning(f"外部 YAML 映射中未找到目标游戏: '{raw_title}' -> '{target_val}'")
+                logger.warning(f"外部 YAML 视频映射中未找到目标游戏: '{game_ident}' -> '{chapter_val}'")
 
         if self.external_map:
             logger.info(f"已加载外部视频对齐映射规则 ({yaml_mapping_path}): 成功加载 {len(self.external_map)} 条自定义规则")

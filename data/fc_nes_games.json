@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "任天堂 NES 与红白机 (FC/FDS) 跨区整合数据库 (基于 Raw 原始数据与自定义 Adjustments)",
-    "generated_at": "2026-09-14 23:34:40",
+    "generated_at": "2026-09-15 00:07:18",
     "sources": {
       "wiki_urls": {
         "NES": "https://zh.wikipedia.org/zh-cn/Nintendo_Entertainment_System%E6%B8%B8%E6%88%8F%E5%88%97%E8%A1%A8",
@@ -24,7 +24,7 @@
       "multi_platform_games": 337,
       "nes_exclusive_games": 379,
       "japan_exclusive_games": 885,
-      "bilibili_videos_matched": 842,
+      "bilibili_videos_matched": 848,
       "raw_records_total": 1961,
       "raw_records": {
         "NES": 709,
@@ -2952,7 +2952,7 @@
     },
     {
       "id": "elevator-action",
-      "title_zh": "电梯迷宫",
+      "title_zh": "电梯大战",
       "title_en": "Elevator Action",
       "title_ja": "エレベーターアクション",
       "is_cross_region": true,
@@ -2973,7 +2973,7 @@
         "NES": {
           "platform": "NES",
           "platform_name": "Nintendo Entertainment System",
-          "title_zh": "电梯迷宫",
+          "title_zh": "电梯大战",
           "title_en": "Elevator Action",
           "title_ja": "",
           "release_date": "1987年8月",
@@ -2988,7 +2988,7 @@
         "FC": {
           "platform": "FC",
           "platform_name": "Family Computer",
-          "title_zh": "电梯迷宫",
+          "title_zh": "电梯大战",
           "title_en": "Elevator Action",
           "title_ja": "エレベーターアクション",
           "release_date": "1985年6月28日",
@@ -3001,7 +3001,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "电梯大战",
+        "timestamp": "12:29",
+        "seconds": 749,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=749"
+      }
     },
     {
       "id": "field-combat",
@@ -3235,7 +3243,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "极速摩托车/美国摩托赛",
+        "timestamp": "22:01",
+        "seconds": 1321,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=1321"
+      }
     },
     {
       "id": "super-arabian",
@@ -3317,11 +3333,19 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "机器人方块套件",
+        "timestamp": "25:11",
+        "seconds": 1511,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=1511"
+      }
     },
     {
       "id": "front-line",
-      "title_zh": "前线任务",
+      "title_zh": "前线",
       "title_en": "Front Line",
       "title_ja": "フロントライン",
       "is_cross_region": false,
@@ -3341,7 +3365,7 @@
         "FC": {
           "platform": "FC",
           "platform_name": "Family Computer",
-          "title_zh": "前线任务",
+          "title_zh": "前线",
           "title_en": "Front Line",
           "title_ja": "フロントライン",
           "release_date": "1985年8月1日",
@@ -3354,7 +3378,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1sfQUYEEYB",
+        "aid": 114165700106718,
+        "video_title": "【雷文】红白机游戏终极鉴赏06期-1985年8-10月 | 4K",
+        "chapter_name": "前线",
+        "timestamp": "00:54",
+        "seconds": 54,
+        "url": "https://www.bilibili.com/video/BV1sfQUYEEYB/?t=54"
+      }
     },
     {
       "id": "tower-of-druaga",
@@ -3436,7 +3468,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1sfQUYEEYB",
+        "aid": 114165700106718,
+        "video_title": "【雷文】红白机游戏终极鉴赏06期-1985年8-10月 | 4K",
+        "chapter_name": "漂浮枪手",
+        "timestamp": "05:45",
+        "seconds": 345,
+        "url": "https://www.bilibili.com/video/BV1sfQUYEEYB/?t=345"
+      }
     },
     {
       "id": "hon-shougi-naitou-9-dan-shougi-hiden",
@@ -3534,7 +3574,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1sfQUYEEYB",
+        "aid": 114165700106718,
+        "video_title": "【雷文】红白机游戏终极鉴赏06期-1985年8-10月 | 4K",
+        "chapter_name": "机器人陀螺套件",
+        "timestamp": "09:38",
+        "seconds": 578,
+        "url": "https://www.bilibili.com/video/BV1sfQUYEEYB/?t=578"
+      }
     },
     {
       "id": "geimos",
@@ -73550,7 +73598,7 @@
     },
     {
       "id": "elevator-action",
-      "title_zh": "电梯迷宫",
+      "title_zh": "电梯大战",
       "title_en": "Elevator Action",
       "title_ja": "エレベーターアクション",
       "is_cross_region": true,
@@ -73571,7 +73619,7 @@
         "NES": {
           "platform": "NES",
           "platform_name": "Nintendo Entertainment System",
-          "title_zh": "电梯迷宫",
+          "title_zh": "电梯大战",
           "title_en": "Elevator Action",
           "title_ja": "",
           "release_date": "1987年8月",
@@ -73586,7 +73634,7 @@
         "FC": {
           "platform": "FC",
           "platform_name": "Family Computer",
-          "title_zh": "电梯迷宫",
+          "title_zh": "电梯大战",
           "title_en": "Elevator Action",
           "title_ja": "エレベーターアクション",
           "release_date": "1985年6月28日",
@@ -73599,7 +73647,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "电梯大战",
+        "timestamp": "12:29",
+        "seconds": 749,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=749"
+      }
     },
     {
       "id": "road-fighter",
@@ -73714,7 +73770,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1sfQUYEEYB",
+        "aid": 114165700106718,
+        "video_title": "【雷文】红白机游戏终极鉴赏06期-1985年8-10月 | 4K",
+        "chapter_name": "机器人陀螺套件",
+        "timestamp": "09:38",
+        "seconds": 578,
+        "url": "https://www.bilibili.com/video/BV1sfQUYEEYB/?t=578"
+      }
     },
     {
       "id": "10-yard-fight",
