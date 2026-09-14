@@ -118,27 +118,60 @@ flowchart TD
 
 ```text
 emu-rom-info/
-├── fetch_fc_nes.py         # 单一全能核心程序 (融合 DAT、rom-name-cn、B站视频、HTML 生成、Excel 导出与完整性校验)
-├── fc_nes_games.html       # 根目录自动重定向页面 (指向 data/fc_nes_games.html)
+├── fetch_fc_nes.py         # 单一全能核心程序 (抓取 Raw、读取 Adjustments、融合 DAT/rom-name-cn、导出全格式及校验)
+├── adjustments.yaml        # 用户可自由编辑的调整配置文件 (视频章节与游戏对齐等调整规则)
 ├── rom-name-cn/            # Git 子模块：权威中文名对照与别名字典
 ├── Nintendo - ... .dat     # No-Intro 官方 Parent-Clone 数据库
 ├── data/                   # 结构化数据存储与应用发布目录
+│   ├── raw/                # 原始抓取数据持久化目录 (未加工)
+│   │   ├── wiki_games_raw.json       # 维基百科 1,961 条原始条目 JSON
+│   │   ├── wiki_games_raw.csv        # 维基百科原始报表 CSV
+│   │   └── bilibili_segments_raw.json # B站合集 1,179 个原始视频分段章节 JSON
 │   ├── fc_nes_games.html   # 自包含内嵌数据的交互式前端可视化页面 (含资源下载中心)
 │   ├── fc_nes_games.xlsx   # 富样式 Excel 工作簿 (首行冻结、自动筛选、含超链接与双 Sheet)
 │   ├── fc_nes_games.csv    # 整合后的 CSV 报表 (带 BOM，含 B站视频时间轴)
 │   ├── fc_nes_games.json   # 跨区整合后的 JSON 格式深度数据 (含 video 字段)
 │   ├── fc_nes_games.pkl    # Python 原生 Pickle 二进制序列化对象
 │   └── fc_nes_games.py     # 原生 Python 数据模块 (可直接 import FC_NES_GAMES)
-├── cache/                  # 网页与 B 站 API 本地下载缓存
+├── cache/                  # 网页与 B 站 API 本地网络请求缓存
 └── README.md               # 项目总体说明文档
 ```
 
 ---
 
+## 用户自定义调整配置 (`adjustments.yaml`)
+
+本项目支持在根目录下的 [`adjustments.yaml`](file:///c:/walt/git/hub/emu-rom-info/adjustments.yaml) 中定义多种数据微调方式。程序在第二阶段基于 Raw 原始数据生成全格式发布数据时，会自动读取并应用这些调整规则：
+
+```yaml
+# 1. 游戏中文译名调整 (title_zh)：将指定的中文译名修改为自定义名称
+title_zh:
+  培基语音: 家用BASIC语言          # 支持按原中文名匹配
+  培基语音第三版: 家用BASIC语言V3
+  # basic-family: 家用BASIC语言    # 亦支持直接按游戏唯一 ID 匹配
+
+# 2. B站解说视频分段对齐调整 (video_mappings)：强制绑定视频章节与游戏
+video_mappings:
+  家用BASIC语言: 家用BASIC语言
+  家用BASIC语言V3: 家用BASIC语言V3
+
+# 3. 游戏属性通用修改 (games，高级微调)：按 ID 或中文名直接覆盖任意字段
+# games:
+#   - match:
+#       id: basic-family
+#     set:
+#       title_zh: 家用BASIC语言
+#       publishers: ["任天堂", "Hudson Soft"]
+```
+
+修改保存后直接运行 `python fetch_fc_nes.py` 或 `python fetch_fc_nes.py --build`，程序会纯从本地 `data/raw` 原始数据读取，并在秒级内根据您的修改重新生成全格式发布数据！
+
+---
+
 ## 前端可视化浏览与资源下载中心
 
-直接使用浏览器双击打开 `data/fc_nes_games.html`（或根目录 `fc_nes_games.html` 自动跳转）即可离线浏览、检索与下载：
-- **自包含单文件 (Self-Contained SPA)**：所有 1,591 款游戏数据与 846 个 B 站视频章节时间轴直接内嵌在 HTML 文件中，彻底摆脱外部 `.js` 依赖，零本地跨域困扰，双击秒开；
+直接使用浏览器双击打开 `data/fc_nes_games.html` 即可离线浏览、检索与下载：
+- **自包含单文件 (Self-Contained SPA)**：所有 1,591 款游戏数据与 839 个 B 站视频章节时间轴直接内嵌在 HTML 文件中，彻底摆脱外部 `.js` 依赖，零本地跨域困扰，双击秒开；
 - **默认模式**：紧凑密集排版的表格视图；
 - **默认排序**：按发售日先后（由早到晚时间线）排列；
 - **双行子格子布局**：
@@ -183,21 +216,32 @@ print("补全后中文名:", fester["title_zh"])  # 费斯特的冒险
 
 ## 运行与校验
 
-本项目现已全面整合为**单一自包含全能引擎 [`fetch_fc_nes.py`](file:///c:/walt/git/hub/emu-rom-info/fetch_fc_nes.py)**，支持直接通过参数执行各项能力：
+本项目现已全面整合为**单一自包含全能引擎 [`fetch_fc_nes.py`](file:///c:/walt/git/hub/emu-rom-info/fetch_fc_nes.py)**，支持两阶段数据流架构与各项参数：
 
 ```bash
-# 1. 默认全流程：维基抓取 + DAT克隆融合 + rom-name-cn对照 + B站视频对齐 + 全格式导出 (JSON/Excel/CSV/PKL/PY/HTML)
+# 1. 默认两阶段流程：
+#    - 若 data/raw 存在：直接基于 raw 数据和 adjustments.yaml 秒级生成全格式发布数据；
+#    - 若 data/raw 不存在：自动先抓取并持久化保存为 raw 格式，再执行发布生成。
 python fetch_fc_nes.py
 
-# 2. 数据质量检验：执行 10 项严密无框架标准库断言校验
+# 2. 仅基于 Raw 数据构建 (无网络请求，极速响应，适合调整 adjustments.yaml 后使用)
+python fetch_fc_nes.py --build
+
+# 3. 指定外部调整规则配置文件
+python fetch_fc_nes.py --adjustments my_adjust.yaml
+
+# 4. 强制重新抓取网络原始数据并持久化到 data/raw/
+python fetch_fc_nes.py --fetch-raw
+
+# 5. 数据质量检验：执行 10 项严密无框架标准库断言校验
 python fetch_fc_nes.py --verify
 
-# 3. 页面热更新：仅重新编译自包含前端 HTML 页面 (无需网络抓取，毫秒级就绪)
+# 6. 页面热更新：仅重新编译自包含前端 HTML 页面 (无需网络抓取，毫秒级就绪)
 python fetch_fc_nes.py --html-only
 
-# 4. 强制刷新：忽略本地网页与 B 站 API 缓存重新从网络下载
+# 7. 强制刷新：忽略本地网页与 B 站 API 缓存重新从网络下载
 python fetch_fc_nes.py --refresh
 
-# 5. 仅更新 B 站合集视频章节分段
+# 8. 仅更新 B 站合集视频章节分段
 python fetch_fc_nes.py --fetch-bilibili-only
 ```

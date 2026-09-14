@@ -45,6 +45,11 @@ try:
 except ImportError:
     openpyxl = None
 
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
 # 配置日志输出格式
 logging.basicConfig(
     level=logging.INFO,
@@ -281,11 +286,183 @@ def extract_year(date_str: Optional[str]) -> Optional[int]:
     return int(m.group(1)) if m else None
 
 
+def load_adjustments_config(yaml_path: str = "adjustments.yaml") -> Dict[str, Any]:
+    """加载用户自定义调整配置文件 (支持多维调整方式：title_zh, video_mappings, games)"""
+    target_path = yaml_path
+    if not os.path.exists(target_path):
+        alt_path = "adjust.yaml" if yaml_path == "adjustments.yaml" else "adjustments.yaml"
+        if os.path.exists(alt_path):
+            target_path = alt_path
+        else:
+            return {}
+
+    if yaml is None:
+        logger.warning("未检测到 PyYAML 库，无法读取外部调整配置文件")
+        return {}
+    try:
+        with open(target_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+
+        config: Dict[str, Any] = {
+            "title_zh": {},
+            "video_mappings": {},
+            "games": []
+        }
+
+        if not isinstance(data, dict):
+            return config
+
+        # 1. 提取 title_zh 调整规则
+        raw_titles = (
+            data.get("title_zh") or 
+            data.get("rename_title_zh") or 
+            data.get("titles") or 
+            data.get("rename", {}).get("title_zh") or 
+            {}
+        )
+        if isinstance(raw_titles, dict):
+            for k, v in raw_titles.items():
+                if v is not None:
+                    config["title_zh"][str(k).strip()] = str(v).strip()
+
+        # 2. 提取视频分段对齐调整规则
+        raw_videos = (
+            data.get("video_mappings") or 
+            data.get("videos") or 
+            data.get("video_mapping") or 
+            data.get("chapters") or 
+            data.get("chapter_to_game") or 
+            {}
+        )
+        if isinstance(raw_videos, dict):
+            for k, v in raw_videos.items():
+                if v is not None:
+                    config["video_mappings"][str(k).strip()] = str(v).strip()
+
+        # 3. 提取通用字段覆盖规则 (games 列表)
+        raw_games = data.get("games", [])
+        if isinstance(raw_games, list):
+            config["games"] = raw_games
+
+        # 4. 兼容顶层扁平字典 (若用户没有写分类标签)
+        known_sections = {
+            "title_zh", "rename_title_zh", "titles", "rename", 
+            "video_mappings", "videos", "video_mapping", "chapters", 
+            "chapter_to_game", "games"
+        }
+        top_level_pairs = {
+            str(k).strip(): str(v).strip() 
+            for k, v in data.items() 
+            if k not in known_sections and isinstance(v, (str, int))
+        }
+        if top_level_pairs:
+            for k, v in top_level_pairs.items():
+                if k not in config["video_mappings"]:
+                    config["video_mappings"][k] = v
+
+        return config
+    except Exception as e:
+        logger.warning(f"读取外部 YAML 调整文件 {target_path} 失败: {e}")
+        return {}
+
+
+def load_external_video_mapping(yaml_path: str = "adjustments.yaml") -> Dict[str, str]:
+    """兼容旧接口：从调整配置文件中获取视频映射规则"""
+    config = load_adjustments_config(yaml_path)
+    return config.get("video_mappings", {})
+
+
+def apply_game_adjustments(games: List[Dict[str, Any]], yaml_path: str = "adjustments.yaml") -> int:
+    """基于 adjustments.yaml 修改游戏属性 (如将 title_zh 从培基语音修改为家用BASIC语言)"""
+    config = load_adjustments_config(yaml_path)
+    if not config:
+        return 0
+
+    modified_count = 0
+    title_zh_rules = config.get("title_zh", {})
+    game_overrides = config.get("games", [])
+
+    if not title_zh_rules and not game_overrides:
+        return 0
+
+    for g in games:
+        g_id = g.get("id", "")
+        old_title_zh = g.get("title_zh", "")
+
+        # 1. 检查 title_zh 调整 (支持按原中文名或游戏 ID 匹配)
+        new_title_zh = title_zh_rules.get(old_title_zh) or title_zh_rules.get(g_id)
+        if new_title_zh and new_title_zh != old_title_zh:
+            logger.info(f"应用 adjustments 调整游戏中文译名: 《{old_title_zh}》 (ID: {g_id}) -> 《{new_title_zh}》")
+            g["title_zh"] = new_title_zh
+            modified_count += 1
+            # 同步更新 versions 中对应中文名
+            for v in g.get("versions", {}).values():
+                if v.get("title_zh") == old_title_zh or not v.get("title_zh"):
+                    v["title_zh"] = new_title_zh
+
+        # 2. 检查高级属性覆盖规则
+        for rule in game_overrides:
+            if not isinstance(rule, dict):
+                continue
+            match_cond = rule.get("match", rule)
+            match_id = match_cond.get("id")
+            match_title = match_cond.get("title_zh")
+
+            is_match = False
+            if match_id and match_id == g_id:
+                is_match = True
+            elif match_title and (match_title == old_title_zh or match_title == g.get("title_zh")):
+                is_match = True
+
+            if is_match:
+                set_fields = rule.get("set", rule)
+                for f_name, f_val in set_fields.items():
+                    if f_name not in ("match", "set") and f_name in g:
+                        g[f_name] = f_val
+                        modified_count += 1
+                        logger.info(f"应用 adjustments 调整游戏属性 (ID: {g_id}): {f_name} = {f_val}")
+
+    if modified_count > 0:
+        logger.info(f"已成功应用 adjustments.yaml 中的调整规则，共修改 {modified_count} 处游戏属性")
+
+    return modified_count
+
+
 class BilibiliMatcher:
-    def __init__(self, games: List[Dict[str, Any]], alias_json_path: str = "rom-name-cn/name_alias(Chinese).json"):
+    def __init__(
+        self, 
+        games: List[Dict[str, Any]], 
+        alias_json_path: str = "rom-name-cn/name_alias(Chinese).json",
+        yaml_mapping_path: str = "adjustments.yaml"
+    ):
         self.games = games
         self.game_by_id = {g["id"]: g for g in games}
+        self.game_by_title_zh = {g["title_zh"]: g for g in games if g.get("title_zh")}
         self.lookup: Dict[str, List[Dict[str, Any]]] = {}
+        self.external_map: Dict[str, Dict[str, Any]] = {}
+        self.external_normalized_map: Dict[str, Dict[str, Any]] = {}
+
+        # 1. 优先加载用户可编辑的外部 YAML 映射配置
+        ext_rules = load_external_video_mapping(yaml_mapping_path)
+        for raw_title, target_val in ext_rules.items():
+            # 目标值优先识别为游戏 ID，其次为游戏中文名、英文名、日文名
+            target_game = self.game_by_id.get(target_val) or self.game_by_title_zh.get(target_val)
+            if not target_game:
+                for g in self.games:
+                    if target_val in (g.get("title_en"), g.get("title_ja")):
+                        target_game = g
+                        break
+            if target_game:
+                self.external_map[raw_title] = target_game
+                norm_key = normalize_text(raw_title)
+                if norm_key:
+                    self.external_normalized_map[norm_key] = target_game
+            else:
+                logger.warning(f"外部 YAML 映射中未找到目标游戏: '{raw_title}' -> '{target_val}'")
+
+        if self.external_map:
+            logger.info(f"已加载外部视频对齐映射规则 ({yaml_mapping_path}): 成功加载 {len(self.external_map)} 条自定义规则")
+
         self._build_index(alias_json_path)
 
     def _add_to_index(self, key: Optional[str], game: Dict[str, Any]):
@@ -341,7 +518,19 @@ class BilibiliMatcher:
             if sep in raw_name:
                 candidates.extend([p.strip() for p in raw_name.split(sep) if len(p.strip()) >= 2])
 
-        # 2. 优先查显式人工映射表 (优先精确匹配候选词，再降序匹配包含长词)
+        # 2. 最高优先级：查找用户在 YAML 文件中配置的外部映射规则
+        for cand in candidates:
+            if cand in self.external_map:
+                return self.external_map[cand]
+            nc = normalize_text(cand)
+            if nc and nc in self.external_normalized_map:
+                return self.external_normalized_map[nc]
+
+        for k in sorted(self.external_map.keys(), key=len, reverse=True):
+            if len(k) >= 3 and k in raw_name:
+                return self.external_map[k]
+
+        # 3. 查显式人工内置映射表 (优先精确匹配候选词，再降序匹配包含长词)
         for cand in candidates:
             if cand in MANUAL_ALIAS_MAP:
                 gid = MANUAL_ALIAS_MAP[cand]
@@ -406,19 +595,28 @@ class BilibiliMatcher:
 
 def attach_bilibili_videos_to_games(
     games: List[Dict[str, Any]], 
-    segments_path: str = "cache/bilibili/bilibili_segments.json"
+    segments: Optional[List[Dict[str, Any]]] = None,
+    segments_path: str = "data/raw/bilibili_segments_raw.json",
+    yaml_mapping_path: str = "adjustments.yaml"
 ) -> Dict[str, Any]:
     """将 Bilibili 视频分段匹配并挂载到游戏列表中"""
-    if not os.path.exists(segments_path):
-        logger.warning(f"未找到 B 站分段数据文件: {segments_path}，跳过视频信息挂载")
-        for g in games:
-            g["video"] = None
-        return {"matched_count": 0, "total_segments": 0}
+    if segments is None:
+        # 若未直接传入分段列表，依次尝试 data/raw 与本地缓存
+        if not os.path.exists(segments_path):
+            alt_path = "cache/bilibili/bilibili_segments.json"
+            if os.path.exists(alt_path):
+                segments_path = alt_path
+            else:
+                logger.warning(f"未找到 B 站分段数据文件: {segments_path}，跳过视频信息挂载")
+                for g in games:
+                    g["video"] = None
+                return {"matched_count": 0, "total_segments": 0}
 
-    with open(segments_path, "r", encoding="utf-8") as f:
-        segments = json.load(f)
+        with open(segments_path, "r", encoding="utf-8") as f:
+            b_data = json.load(f)
+            segments = b_data.get("segments", b_data) if isinstance(b_data, dict) else b_data
 
-    matcher = BilibiliMatcher(games)
+    matcher = BilibiliMatcher(games, yaml_mapping_path=yaml_mapping_path)
     matched_count = 0
     matched_game_ids = set()
 
@@ -2923,76 +3121,161 @@ def merge_fc_nes_records(
     return unified_games
 
 
-def collect_fc_nes_games(
+def save_raw_data(
+    raw_records: List[Dict[str, Any]], 
+    bilibili_segments: List[Dict[str, Any]], 
+    raw_dir: str = "data/raw"
+) -> None:
+    """将下载与解析得到的原始数据持久化保存为 raw 格式 (JSON 与 CSV)"""
+    os.makedirs(raw_dir, exist_ok=True)
+    
+    # 1. 保存维基原始条目 JSON
+    wiki_json_path = os.path.join(raw_dir, "wiki_games_raw.json")
+    with open(wiki_json_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "total_records": len(raw_records),
+            "records": raw_records
+        }, f, ensure_ascii=False, indent=2)
+    logger.info(f"已保存维基原始条目 JSON: {wiki_json_path} (共 {len(raw_records)} 条)")
+
+    # 2. 保存维基原始条目 CSV 报表
+    wiki_csv_path = os.path.join(raw_dir, "wiki_games_raw.csv")
+    if raw_records:
+        fieldnames = list(raw_records[0].keys())
+        with open(wiki_csv_path, "w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            for r in raw_records:
+                writer.writerow(r)
+        logger.info(f"已保存维基原始报表 CSV: {wiki_csv_path}")
+
+    # 3. 保存 B 站原始分段章节 JSON
+    bili_json_path = os.path.join(raw_dir, "bilibili_segments_raw.json")
+    with open(bili_json_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "total_segments": len(bilibili_segments),
+            "segments": bilibili_segments
+        }, f, ensure_ascii=False, indent=2)
+    logger.info(f"已保存 B 站原始分段 JSON: {bili_json_path} (共 {len(bilibili_segments)} 条)")
+
+
+def load_raw_data(raw_dir: str = "data/raw") -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """从本地 data/raw 目录读取原始记录与 B 站分段"""
+    wiki_json_path = os.path.join(raw_dir, "wiki_games_raw.json")
+    bili_json_path = os.path.join(raw_dir, "bilibili_segments_raw.json")
+
+    if not os.path.exists(wiki_json_path):
+        raise FileNotFoundError(f"未找到维基原始数据: {wiki_json_path}，请先运行 --fetch-raw 获取原始数据")
+
+    with open(wiki_json_path, "r", encoding="utf-8") as f:
+        w_data = json.load(f)
+        raw_records = w_data.get("records", w_data) if isinstance(w_data, dict) else w_data
+
+    bilibili_segments = []
+    if os.path.exists(bili_json_path):
+        with open(bili_json_path, "r", encoding="utf-8") as f:
+            b_data = json.load(f)
+            bilibili_segments = b_data.get("segments", b_data) if isinstance(b_data, dict) else b_data
+
+    return raw_records, bilibili_segments
+
+
+def fetch_raw_data(
     cache_dir: Optional[str] = "cache",
+    raw_dir: str = "data/raw",
     timeout: int = 30,
     force_refresh: bool = False
-) -> Dict[str, Any]:
-    """收集 FC/FDS/NES 平台游戏数据并结合 DAT 与 rom-name-cn 执行深度整合"""
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """第一阶段：抓取与解析网络数据，并保存为标准 data/raw 格式"""
     session = create_resilient_session()
-    raw_by_platform: Dict[str, List[Dict[str, Any]]] = {}
     all_raw_list: List[Dict[str, Any]] = []
 
     # 1. 抓取与解析 NES (欧美版)
     nes_cache = os.path.join(cache_dir, "nes.html") if cache_dir else None
-    nes_html = fetch_html(
-        FC_NES_WIKI_URLS["NES"]["url"],
-        session=session,
-        cache_path=nes_cache,
-        timeout=timeout,
-        force_refresh=force_refresh
-    )
-    nes_records = parse_nes_page(nes_html)
-    raw_by_platform["NES"] = [g.to_dict() for g in nes_records]
-    all_raw_list.extend(raw_by_platform["NES"])
+    nes_html = fetch_html(FC_NES_WIKI_URLS["NES"]["url"], session=session, cache_path=nes_cache, timeout=timeout, force_refresh=force_refresh)
+    nes_records = [g.to_dict() for g in parse_nes_page(nes_html)]
+    all_raw_list.extend(nes_records)
 
     # 2. 抓取与解析 FDS (FC磁碟机)
     fds_cache = os.path.join(cache_dir, "fds.html") if cache_dir else None
-    fds_html = fetch_html(
-        FC_NES_WIKI_URLS["FDS"]["url"],
-        session=session,
-        cache_path=fds_cache,
-        timeout=timeout,
-        force_refresh=force_refresh
-    )
-    fds_records = parse_fc_or_fds_page(fds_html, "FDS")
-    raw_by_platform["FDS"] = [g.to_dict() for g in fds_records]
-    all_raw_list.extend(raw_by_platform["FDS"])
+    fds_html = fetch_html(FC_NES_WIKI_URLS["FDS"]["url"], session=session, cache_path=fds_cache, timeout=timeout, force_refresh=force_refresh)
+    fds_records = [g.to_dict() for g in parse_fc_or_fds_page(fds_html, "FDS")]
+    all_raw_list.extend(fds_records)
 
     # 3. 抓取与解析 FC (红白机卡带)
     fc_cache = os.path.join(cache_dir, "fc.html") if cache_dir else None
-    fc_html = fetch_html(
-        FC_NES_WIKI_URLS["FC"]["url"],
-        session=session,
-        cache_path=fc_cache,
-        timeout=timeout,
-        force_refresh=force_refresh
-    )
-    fc_records = parse_fc_or_fds_page(fc_html, "FC")
-    raw_by_platform["FC"] = [g.to_dict() for g in fc_records]
-    all_raw_list.extend(raw_by_platform["FC"])
+    fc_html = fetch_html(FC_NES_WIKI_URLS["FC"]["url"], session=session, cache_path=fc_cache, timeout=timeout, force_refresh=force_refresh)
+    fc_records = [g.to_dict() for g in parse_fc_or_fds_page(fc_html, "FC")]
+    all_raw_list.extend(fc_records)
 
-    # 4. 加载 DAT 克隆树与 rom-name-cn 辅助器
+    # 4. 抓取与解析 B 站合集视频分段
+    bili_cache = os.path.join(cache_dir, "bilibili") if cache_dir else "cache/bilibili"
+    archives = collect_bilibili_season_videos(cache_dir=bili_cache)
+    segments = fetch_all_video_details(archives, cache_dir=bili_cache)
+
+    # 5. 持久化保存到 data/raw 目录
+    save_raw_data(all_raw_list, segments, raw_dir=raw_dir)
+    return all_raw_list, segments
+
+
+def build_from_raw(
+    raw_dir: str = "data/raw",
+    output_dir: str = "data",
+    yaml_adjust_path: str = "adjustments.yaml",
+    raw_records: Optional[List[Dict[str, Any]]] = None,
+    bilibili_segments: Optional[List[Dict[str, Any]]] = None
+) -> Dict[str, Any]:
+    """第二阶段：纯从 raw 数据读取，根据用户自定义 adjustments.yaml 生成全格式数据"""
+    if raw_records is None or bilibili_segments is None:
+        logger.info(f"正在从本地 Raw 目录读取原始数据: {raw_dir}")
+        raw_records, bilibili_segments = load_raw_data(raw_dir=raw_dir)
+
+    # 加载 No-Intro DAT 与 rom-name-cn 对照库
     logger.info("正在加载 No-Intro DAT 克隆组与 rom-name-cn 对照库...")
     helper = RomNameCnHelper(workspace_dir=".")
 
-    # 5. 执行深度多维合并
+    # 执行深度多维合并
     logger.info("正在基于 DAT 克隆树与 rom-name-cn 对齐合并美版与日版游戏...")
-    unified_games = merge_fc_nes_records(all_raw_list, helper)
+    unified_games = merge_fc_nes_records(raw_records, helper)
 
-    # 6. 对齐挂载 Bilibili 红白机游戏编年史视频与时间轴章节
-    logger.info("正在对齐挂载 Bilibili 红白机游戏编年史合集视频章节...")
-    from bilibili_matcher import attach_bilibili_videos_to_games
-    video_stats = attach_bilibili_videos_to_games(unified_games)
+    # 执行游戏属性调整 (应用用户自定义 adjustments.yaml 中的 title_zh 等修改)
+    logger.info(f"正在结合用户自定义调整配置 ({yaml_adjust_path}) 调整游戏属性...")
+    apply_game_adjustments(unified_games, yaml_path=yaml_adjust_path)
+
+    # 对齐挂载 B 站视频 (应用用户自定义 adjustments.yaml)
+    logger.info(f"正在结合用户自定义调整配置 ({yaml_adjust_path}) 对齐挂载 B 站视频章节...")
+    video_stats = attach_bilibili_videos_to_games(
+        unified_games, 
+        segments=bilibili_segments,
+        yaml_mapping_path=yaml_adjust_path
+    )
 
     cross_region_games = [g for g in unified_games if g["is_cross_region"]]
     multi_platform_games = [g for g in unified_games if len(g["platforms"]) > 1]
     nes_only_games = [g for g in unified_games if g["platforms"] == ["NES"]]
     japan_only_games = [g for g in unified_games if "NES" not in g["platforms"]]
 
+    # 按平台归集原始记录与统计
+    raw_by_platform: Dict[str, List[Dict[str, Any]]] = {"NES": [], "FDS": [], "FC": []}
+    for r in raw_records:
+        plat = r.get("platform")
+        if plat in raw_by_platform:
+            raw_by_platform[plat].append(r)
+        elif plat:
+            raw_by_platform.setdefault(plat, []).append(r)
+
+    raw_records_stat = {
+        "NES": len(raw_by_platform.get("NES", [])),
+        "FDS": len(raw_by_platform.get("FDS", [])),
+        "FC": len(raw_by_platform.get("FC", [])),
+        "total": len(raw_records)
+    }
+
     dataset = {
         "metadata": {
-            "title": "任天堂 NES 与红白机 (FC/FDS) 跨区整合数据库 (结合 DAT、rom-name-cn 与 B站编年史视频)",
+            "title": "任天堂 NES 与红白机 (FC/FDS) 跨区整合数据库 (基于 Raw 原始数据与自定义 Adjustments)",
             "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "sources": {
                 "wiki_urls": {k: v["url"] for k, v in FC_NES_WIKI_URLS.items()},
@@ -3001,7 +3284,8 @@ def collect_fc_nes_games(
                     "Nintendo - Family Computer Disk System (FDS) (20260617-195332).dat"
                 ],
                 "submodules": ["rom-name-cn"],
-                "bilibili_series_url": "https://space.bilibili.com/3546818172423070/lists/4877626"
+                "bilibili_series_url": "https://space.bilibili.com/3546818172423070/lists/4877626",
+                "adjustments_file": yaml_adjust_path
             },
             "statistics": {
                 "total_unified_games": len(unified_games),
@@ -3010,12 +3294,8 @@ def collect_fc_nes_games(
                 "nes_exclusive_games": len(nes_only_games),
                 "japan_exclusive_games": len(japan_only_games),
                 "bilibili_videos_matched": video_stats.get("matched_games_count", 0),
-                "raw_records": {
-                    "NES": len(nes_records),
-                    "FDS": len(fds_records),
-                    "FC": len(fc_records),
-                    "total": len(all_raw_list),
-                }
+                "raw_records_total": len(raw_records),
+                "raw_records": raw_records_stat
             }
         },
         "games": unified_games,
@@ -3023,7 +3303,45 @@ def collect_fc_nes_games(
         "raw_by_platform": raw_by_platform
     }
 
+    # 导出全套发布数据
+    os.makedirs(output_dir, exist_ok=True)
+    json_path = os.path.join(output_dir, "fc_nes_games.json")
+    pickle_path = os.path.join(output_dir, "fc_nes_games.pkl")
+    py_module_path = os.path.join(output_dir, "fc_nes_games.py")
+    csv_path = os.path.join(output_dir, "fc_nes_games.csv")
+    excel_path = os.path.join(output_dir, "fc_nes_games.xlsx")
+    html_path = os.path.join(output_dir, "fc_nes_games.html")
+
+    save_to_json(dataset, json_path)
+    save_to_pickle(dataset, pickle_path)
+    save_to_python_module(dataset, py_module_path)
+    save_to_csv(dataset["games"], csv_path)
+    save_to_excel(dataset, excel_path)
+    save_to_html(dataset, html_path)
+
     return dataset
+
+
+def collect_fc_nes_games(
+    cache_dir: Optional[str] = "cache",
+    timeout: int = 30,
+    force_refresh: bool = False,
+    yaml_mapping_path: str = "adjustments.yaml"
+) -> Dict[str, Any]:
+    """兼容旧接口：自动执行 Raw 抓取与发布构建"""
+    raw_dir = "data/raw"
+    raw_records, segments = fetch_raw_data(
+        cache_dir=cache_dir,
+        raw_dir=raw_dir,
+        timeout=timeout,
+        force_refresh=force_refresh
+    )
+    return build_from_raw(
+        raw_dir=raw_dir,
+        yaml_adjust_path=yaml_mapping_path,
+        raw_records=raw_records,
+        bilibili_segments=segments
+    )
 
 
 def save_to_json(data: Dict[str, Any], filepath: str) -> None:
@@ -3254,7 +3572,6 @@ def save_to_excel(data: Dict[str, Any], filepath: str) -> None:
 
 def save_to_html(data: Dict[str, Any] = None, filepath: str = "data/fc_nes_games.html") -> None:
     """生成并保存现代化交互式前端 HTML 文件（自包含内嵌完整数据，无需外部 js）"""
-    from generate_fc_nes_html import generate_fc_nes_html
     generate_fc_nes_html(output_file=filepath, dataset=data)
     logger.info(f"已保存 HTML 交互式前端页面: {filepath}")
 
@@ -3391,6 +3708,28 @@ def run_verifications():
         assert f"?t={v['seconds']}" in v["url"], "直达链接未附带秒数参数"
         print(f"  [OK] 经典游戏视频抽检: 《{game['title_zh']}》 -> [{v['timestamp']}] {v['chapter_name']} ({v['url']})")
         
+    # 验证外部 YAML 调整规则生效 (title_zh 修改与视频对齐)
+    basic_game = next((g for g in games if g["id"] == "basic-family"), None)
+    assert basic_game is not None, "未找到 basic-family 游戏条目"
+    assert basic_game["title_zh"] == "家用BASIC语言", f"培基语音 title_zh 应通过 adjustments.yaml 调整为家用BASIC语言，实为: {basic_game['title_zh']}"
+    assert basic_game.get("video") is not None, "家用BASIC语言应匹配到解说视频"
+    assert basic_game["video"]["chapter_name"] == "家用BASIC语言", f"匹配章节应为家用BASIC语言，实为: {basic_game['video']['chapter_name']}"
+
+    basic_v3 = next((g for g in games if g["id"] == "family-basic-v3"), None)
+    assert basic_v3 is not None, "未找到 family-basic-v3 游戏条目"
+    assert basic_v3["title_zh"] == "家用BASIC语言V3", f"培基语音第三版 title_zh 应通过 adjustments.yaml 调整为家用BASIC语言V3，实为: {basic_v3['title_zh']}"
+    print(f"  [OK] 外部 YAML 调整验证: 《{basic_game['title_zh']}》与《{basic_v3['title_zh']}》的 title_zh 属性修改及视频绑定校验成功")
+        
+    # 验证 Raw 原始数据持久化文件
+    raw_dir = "data/raw"
+    wiki_raw_json = os.path.join(raw_dir, "wiki_games_raw.json")
+    wiki_raw_csv = os.path.join(raw_dir, "wiki_games_raw.csv")
+    bili_raw_json = os.path.join(raw_dir, "bilibili_segments_raw.json")
+    assert os.path.exists(wiki_raw_json), "缺少 data/raw/wiki_games_raw.json 原始维基条目数据"
+    assert os.path.exists(wiki_raw_csv), "缺少 data/raw/wiki_games_raw.csv 原始维基报表数据"
+    assert os.path.exists(bili_raw_json), "缺少 data/raw/bilibili_segments_raw.json 原始分段数据"
+    print("  [OK] Raw 原始数据持久化校验通过 (data/raw/*.json, *.csv)")
+        
     assert "bili-tag" in html_content, "HTML 应包含 B 站视频徽章样式 bili-tag"
     assert "bili-card" in html_content, "HTML 应包含详情弹窗中的 B 站解说卡片 bili-card"
     assert "视频介绍 by 雷文" in html_content, "HTML 应包含 '视频介绍 by 雷文' 链接文本"
@@ -3425,7 +3764,7 @@ def run_verifications():
 # ==============================================================================
 
 def main():
-    """主程序入口：支持抓取、整合、全格式导出、独立编译 HTML 及完整性断言校验"""
+    """主程序入口：支持原始数据抓取(raw)、基于调整规则构建(build)、全格式导出及完整性断言校验"""
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -3437,9 +3776,30 @@ def main():
         help="数据与页面生成目录 (默认: data/)"
     )
     parser.add_argument(
+        "--raw-dir",
+        default="data/raw",
+        help="原始数据持久化目录 (默认: data/raw/)"
+    )
+    parser.add_argument(
         "--cache-dir",
         default="cache",
         help="网页与 API 缓存目录 (默认: cache/)"
+    )
+    parser.add_argument(
+        "--adjustments", "--adjust",
+        dest="adjustments",
+        default="adjustments.yaml",
+        help="用户可编辑的自定义调整规则 YAML 文件路径 (默认: adjustments.yaml)"
+    )
+    parser.add_argument(
+        "--fetch-raw",
+        action="store_true",
+        help="强制重新从网络抓取原始数据并保存为 raw 格式 (JSON/CSV)"
+    )
+    parser.add_argument(
+        "--build",
+        action="store_true",
+        help="仅从本地 raw 数据和 adjustments.yaml 生成全套发布数据"
     )
     parser.add_argument(
         "--refresh",
@@ -3490,16 +3850,38 @@ def main():
         print(f"\n[OK] B 站合集视频章节已全量抓取更新至: {bili_cache}")
         return
 
-    # 4. 默认全流程整合与全格式发布模式
+    # 4. 判断是否需要抓取 Raw 原始数据
+    wiki_raw_file = os.path.join(args.raw_dir, "wiki_games_raw.json")
+    bili_raw_file = os.path.join(args.raw_dir, "bilibili_segments_raw.json")
+    raw_exists = os.path.exists(wiki_raw_file) and os.path.exists(bili_raw_file)
+
+    raw_records = None
+    segments = None
+
+    if (args.fetch_raw or args.refresh or not raw_exists) and not args.build:
+        print("=" * 65)
+        print("【阶段一】开始从网络抓取原始数据并保存为 Raw 格式 (JSON/CSV)...")
+        print("=" * 65)
+        raw_records, segments = fetch_raw_data(
+            cache_dir=args.cache_dir,
+            raw_dir=args.raw_dir,
+            timeout=args.timeout,
+            force_refresh=args.refresh
+        )
+        print(f"[OK] Raw 原始数据已成功持久化至: {args.raw_dir}")
+
+    # 5. 基于 Raw 原始数据与用户自定义 adjustments.yaml 执行构建与全格式导出
     print("=" * 65)
-    print("开始收集与深度整合 NES / FC磁碟机 / 红白机 游戏数据...")
+    print(f"【阶段二】从 Raw 数据出发，结合调整配置 ({args.adjustments}) 生成全格式数据...")
     print(" (融合 No-Intro DAT、rom-name-cn 与 B站编年史视频)")
     print("=" * 65)
 
-    dataset = collect_fc_nes_games(
-        cache_dir=args.cache_dir,
-        timeout=args.timeout,
-        force_refresh=args.refresh
+    dataset = build_from_raw(
+        raw_dir=args.raw_dir,
+        output_dir=args.output_dir,
+        yaml_adjust_path=args.adjustments,
+        raw_records=raw_records,
+        bilibili_segments=segments
     )
 
     stats = dataset["metadata"]["statistics"]
@@ -3528,20 +3910,14 @@ def main():
     csv_path = os.path.join(out_dir, "fc_nes_games.csv")
     excel_path = os.path.join(out_dir, "fc_nes_games.xlsx")
 
-    save_to_json(dataset, json_path)
-    save_to_pickle(dataset, pickle_path)
-    save_to_python_module(dataset, py_module_path)
-    save_to_csv(dataset["games"], csv_path)
-    save_to_excel(dataset, excel_path)
-    save_to_html(dataset, html_path)
-
     print("\n所有 FC/NES 整合数据与前端页面已成功保存！")
-    print(f"1. JSON 数据结构:     {json_path}")
-    print(f"2. Pickle 二进制对象: {pickle_path}")
-    print(f"3. Python 代码模块:   {py_module_path} (可直接 import FC_NES_GAMES)")
-    print(f"4. CSV 表格导出:      {csv_path} (含 B站视频时间轴)")
-    print(f"5. Excel 格式文件:    {excel_path} (富样式、首行冻结、含超链接)")
-    print(f"6. HTML 交互式前端:   {html_path} (自包含内嵌数据，含资源下载中心)")
+    print(f"1. Raw 原始数据目录:  {args.raw_dir} (wiki_games_raw.json/csv, bilibili_segments_raw.json)")
+    print(f"2. JSON 数据结构:     {json_path}")
+    print(f"3. Pickle 二进制对象: {pickle_path}")
+    print(f"4. Python 代码模块:   {py_module_path} (可直接 import FC_NES_GAMES)")
+    print(f"5. CSV 表格导出:      {csv_path} (含 B站视频时间轴)")
+    print(f"6. Excel 格式文件:    {excel_path} (富样式、首行冻结、含超链接)")
+    print(f"7. HTML 交互式前端:   {html_path} (自包含内嵌数据，含资源下载中心)")
 
 
 if __name__ == "__main__":

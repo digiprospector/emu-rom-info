@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "任天堂 NES 与红白机 (FC/FDS) 跨区整合数据库 (结合 DAT、rom-name-cn 与 B站编年史视频)",
-    "generated_at": "2026-09-14 22:16:33",
+    "title": "任天堂 NES 与红白机 (FC/FDS) 跨区整合数据库 (基于 Raw 原始数据与自定义 Adjustments)",
+    "generated_at": "2026-09-14 23:34:40",
     "sources": {
       "wiki_urls": {
         "NES": "https://zh.wikipedia.org/zh-cn/Nintendo_Entertainment_System%E6%B8%B8%E6%88%8F%E5%88%97%E8%A1%A8",
@@ -15,7 +15,8 @@
       "submodules": [
         "rom-name-cn"
       ],
-      "bilibili_series_url": "https://space.bilibili.com/3546818172423070/lists/4877626"
+      "bilibili_series_url": "https://space.bilibili.com/3546818172423070/lists/4877626",
+      "adjustments_file": "adjustments.yaml"
     },
     "statistics": {
       "total_unified_games": 1591,
@@ -23,7 +24,8 @@
       "multi_platform_games": 337,
       "nes_exclusive_games": 379,
       "japan_exclusive_games": 885,
-      "bilibili_videos_matched": 846,
+      "bilibili_videos_matched": 842,
+      "raw_records_total": 1961,
       "raw_records": {
         "NES": 709,
         "FDS": 199,
@@ -1015,7 +1017,7 @@
     },
     {
       "id": "basic-family",
-      "title_zh": "培基语音",
+      "title_zh": "家用BASIC语言",
       "title_en": "Basic Family",
       "title_ja": "ファミリーベーシック",
       "is_cross_region": false,
@@ -1035,7 +1037,7 @@
         "FC": {
           "platform": "FC",
           "platform_name": "Family Computer",
-          "title_zh": "培基语音",
+          "title_zh": "家用BASIC语言",
           "title_en": "Basic Family",
           "title_ja": "ファミリーベーシック",
           "release_date": "1984年6月21日",
@@ -1048,7 +1050,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1bC9iYZEqZ",
+        "aid": 114097869888843,
+        "video_title": "【雷文】红白机游戏终极鉴赏03期-1984年·下 | 4K",
+        "chapter_name": "家用BASIC语言",
+        "timestamp": "01:02",
+        "seconds": 62,
+        "url": "https://www.bilibili.com/video/BV1bC9iYZEqZ/?t=62"
+      }
     },
     {
       "id": "donkey-kong-3",
@@ -1742,7 +1752,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1bC9iYZEqZ",
+        "aid": 114097869888843,
+        "video_title": "【雷文】红白机游戏终极鉴赏03期-1984年·下 | 4K",
+        "chapter_name": "咕噜咕噜世界/豆豆迷魂阵",
+        "timestamp": "17:05",
+        "seconds": 1025,
+        "url": "https://www.bilibili.com/video/BV1bC9iYZEqZ/?t=1025"
+      }
     },
     {
       "id": "excitebike",
@@ -1978,7 +1996,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1BBRNY9EpD",
+        "aid": 114115787887850,
+        "video_title": "【雷文】红白机游戏终极鉴赏04期-1985年1-5月 | 4K",
+        "chapter_name": "火凤凰/凤凰战机",
+        "timestamp": "06:32",
+        "seconds": 392,
+        "url": "https://www.bilibili.com/video/BV1BBRNY9EpD/?t=392"
+      }
     },
     {
       "id": "galaga",
@@ -2060,7 +2086,7 @@
     },
     {
       "id": "family-basic-v3",
-      "title_zh": "培基语音第三版",
+      "title_zh": "家用BASIC语言V3",
       "title_en": "Family Basic V3",
       "title_ja": "ファミリーベーシックV3",
       "is_cross_region": false,
@@ -2080,7 +2106,7 @@
         "FC": {
           "platform": "FC",
           "platform_name": "Family Computer",
-          "title_zh": "培基语音第三版",
+          "title_zh": "家用BASIC语言V3",
           "title_en": "Family Basic V3",
           "title_ja": "ファミリーベーシックV3",
           "release_date": "1985年2月21日",
@@ -2093,7 +2119,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1BBRNY9EpD",
+        "aid": 114115787887850,
+        "video_title": "【雷文】红白机游戏终极鉴赏04期-1985年1-5月 | 4K",
+        "chapter_name": "家用BASIC语言V3",
+        "timestamp": "09:57",
+        "seconds": 597,
+        "url": "https://www.bilibili.com/video/BV1BBRNY9EpD/?t=597"
+      }
     },
     {
       "id": "raid-on-bungeling-bay",
@@ -2645,7 +2679,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "顽皮精灵",
+        "timestamp": "03:15",
+        "seconds": 195,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=195"
+      }
     },
     {
       "id": "wrecking-crew",
@@ -2836,7 +2878,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "超级奥林匹克",
+        "timestamp": "09:27",
+        "seconds": 567,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=567"
+      }
     },
     {
       "id": "star-force",
@@ -6257,15 +6307,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1kHZJYkE5C",
-        "aid": 114256716502889,
-        "video_title": "【雷文】红白机游戏终极鉴赏10期-1986年4-5月 | 4K",
-        "chapter_name": "算数一年级~算数三年级",
-        "timestamp": "19:01",
-        "seconds": 1141,
-        "url": "https://www.bilibili.com/video/BV1kHZJYkE5C/?t=1141"
-      }
+      "video": null
     },
     {
       "id": "sansuu-2-nen-keisan-game",
@@ -8504,15 +8546,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1ULdaYEEb3",
-        "aid": 114325251559492,
-        "video_title": "【雷文】红白机游戏终极鉴赏13期-1986年9-10月 | 4K",
-        "chapter_name": "算数四年级",
-        "timestamp": "24:44",
-        "seconds": 1484,
-        "url": "https://www.bilibili.com/video/BV1ULdaYEEb3/?t=1484"
-      }
+      "video": null
     },
     {
       "id": "sansuu-5-6-nen-keisan-game",
@@ -8549,15 +8583,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1ULdaYEEb3",
-        "aid": 114325251559492,
-        "video_title": "【雷文】红白机游戏终极鉴赏13期-1986年9-10月 | 4K",
-        "chapter_name": "算数五六年级",
-        "timestamp": "25:42",
-        "seconds": 1542,
-        "url": "https://www.bilibili.com/video/BV1ULdaYEEb3/?t=1542"
-      }
+      "video": null
     },
     {
       "id": "mississippi-satsujin-jiken",
@@ -29875,15 +29901,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1CLnPznEvz",
-        "aid": 115248266747785,
-        "video_title": "【雷文】红白机游戏终极鉴赏46期-1988年12月下篇 | 4K",
-        "chapter_name": "职业棒球？杀人事件！",
-        "timestamp": "21:02",
-        "seconds": 1262,
-        "url": "https://www.bilibili.com/video/BV1CLnPznEvz/?t=1262"
-      }
+      "video": null
     },
     {
       "id": "shoukoushi-ceddie",
@@ -31833,15 +31851,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1rf48zBEY2",
-        "aid": 115372669800670,
-        "video_title": "【雷文】红白机游戏终极鉴赏50期-1989年3月下篇 | 4K",
-        "chapter_name": "爆笑！人生剧场",
-        "timestamp": "00:47",
-        "seconds": 47,
-        "url": "https://www.bilibili.com/video/BV1rf48zBEY2/?t=47"
-      }
+      "video": null
     },
     {
       "id": "jesus-kyoufu-no-bio-monster",
@@ -32112,15 +32122,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1rf48zBEY2",
-        "aid": 115372669800670,
-        "video_title": "【雷文】红白机游戏终极鉴赏50期-1989年3月下篇 | 4K",
-        "chapter_name": "大挑战！神枪手",
-        "timestamp": "18:52",
-        "seconds": 1132,
-        "url": "https://www.bilibili.com/video/BV1rf48zBEY2/?t=1132"
-      }
+      "video": null
     },
     {
       "id": "jajamaru-ninpou-chou",
@@ -33759,15 +33761,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1xGxAzAEdw",
-        "aid": 115438990267073,
-        "video_title": "【雷文】红白机游戏终极鉴赏52期-1989年5-6月篇 | 4K",
-        "chapter_name": "大挑战！GOGO保龄球",
-        "timestamp": "31:42",
-        "seconds": 1902,
-        "url": "https://www.bilibili.com/video/BV1xGxAzAEdw/?t=1902"
-      }
+      "video": null
     },
     {
       "id": "rasaaru-ishii-no-childs-quest",
@@ -46658,15 +46652,7 @@
           "region": "NA/PAL"
         }
       },
-      "video": {
-        "bvid": "BV1FTdzB7EK3",
-        "aid": 116418863504356,
-        "video_title": "【雷文】红白机游戏终极鉴赏77期-1990年9月上篇 | 4K",
-        "chapter_name": "回到未来2&3",
-        "timestamp": "00:53",
-        "seconds": 53,
-        "url": "https://www.bilibili.com/video/BV1FTdzB7EK3/?t=53"
-      }
+      "video": null
     },
     {
       "id": "battle-tank",
@@ -54489,15 +54475,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1LL3o6UE1f",
-        "aid": 117026181880558,
-        "video_title": "【雷文】红白机游戏终极鉴赏93期-1991年3月下篇 | 4K",
-        "chapter_name": "爆笑！人生剧场2",
-        "timestamp": "17:42",
-        "seconds": 1062,
-        "url": "https://www.bilibili.com/video/BV1LL3o6UE1f/?t=1062"
-      }
+      "video": null
     },
     {
       "id": "oeka-kids-anpanman-no-hiragana-daisuki",
@@ -63902,15 +63880,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1bC9iYZEqZ",
-        "aid": 114097869888843,
-        "video_title": "【雷文】红白机游戏终极鉴赏03期-1984年·下 | 4K",
-        "chapter_name": "咕噜咕噜世界/豆豆迷魂阵",
-        "timestamp": "17:05",
-        "seconds": 1025,
-        "url": "https://www.bilibili.com/video/BV1bC9iYZEqZ/?t=1025"
-      }
+      "video": null
     },
     {
       "id": "race-america",
@@ -72891,7 +72861,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1bC9iYZEqZ",
+        "aid": 114097869888843,
+        "video_title": "【雷文】红白机游戏终极鉴赏03期-1984年·下 | 4K",
+        "chapter_name": "咕噜咕噜世界/豆豆迷魂阵",
+        "timestamp": "17:05",
+        "seconds": 1025,
+        "url": "https://www.bilibili.com/video/BV1bC9iYZEqZ/?t=1025"
+      }
     },
     {
       "id": "excitebike",
@@ -73498,7 +73476,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "超级奥林匹克",
+        "timestamp": "09:27",
+        "seconds": 567,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=567"
+      }
     },
     {
       "id": "star-force",
