@@ -905,6 +905,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       text-decoration: none;
       transition: var(--transition);
       line-height: 1.2;
+      white-space: nowrap;
     }
 
     .bili-btn:hover, .bili-tag:hover {
@@ -1549,7 +1550,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <th style="min-width: 220px;">英文名 / 日文名</th>
             <th style="min-width: 180px;">美版发售日 / 日版发售日</th>
             <th style="min-width: 130px;">主要发行商</th>
-            <th style="width: 120px; min-width: 110px; text-align: center; white-space: nowrap;">跨区属性</th>
           </tr>
         </thead>
         <tbody id="gamesTableBody"></tbody>
@@ -1939,6 +1939,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               <span class="meta-label">主要发行商</span>
               <span class="publisher-tag" title="${escapeHtml(publishersStr)}">${escapeHtml(publishersStr)}</span>
             </div>
+            ${game.video ? `
+            <div class="meta-row" style="margin-top:6px;">
+              <span class="meta-label">视频解说</span>
+              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn bili-tag" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 1a.5.5 0 0 1 .4.2L6.8 3h2.4l1.9-1.8a.5.5 0 1 1 .7.7L10.3 3.4c1.6.4 2.7 1.8 2.7 3.6v5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7c0-1.8 1.1-3.2 2.7-3.6L4.1 1.9a.5.5 0 0 1 .4-.9zm-.5 6v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2zm2 1.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm4 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>
+                视频介绍 by 雷文
+              </a>
+            </div>` : ''}
           </div>
         `;
         grid.appendChild(card);
@@ -1961,10 +1969,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           return '';
         }).join(' ');
 
-        const crossBadge = game.is_cross_region 
-          ? '<span class="badge badge-cross">美日跨区</span>' 
-          : '<span style="color:var(--text-muted);font-size:0.8rem;">单区</span>';
-
         const enName = game.title_en || '-';
         const jaName = game.title_ja || '-';
         const naDate = (game.release_dates && game.release_dates.north_america) ? game.release_dates.north_america : '-';
@@ -1974,9 +1978,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         let videoBtn = '';
         if (game.video) {
           videoBtn = `
-            <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn bili-tag" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (点击直达 ${game.video.timestamp} 播放)">
+            <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn bili-tag" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
               <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 1a.5.5 0 0 1 .4.2L6.8 3h2.4l1.9-1.8a.5.5 0 1 1 .7.7L10.3 3.4c1.6.4 2.7 1.8 2.7 3.6v5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7c0-1.8 1.1-3.2 2.7-3.6L4.1 1.9a.5.5 0 0 1 .4-.9zm-.5 6v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2zm2 1.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm4 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>
-              ${game.video.timestamp}
+              视频介绍 by 雷文
             </a>`;
         }
 
@@ -2017,7 +2021,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               ${escapeHtml(publishersStr)}
             </span>
           </td>
-          <td style="text-align: center; white-space: nowrap;">${crossBadge}</td>
         `;
 
         tbody.appendChild(tr);
@@ -2177,7 +2180,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               </div>
             </div>
             <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" style="padding: 8px 18px; font-size: 0.88rem; border-radius: 6px; box-shadow: 0 4px 12px rgba(251,114,153,0.3);">
-              📺 直达起播点播放 &nearr;
+              📺 视频介绍 by 雷文 &nearr;
             </a>
           </div>
         `;
@@ -3162,7 +3165,7 @@ def save_to_excel(data: Dict[str, Any], filepath: str) -> None:
             v.get("video_title", ""),
             v.get("chapter_name", ""),
             v.get("timestamp", ""),
-            v.get("url", "")
+            "视频介绍 by 雷文" if v.get("url") else ""
         ]
         ws_games.append(row_values)
         ws_games.row_dimensions[row_num].height = 20
@@ -3357,6 +3360,7 @@ def run_verifications():
     assert "split-cell-box" in html_content, "HTML 表格应包含上下两层子格子容器 (split-cell-box)"
     assert "tag-en" in html_content and "tag-ja" in html_content, "HTML 表格应包含 EN/JA 英文日文子标签"
     assert "tag-na" in html_content and "tag-jp" in html_content, "HTML 表格应包含 美版/日版 发售日子标签"
+    assert "跨区属性</th>" not in html_content, "HTML 表格表头已移除跨区属性列"
     
     # 验证数据自包含与脱离外部 js
     assert "window.FC_NES_DATA = " in html_content, "HTML 必须内嵌注入完整 FC_NES_DATA 数据"
@@ -3389,7 +3393,8 @@ def run_verifications():
         
     assert "bili-tag" in html_content, "HTML 应包含 B 站视频徽章样式 bili-tag"
     assert "bili-card" in html_content, "HTML 应包含详情弹窗中的 B 站解说卡片 bili-card"
-    print("  [OK] 前端页面 B 站视频徽章、时间戳跳转按钮与弹窗卡片校验通过")
+    assert "视频介绍 by 雷文" in html_content, "HTML 应包含 '视频介绍 by 雷文' 链接文本"
+    print("  [OK] 前端页面 B 站视频徽章、'视频介绍 by 雷文' 跳转按钮与弹窗卡片校验通过")
     
     # 10. 验证 data/fc_nes_games.xlsx 结构与样式完整性
     import openpyxl
