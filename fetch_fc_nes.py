@@ -306,7 +306,8 @@ def load_adjustments_config(yaml_path: str = "adjustments.yaml") -> Dict[str, An
         config: Dict[str, Any] = {
             "title_zh": {},
             "video_mappings": {},
-            "games": []
+            "games": [],
+            "merge_games": []
         }
 
         if not isinstance(data, dict):
@@ -344,11 +345,45 @@ def load_adjustments_config(yaml_path: str = "adjustments.yaml") -> Dict[str, An
         if isinstance(raw_games, list):
             config["games"] = raw_games
 
-        # 4. 兼容顶层扁平字典 (若用户没有写分类标签)
+        # 4. 提取跨版本/跨区游戏手动合并规则 (merge_games)
+        raw_merges = (
+            data.get("merge_games") or 
+            data.get("merges") or 
+            data.get("merge") or 
+            data.get("game_merges") or 
+            data.get("alias_games") or 
+            {}
+        )
+        merge_pairs: List[Tuple[str, str]] = []
+        if isinstance(raw_merges, dict):
+            for k, v in raw_merges.items():
+                if isinstance(v, list):
+                    for item in v:
+                        if item:
+                            merge_pairs.append((str(k).strip(), str(item).strip()))
+                elif v:
+                    merge_pairs.append((str(k).strip(), str(v).strip()))
+        elif isinstance(raw_merges, list):
+            for item in raw_merges:
+                if isinstance(item, (list, tuple)) and len(item) >= 2:
+                    merge_pairs.append((str(item[0]).strip(), str(item[1]).strip()))
+                elif isinstance(item, dict):
+                    target = item.get("target") or item.get("primary") or item.get("main")
+                    sources = item.get("source") or item.get("merge") or item.get("sources") or item.get("aliases")
+                    if target and sources:
+                        if isinstance(sources, list):
+                            for s in sources:
+                                merge_pairs.append((str(target).strip(), str(s).strip()))
+                        else:
+                            merge_pairs.append((str(target).strip(), str(sources).strip()))
+        config["merge_games"] = merge_pairs
+
+        # 5. 兼容顶层扁平字典 (若用户没有写分类标签)
         known_sections = {
             "title_zh", "rename_title_zh", "titles", "rename", 
             "video_mappings", "videos", "video_mapping", "chapters", 
-            "chapter_to_game", "games"
+            "chapter_to_game", "games", "merge_games", "merges", "merge", 
+            "game_merges", "alias_games"
         }
         top_level_pairs = {
             str(k).strip(): str(v).strip() 
@@ -1124,6 +1159,29 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       box-shadow: 0 0 10px rgba(251, 114, 153, 0.5);
     }
 
+    .bili-icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(251, 114, 153, 0.15);
+      border: 1px solid rgba(251, 114, 153, 0.4);
+      color: #fb7299;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: 0 2px 6px rgba(251, 114, 153, 0.15);
+    }
+
+    .bili-icon-btn:hover {
+      background: #fb7299;
+      color: #fff;
+      border-color: #fb7299;
+      transform: scale(1.12);
+      box-shadow: 0 4px 12px rgba(251, 114, 153, 0.45);
+    }
+
     .bili-card {
       margin-top: 16px;
       background: rgba(251, 114, 153, 0.08);
@@ -1347,6 +1405,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       margin-top: 32px;
       margin-bottom: 48px;
       flex-wrap: wrap;
+    }
+
+    .pagination-bar.pagination-bar-top {
+      margin-top: 0;
+      margin-bottom: 20px;
     }
 
     .page-btn {
@@ -1746,6 +1809,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       </div>
     </div>
 
+    <!-- 顶部翻页控件 -->
+    <div class="pagination-bar pagination-bar-top" id="paginationBarTop"></div>
+
     <!-- 网格视图容器 -->
     <section class="games-grid" id="gamesGrid" style="display: none;"></section>
 
@@ -1754,9 +1820,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <table>
         <thead>
           <tr>
-            <th style="width: 120px;">平台</th>
-            <th style="min-width: 140px;">中文译名</th>
-            <th style="min-width: 220px;">英文名 / 日文名</th>
+            <th style="min-width: 150px;">中文译名</th>
+            <th style="width: 110px; text-align: center;">视频介绍</th>
+            <th style="min-width: 240px;">英文名 / 日文名</th>
             <th style="min-width: 180px;">美版发售日 / 日版发售日</th>
             <th style="min-width: 130px;">主要发行商</th>
           </tr>
@@ -2184,23 +2250,22 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         const jpDate = (game.release_dates && game.release_dates.japan) ? game.release_dates.japan : '-';
         const publishersStr = (game.publishers || []).join(', ') || '-';
 
-        let videoBtn = '';
+        let videoCell = '<td style="text-align: center; color: var(--text-muted);">-</td>';
         if (game.video) {
-          videoBtn = `
-            <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn bili-tag" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 1a.5.5 0 0 1 .4.2L6.8 3h2.4l1.9-1.8a.5.5 0 1 1 .7.7L10.3 3.4c1.6.4 2.7 1.8 2.7 3.6v5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7c0-1.8 1.1-3.2 2.7-3.6L4.1 1.9a.5.5 0 0 1 .4-.9zm-.5 6v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2zm2 1.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm4 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>
-              视频介绍 by 雷文
-            </a>`;
+          videoCell = `
+            <td style="text-align: center; white-space: nowrap;">
+              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn bili-tag" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 1a.5.5 0 0 1 .4.2L6.8 3h2.4l1.9-1.8a.5.5 0 1 1 .7.7L10.3 3.4c1.6.4 2.7 1.8 2.7 3.6v5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7c0-1.8 1.1-3.2 2.7-3.6L4.1 1.9a.5.5 0 0 1 .4-.9zm-.5 6v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2zm2 1.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm4 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>
+                by 雷文
+              </a>
+            </td>`;
         }
 
         tr.innerHTML = `
-          <td>${badges}</td>
           <td>
-            <div style="display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px;">
-              <strong style="color:var(--text-main);font-size:0.95rem;">${escapeHtml(game.title_zh || '-')}</strong>
-              ${videoBtn}
-            </div>
+            <strong style="color:var(--text-main);font-size:0.95rem;">${escapeHtml(game.title_zh || '-')}</strong>
           </td>
+          ${videoCell}
           <td>
             <div class="split-cell-box">
               <div class="sub-cell sub-cell-top" title="英文名: ${escapeHtml(enName)}">
@@ -2238,66 +2303,72 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     // 渲染分页器
     function renderPagination(totalPages) {
-      const bar = document.getElementById('paginationBar');
-      bar.innerHTML = '';
-      if (totalPages <= 1) return;
+      const bars = [
+        document.getElementById('paginationBarTop'),
+        document.getElementById('paginationBar')
+      ].filter(Boolean);
 
-      const prevBtn = document.createElement('button');
-      prevBtn.className = 'page-btn';
-      prevBtn.innerHTML = '&laquo;';
-      prevBtn.disabled = (currentPage === 1);
-      prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); }; };
-      bar.appendChild(prevBtn);
+      bars.forEach(bar => {
+        bar.innerHTML = '';
+        if (totalPages <= 1) return;
 
-      const maxButtons = 7;
-      let startPage = Math.max(1, currentPage - 3);
-      let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-      if (endPage - startPage < maxButtons - 1) {
-        startPage = Math.max(1, endPage - maxButtons + 1);
-      }
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'page-btn';
+        prevBtn.innerHTML = '&laquo;';
+        prevBtn.disabled = (currentPage === 1);
+        prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); } };
+        bar.appendChild(prevBtn);
 
-      if (startPage > 1) {
-        const btn1 = document.createElement('button');
-        btn1.className = 'page-btn';
-        btn1.textContent = '1';
-        btn1.onclick = () => { currentPage = 1; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); };
-        bar.appendChild(btn1);
-        if (startPage > 2) {
-          const span = document.createElement('span');
-          span.textContent = '...';
-          span.style.color = 'var(--text-muted)';
-          bar.appendChild(span);
+        const maxButtons = 7;
+        let startPage = Math.max(1, currentPage - 3);
+        let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+        if (endPage - startPage < maxButtons - 1) {
+          startPage = Math.max(1, endPage - maxButtons + 1);
         }
-      }
 
-      for (let p = startPage; p <= endPage; p++) {
-        const btn = document.createElement('button');
-        btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
-        btn.textContent = p;
-        btn.onclick = () => { currentPage = p; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); };
-        bar.appendChild(btn);
-      }
-
-      if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-          const span = document.createElement('span');
-          span.textContent = '...';
-          span.style.color = 'var(--text-muted)';
-          bar.appendChild(span);
+        if (startPage > 1) {
+          const btn1 = document.createElement('button');
+          btn1.className = 'page-btn';
+          btn1.textContent = '1';
+          btn1.onclick = () => { currentPage = 1; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); };
+          bar.appendChild(btn1);
+          if (startPage > 2) {
+            const span = document.createElement('span');
+            span.textContent = '...';
+            span.style.color = 'var(--text-muted)';
+            bar.appendChild(span);
+          }
         }
-        const lastBtn = document.createElement('button');
-        lastBtn.className = 'page-btn';
-        lastBtn.textContent = totalPages;
-        lastBtn.onclick = () => { currentPage = totalPages; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); };
-        bar.appendChild(lastBtn);
-      }
 
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'page-btn';
-      nextBtn.innerHTML = '&raquo;';
-      nextBtn.disabled = (currentPage === totalPages);
-      nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); }; };
-      bar.appendChild(nextBtn);
+        for (let p = startPage; p <= endPage; p++) {
+          const btn = document.createElement('button');
+          btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
+          btn.textContent = p;
+          btn.onclick = () => { currentPage = p; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); };
+          bar.appendChild(btn);
+        }
+
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) {
+            const span = document.createElement('span');
+            span.textContent = '...';
+            span.style.color = 'var(--text-muted)';
+            bar.appendChild(span);
+          }
+          const lastBtn = document.createElement('button');
+          lastBtn.className = 'page-btn';
+          lastBtn.textContent = totalPages;
+          lastBtn.onclick = () => { currentPage = totalPages; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); };
+          bar.appendChild(lastBtn);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'page-btn';
+        nextBtn.innerHTML = '&raquo;';
+        nextBtn.disabled = (currentPage === totalPages);
+        nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); } };
+        bar.appendChild(nextBtn);
+      });
     }
 
     // 模态弹窗 - 查看跨版本并排对比
@@ -2962,10 +3033,11 @@ class UnionFind:
 
 def merge_fc_nes_records(
     raw_records: List[Dict[str, Any]],
-    helper: RomNameCnHelper
+    helper: RomNameCnHelper,
+    custom_merges: Optional[List[Tuple[str, str]]] = None
 ) -> List[Dict[str, Any]]:
     """
-    结合 DAT 克隆关系与 rom-name-cn，将美版 (NES) 与日版 (FC/FDS) 同款游戏聚类合并
+    结合 DAT 克隆关系、rom-name-cn 以及用户自定义 adjustments.yaml，将美版 (NES) 与日版 (FC/FDS) 同款游戏聚类合并
     """
     indexed_records = []
     enriched_zh_count = 0
@@ -2990,21 +3062,79 @@ def merge_fc_nes_records(
 
     logger.info(f"利用 rom-name-cn 成功补齐中文游戏名: {enriched_zh_count} 款")
 
+    # 构建用户自定义合并规则的特征映射与目标优先级
+    def gen_lookup_keys(val: Any) -> Set[str]:
+        keys = set()
+        if not val:
+            return keys
+        s = str(val).strip()
+        if s:
+            keys.add(s)
+            keys.add(s.lower())
+            norm = normalize_text(s)
+            if norm:
+                keys.add(norm)
+            slug = re.sub(r'[^a-zA-Z0-9]+', '-', s).strip('-').lower()
+            if slug:
+                keys.add(slug)
+        return keys
+
+    custom_merge_links: Dict[str, Set[str]] = {}
+    target_preferences: Dict[str, str] = {}
+    if custom_merges:
+        for t1, t2 in custom_merges:
+            target_str = str(t1).strip()
+            source_str = str(t2).strip()
+            k1_set = gen_lookup_keys(target_str)
+            k2_set = gen_lookup_keys(source_str)
+            for k1 in k1_set:
+                custom_merge_links.setdefault(k1, set()).update(k2_set)
+                target_preferences[k1] = target_str
+            for k2 in k2_set:
+                custom_merge_links.setdefault(k2, set()).update(k1_set)
+                target_preferences[k2] = target_str
+
+    def get_record_lookup_keys(r: Dict[str, Any]) -> Set[str]:
+        keys = set()
+        for f in ("title_en", "title_zh", "title_ja"):
+            keys.update(gen_lookup_keys(r.get(f)))
+        return keys
+
+    record_keys_list = [get_record_lookup_keys(r) for r in indexed_records]
+
     # 执行并查集两两比对合并
     uf = UnionFind([it["_uid"] for it in indexed_records])
     n = len(indexed_records)
 
     for i in range(n):
         r1 = indexed_records[i]
+        r1_keys = record_keys_list[i]
         for j in range(i + 1, n):
             r2 = indexed_records[j]
             if r1["platform"] != r2["platform"]:
-                matched, reason = is_same_fc_nes_game(r1, r2, helper)
+                # 优先检查用户在 adjustments.yaml 中声明的自定义合并规则
+                is_custom_merged = False
+                matched_rule = ""
+                if custom_merge_links:
+                    r2_keys = record_keys_list[j]
+                    for k1 in r1_keys:
+                        if k1 in custom_merge_links and custom_merge_links[k1].intersection(r2_keys):
+                            is_custom_merged = True
+                            matched_rule = f"{r1.get('title_en')} <-> {r2.get('title_en')}"
+                            break
+
+                if is_custom_merged:
+                    matched, reason = True, f"adjustments自定义合并规则({matched_rule})"
+                else:
+                    matched, reason = is_same_fc_nes_game(r1, r2, helper)
+
                 if matched:
                     root1 = uf.find(r1["_uid"])
                     root2 = uf.find(r2["_uid"])
                     if root1 != root2:
                         uf.union(r1["_uid"], r2["_uid"])
+                        if is_custom_merged:
+                            logger.info(f"应用 adjustments 自定义合并规则: 《{r1.get('title_en')}》({r1['platform']}) 与 《{r2.get('title_en')}》({r2['platform']}) 成功合并为同一游戏")
 
     # 聚类归组
     clusters: Dict[str, List[Dict[str, Any]]] = {}
@@ -3027,9 +3157,25 @@ def merge_fc_nes_records(
         fc_ver = versions.get("FC")
         fds_ver = versions.get("FDS")
 
-        # 确定主英文名（优先美版 NES，其次日版）
+        # 确定主英文名（优先用户在 custom_merges 中显式指定的 target，其次优先美版 NES，最后日版）
+        preferred_en = ""
+        for it in cluster_items:
+            for k in gen_lookup_keys(it.get("title_en")):
+                if k in target_preferences:
+                    target_candidate = target_preferences[k]
+                    for cand_v in [nes_ver, fc_ver, fds_ver]:
+                        if cand_v and normalize_text(cand_v.get("title_en", "")) == normalize_text(target_candidate):
+                            preferred_en = cand_v["title_en"]
+                            break
+                if preferred_en:
+                    break
+            if preferred_en:
+                break
+
         title_en = ""
-        if nes_ver and nes_ver.get("title_en"):
+        if preferred_en:
+            title_en = preferred_en
+        elif nes_ver and nes_ver.get("title_en"):
             title_en = nes_ver["title_en"]
         elif fc_ver and fc_ver.get("title_en"):
             title_en = fc_ver["title_en"]
@@ -3038,10 +3184,15 @@ def merge_fc_nes_records(
 
         # 确定主中文名（优先维基官方译名，其次 rom-name-cn 权威民间译名）
         title_zh = ""
-        for v in [nes_ver, fc_ver, fds_ver]:
-            if v and v.get("title_zh"):
+        for v in [fc_ver, fds_ver, nes_ver]:
+            if v and v.get("title_zh") and v.get("title_zh_source") == "wikipedia":
                 title_zh = v["title_zh"]
                 break
+        if not title_zh:
+            for v in [nes_ver, fc_ver, fds_ver]:
+                if v and v.get("title_zh"):
+                    title_zh = v["title_zh"]
+                    break
 
         # 确定主日文名
         title_ja = ""
@@ -3247,9 +3398,13 @@ def build_from_raw(
     logger.info("正在加载 No-Intro DAT 克隆组与 rom-name-cn 对照库...")
     helper = RomNameCnHelper(workspace_dir=".")
 
+    # 加载用户自定义调整配置中的游戏合并规则 (merge_games)
+    adjust_config = load_adjustments_config(yaml_adjust_path)
+    custom_merges = adjust_config.get("merge_games", [])
+
     # 执行深度多维合并
-    logger.info("正在基于 DAT 克隆树与 rom-name-cn 对齐合并美版与日版游戏...")
-    unified_games = merge_fc_nes_records(raw_records, helper)
+    logger.info(f"正在基于 DAT 克隆树、rom-name-cn 及自定义调整配置 ({yaml_adjust_path}) 对齐合并美版与日版游戏...")
+    unified_games = merge_fc_nes_records(raw_records, helper, custom_merges=custom_merges)
 
     # 执行游戏属性调整 (应用用户自定义 adjustments.yaml 中的 title_zh 等修改)
     logger.info(f"正在结合用户自定义调整配置 ({yaml_adjust_path}) 调整游戏属性...")
@@ -3689,6 +3844,7 @@ def run_verifications():
     assert "tag-en" in html_content and "tag-ja" in html_content, "HTML 表格应包含 EN/JA 英文日文子标签"
     assert "tag-na" in html_content and "tag-jp" in html_content, "HTML 表格应包含 美版/日版 发售日子标签"
     assert "跨区属性</th>" not in html_content, "HTML 表格表头已移除跨区属性列"
+    assert "平台</th>" not in html_content, "HTML 表格表头已移除平台列"
     
     # 验证数据自包含与脱离外部 js
     assert "window.FC_NES_DATA = " in html_content, "HTML 必须内嵌注入完整 FC_NES_DATA 数据"

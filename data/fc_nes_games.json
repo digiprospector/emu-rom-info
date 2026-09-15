@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "任天堂 NES 与红白机 (FC/FDS) 跨区整合数据库 (基于 Raw 原始数据与自定义 Adjustments)",
-    "generated_at": "2026-09-15 00:07:18",
+    "generated_at": "2026-09-15 14:51:27",
     "sources": {
       "wiki_urls": {
         "NES": "https://zh.wikipedia.org/zh-cn/Nintendo_Entertainment_System%E6%B8%B8%E6%88%8F%E5%88%97%E8%A1%A8",
@@ -19,12 +19,12 @@
       "adjustments_file": "adjustments.yaml"
     },
     "statistics": {
-      "total_unified_games": 1591,
-      "cross_region_games": 327,
-      "multi_platform_games": 337,
-      "nes_exclusive_games": 379,
-      "japan_exclusive_games": 885,
-      "bilibili_videos_matched": 848,
+      "total_unified_games": 1590,
+      "cross_region_games": 328,
+      "multi_platform_games": 338,
+      "nes_exclusive_games": 378,
+      "japan_exclusive_games": 884,
+      "bilibili_videos_matched": 853,
       "raw_records_total": 1961,
       "raw_records": {
         "NES": 709,
@@ -359,7 +359,7 @@
     },
     {
       "id": "mario-bros",
-      "title_zh": "马力欧兄弟",
+      "title_zh": "马力欧兄弟/水管马力欧",
       "title_en": "Mario Bros.",
       "title_ja": "マリオブラザーズ",
       "is_cross_region": true,
@@ -757,7 +757,7 @@
     },
     {
       "id": "wild-gunman",
-      "title_zh": "荒野枪手",
+      "title_zh": "荒野枪手（光线枪）",
       "title_en": "Wild Gunman",
       "title_ja": "ワイルドガンマン",
       "is_cross_region": true,
@@ -818,7 +818,7 @@
     },
     {
       "id": "duck-hunt",
-      "title_zh": "打鸭子",
+      "title_zh": "打鸭子（光线枪）",
       "title_en": "Duck Hunt",
       "title_ja": "ダックハント",
       "is_cross_region": true,
@@ -956,7 +956,7 @@
     },
     {
       "id": "hogan-s-alley",
-      "title_zh": "警技射击",
+      "title_zh": "警技射击（光线枪）",
       "title_en": "Hogan's Alley",
       "title_ja": "ホーガンズアレイ",
       "is_cross_region": true,
@@ -1764,7 +1764,7 @@
     },
     {
       "id": "excitebike",
-      "title_zh": "越野机车",
+      "title_zh": "越野机车/火爆机车赛",
       "title_en": "Excitebike",
       "title_ja": "エキサイトバイク",
       "is_cross_region": true,
@@ -2691,7 +2691,7 @@
     },
     {
       "id": "wrecking-crew",
-      "title_zh": "拆屋工",
+      "title_zh": "拆屋工/玛丽工人",
       "title_en": "Wrecking Crew",
       "title_ja": "レッキングクルー",
       "is_cross_region": true,
@@ -2890,7 +2890,7 @@
     },
     {
       "id": "star-force",
-      "title_zh": "星际力量",
+      "title_zh": "星际力量/雷鸟号",
       "title_en": "Star Force",
       "title_ja": "スターフォース",
       "is_cross_region": true,
@@ -3058,7 +3058,7 @@
     },
     {
       "id": "road-fighter",
-      "title_zh": "公路战士",
+      "title_zh": "公路战士/马路英雄",
       "title_en": "Road Fighter",
       "title_ja": "ロードファイター",
       "is_cross_region": true,
@@ -3303,9 +3303,10 @@
       "title_zh": "机器人组合套件",
       "title_en": "Family Computer Robot Block Set",
       "title_ja": "ブロックセット",
-      "is_cross_region": false,
+      "is_cross_region": true,
       "platforms": [
-        "FC"
+        "FC",
+        "NES"
       ],
       "publishers": [
         "任天堂"
@@ -3313,10 +3314,25 @@
       "wiki_url": "",
       "release_dates": {
         "japan": "1985年7月26日",
-        "north_america": "",
-        "europe": ""
+        "north_america": "1985年10月18日",
+        "europe": "1986年9月"
       },
       "versions": {
+        "NES": {
+          "platform": "NES",
+          "platform_name": "Nintendo Entertainment System",
+          "title_zh": "叠加方块",
+          "title_en": "Stack-Up",
+          "title_ja": "",
+          "release_date": "1985年10月18日",
+          "release_date_na": "1985年10月18日",
+          "release_date_pal": "1986年9月",
+          "publisher": "任天堂",
+          "wiki_url": "",
+          "publisher_wiki_url": "https://zh.wikipedia.org/wiki/%E4%BB%BB%E5%A4%A9%E5%A0%82",
+          "title_zh_source": "rom-name-cn",
+          "region": "NA/PAL"
+        },
         "FC": {
           "platform": "FC",
           "platform_name": "Family Computer",
@@ -4116,43 +4132,6 @@
       }
     },
     {
-      "id": "stack-up",
-      "title_zh": "叠加方块",
-      "title_en": "Stack-Up",
-      "title_ja": "",
-      "is_cross_region": false,
-      "platforms": [
-        "NES"
-      ],
-      "publishers": [
-        "任天堂"
-      ],
-      "wiki_url": "",
-      "release_dates": {
-        "japan": "",
-        "north_america": "1985年10月18日",
-        "europe": "1986年9月"
-      },
-      "versions": {
-        "NES": {
-          "platform": "NES",
-          "platform_name": "Nintendo Entertainment System",
-          "title_zh": "叠加方块",
-          "title_en": "Stack-Up",
-          "title_ja": "",
-          "release_date": "1985年10月18日",
-          "release_date_na": "1985年10月18日",
-          "release_date_pal": "1986年9月",
-          "publisher": "任天堂",
-          "wiki_url": "",
-          "publisher_wiki_url": "https://zh.wikipedia.org/wiki/%E4%BB%BB%E5%A4%A9%E5%A0%82",
-          "title_zh_source": "rom-name-cn",
-          "region": "NA/PAL"
-        }
-      },
-      "video": null
-    },
-    {
       "id": "kinniku-man-muscle-tag-match",
       "title_zh": "筋肉人摔角大赛",
       "title_en": "Kinniku Man - Muscle Tag Match",
@@ -4187,7 +4166,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1riQRYtE2J",
+        "aid": 114188047358774,
+        "video_title": "【雷文】红白机游戏终极鉴赏07期-1985年11月 | 4K",
+        "chapter_name": "筋肉人摔跤大赛",
+        "timestamp": "00:55",
+        "seconds": 55,
+        "url": "https://www.bilibili.com/video/BV1riQRYtE2J/?t=55"
+      }
     },
     {
       "id": "sky-destroyer",
@@ -4359,7 +4346,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1riQRYtE2J",
+        "aid": 114188047358774,
+        "video_title": "【雷文】红白机游戏终极鉴赏07期-1985年11月 | 4K",
+        "chapter_name": "吃豆人乐园",
+        "timestamp": "12:45",
+        "seconds": 765,
+        "url": "https://www.bilibili.com/video/BV1riQRYtE2J/?t=765"
+      }
     },
     {
       "id": "pachi-com",
@@ -4491,7 +4486,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1riQRYtE2J",
+        "aid": 114188047358774,
+        "video_title": "【雷文】红白机游戏终极鉴赏07期-1985年11月 | 4K",
+        "chapter_name": "汉堡时间",
+        "timestamp": "16:42",
+        "seconds": 1002,
+        "url": "https://www.bilibili.com/video/BV1riQRYtE2J/?t=1002"
+      }
     },
     {
       "id": "ikki",
@@ -4618,11 +4621,19 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1riQRYtE2J",
+        "aid": 114188047358774,
+        "video_title": "【雷文】红白机游戏终极鉴赏07期-1985年11月 | 4K",
+        "chapter_name": "空手道",
+        "timestamp": "22:52",
+        "seconds": 1372,
+        "url": "https://www.bilibili.com/video/BV1riQRYtE2J/?t=1372"
+      }
     },
     {
       "id": "lunar-pool",
-      "title_zh": "月宫桌球",
+      "title_zh": "月宫桌球/花式台球",
       "title_en": "Lunar Pool",
       "title_ja": "ルナーボール",
       "is_cross_region": true,
@@ -4762,7 +4773,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1pDXxYJEaf",
+        "aid": 114206854683236,
+        "video_title": "【雷文】红白机游戏终极鉴赏08期-1985年12月 | 4K",
+        "chapter_name": "高机动战斗2",
+        "timestamp": "03:36",
+        "seconds": 216,
+        "url": "https://www.bilibili.com/video/BV1pDXxYJEaf/?t=216"
+      }
     },
     {
       "id": "super-dimension-fortress-macross",
@@ -5007,7 +5026,7 @@
     },
     {
       "id": "chubby-cherub",
-      "title_zh": "胖天使",
+      "title_zh": "Q太郎",
       "title_en": "Chubby Cherub",
       "title_ja": "オバケのQ太郎 ワンワンパニック",
       "is_cross_region": true,
@@ -5056,7 +5075,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1pDXxYJEaf",
+        "aid": 114206854683236,
+        "video_title": "【雷文】红白机游戏终极鉴赏08期-1985年12月 | 4K",
+        "chapter_name": "小鬼Q太郎 汪汪恐慌",
+        "timestamp": "16:41",
+        "seconds": 1001,
+        "url": "https://www.bilibili.com/video/BV1pDXxYJEaf/?t=1001"
+      }
     },
     {
       "id": "binary-land",
@@ -5810,7 +5837,7 @@
     },
     {
       "id": "tag-team-wrestling",
-      "title_zh": "双人组职业摔角",
+      "title_zh": "组合摔跤",
       "title_en": "Tag Team Wrestling",
       "title_ja": "タッグチームプロレスリング",
       "is_cross_region": true,
@@ -6200,7 +6227,7 @@
     },
     {
       "id": "mighty-bomb-jack",
-      "title_zh": "炸弹人杰克",
+      "title_zh": "炸弹人杰克/小飞侠",
       "title_en": "Mighty Bomb Jack",
       "title_ja": "マイティボンジャック",
       "is_cross_region": true,
@@ -6816,7 +6843,7 @@
     },
     {
       "id": "star-soldier",
-      "title_zh": "星际战机",
+      "title_zh": "星际战士",
       "title_en": "Star Soldier",
       "title_ja": "スターソルジャー",
       "is_cross_region": true,
@@ -7271,7 +7298,7 @@
     },
     {
       "id": "solomon-s-key",
-      "title_zh": "所罗门之匙",
+      "title_zh": "所罗门之钥",
       "title_en": "Solomon's Key",
       "title_ja": "ソロモンの鍵",
       "is_cross_region": true,
@@ -7733,7 +7760,7 @@
     },
     {
       "id": "alpha-mission",
-      "title_zh": "阿尔法任务 - 装甲争夺战",
+      "title_zh": "ASO战机",
       "title_en": "Alpha Mission",
       "title_ja": "ASO",
       "is_cross_region": true,
@@ -8680,7 +8707,7 @@
     },
     {
       "id": "karate-champ",
-      "title_zh": "空手道",
+      "title_zh": "猛龙过江",
       "title_en": "Karate Champ",
       "title_ja": "カラテチャンプ",
       "is_cross_region": true,
@@ -8730,15 +8757,7 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1riQRYtE2J",
-        "aid": 114188047358774,
-        "video_title": "【雷文】红白机游戏终极鉴赏07期-1985年11月 | 4K",
-        "chapter_name": "空手道",
-        "timestamp": "22:52",
-        "seconds": 1372,
-        "url": "https://www.bilibili.com/video/BV1riQRYtE2J/?t=1372"
-      }
+      "video": null
     },
     {
       "id": "ginga-denshou-galaxy-odyssey",
@@ -8906,7 +8925,7 @@
     },
     {
       "id": "othello",
-      "title_zh": "奥赛罗棋",
+      "title_zh": "黑白棋",
       "title_en": "Othello",
       "title_ja": "オセロ",
       "is_cross_region": true,
@@ -9691,7 +9710,7 @@
     },
     {
       "id": "r-b-i-baseball",
-      "title_zh": "RBI棒球",
+      "title_zh": "职业棒球 家庭竞技场",
       "title_en": "R.B.I. Baseball",
       "title_ja": "プロ野球ファミリースタジアム",
       "is_cross_region": true,
@@ -10641,7 +10660,7 @@
     },
     {
       "id": "trojan",
-      "title_zh": "斗者挽歌",
+      "title_zh": "斗者的挽歌",
       "title_en": "Trojan",
       "title_ja": "闘いの挽歌",
       "is_cross_region": true,
@@ -12395,7 +12414,7 @@
     },
     {
       "id": "rush-n-attack",
-      "title_zh": "绿色兵团",
+      "title_zh": "绿色兵团/绿扁帽部队",
       "title_en": "Rush'n Attack",
       "title_ja": "グリーンベレー",
       "is_cross_region": true,
@@ -12879,7 +12898,7 @@
     },
     {
       "id": "rygar",
-      "title_zh": "未来战士",
+      "title_zh": "未来战士/阿格斯战士",
       "title_en": "Rygar",
       "title_ja": "アルゴスの戦士 はちゃめちゃ大進撃",
       "is_cross_region": true,
@@ -13075,7 +13094,7 @@
     },
     {
       "id": "castlevania",
-      "title_zh": "恶魔城",
+      "title_zh": "恶魔城ROM复刻版",
       "title_en": "Castlevania",
       "title_ja": "悪魔城ドラキュラ",
       "is_cross_region": true,
@@ -13623,7 +13642,7 @@
     },
     {
       "id": "side-pocket",
-      "title_zh": "花式撞球",
+      "title_zh": "花式台球",
       "title_en": "Side Pocket",
       "title_ja": "サイドポケット",
       "is_cross_region": true,
@@ -14061,7 +14080,7 @@
     },
     {
       "id": "ring-king",
-      "title_zh": "家庭拳击",
+      "title_zh": "火爆拳击",
       "title_en": "Ring King",
       "title_ja": "ファミリーボクシング",
       "is_cross_region": true,
@@ -14168,7 +14187,7 @@
     },
     {
       "id": "bases-loaded",
-      "title_zh": "满垒王",
+      "title_zh": "燃烧棒球",
       "title_en": "Bases Loaded",
       "title_ja": "燃えろ!!プロ野球",
       "is_cross_region": true,
@@ -14794,7 +14813,7 @@
     },
     {
       "id": "legacy-of-the-wizard",
-      "title_zh": "屠龙剑IV 屠龙家族",
+      "title_zh": "屠龙剑VI 屠龙家族",
       "title_en": "Legacy of the Wizard",
       "title_ja": "ドラゴンスレイヤーIV ドラスレファミリー",
       "is_cross_region": true,
@@ -15455,7 +15474,7 @@
     },
     {
       "id": "robowarrior",
-      "title_zh": "机器人战士之王",
+      "title_zh": "轰炸之王",
       "title_en": "Robowarrior",
       "title_ja": "ボンバーキング",
       "is_cross_region": true,
@@ -15947,7 +15966,7 @@
     },
     {
       "id": "the-legend-of-zelda",
-      "title_zh": "塞尔达传说",
+      "title_zh": "塞尔达传说ROM复刻版",
       "title_en": "The Legend of Zelda",
       "title_ja": "ゼルダの伝説1",
       "is_cross_region": true,
@@ -16847,7 +16866,7 @@
     },
     {
       "id": "defender-ii",
-      "title_zh": "毁灭入侵者 2",
+      "title_zh": "时空门",
       "title_en": "Defender II",
       "title_ja": "スター・ゲイト",
       "is_cross_region": true,
@@ -17097,7 +17116,7 @@
     },
     {
       "id": "mike-tyson-s-punch-out",
-      "title_zh": "迈克·泰森的拳无虚发",
+      "title_zh": "拳王泰森的拳无虚发",
       "title_en": "Mike Tyson's Punch-Out!!",
       "title_ja": "マイクタイソン・パンチアウト!!",
       "is_cross_region": true,
@@ -17150,7 +17169,7 @@
     },
     {
       "id": "millipede",
-      "title_zh": "杀虫大战",
+      "title_zh": "杀虫大战：巨大昆虫的反击",
       "title_en": "Millipede",
       "title_ja": "ミリピード 巨大昆虫の逆襲",
       "is_cross_region": true,
@@ -17257,7 +17276,7 @@
     },
     {
       "id": "kid-niki-radical-ninja",
-      "title_zh": "快杰洋枪丸",
+      "title_zh": "快杰洋枪",
       "title_en": "Kid Niki: Radical Ninja",
       "title_ja": "快傑ヤンチャ丸",
       "is_cross_region": true,
@@ -18296,7 +18315,7 @@
     },
     {
       "id": "top-gun",
-      "title_zh": "捍卫战士",
+      "title_zh": "捍卫战士/凌云壮志",
       "title_en": "Top Gun",
       "title_ja": "トップガン",
       "is_cross_region": true,
@@ -18824,7 +18843,7 @@
     },
     {
       "id": "wizards-warriors",
-      "title_zh": "巫术",
+      "title_zh": "传说骑士：艾尔洛德",
       "title_en": "Wizards & Warriors",
       "title_ja": "伝説の騎士エルロンド",
       "is_cross_region": true,
@@ -19674,7 +19693,7 @@
     },
     {
       "id": "ice-hockey",
-      "title_zh": "冰球",
+      "title_zh": "冰上曲棍球",
       "title_en": "Ice Hockey",
       "title_ja": "スティックハンター",
       "is_cross_region": true,
@@ -20031,7 +20050,7 @@
     },
     {
       "id": "metal-gear",
-      "title_zh": "合金装备",
+      "title_zh": "合金装备/燃烧坦克",
       "title_en": "Metal Gear",
       "title_ja": "メタルギア",
       "is_cross_region": true,
@@ -20659,7 +20678,7 @@
     },
     {
       "id": "gun-smoke",
-      "title_zh": "荒野大镖客",
+      "title_zh": "西部神枪手",
       "title_en": "Gun.Smoke",
       "title_ja": "ガンスモーク",
       "is_cross_region": true,
@@ -22558,7 +22577,7 @@
     },
     {
       "id": "dr-jekyll-and-mr-hyde",
-      "title_zh": "化身博士",
+      "title_zh": "化身博士/彷魔之刻",
       "title_en": "Dr. Jekyll and Mr. Hyde",
       "title_ja": "ジーキル博士の彷魔が刻",
       "is_cross_region": true,
@@ -22702,7 +22721,7 @@
     },
     {
       "id": "racket-attack",
-      "title_zh": "燃烧职业网球",
+      "title_zh": "燃烧网球",
       "title_en": "Racket Attack",
       "title_ja": "燃えろ!!プロテニス",
       "is_cross_region": true,
@@ -22959,7 +22978,7 @@
     },
     {
       "id": "desert-commander",
-      "title_zh": "沙漠之狐",
+      "title_zh": "沙漠之狐：战车战略",
       "title_en": "Desert Commander",
       "title_ja": "戦車戦略 砂漠の狐",
       "is_cross_region": true,
@@ -23066,7 +23085,7 @@
     },
     {
       "id": "tecmo-cup-soccer-game",
-      "title_zh": "Tecmo足球",
+      "title_zh": "天使之翼/足球小将",
       "title_en": "Tecmo Cup Soccer Game",
       "title_ja": "キャプテン翼",
       "is_cross_region": true,
@@ -23405,7 +23424,7 @@
     },
     {
       "id": "princess-tomato-in-the-salad-kingdom",
-      "title_zh": "沙拉王国的蕃茄公主",
+      "title_zh": "番茄公主",
       "title_en": "Princess Tomato in the Salad Kingdom",
       "title_ja": "サラダの国のトマト姫",
       "is_cross_region": true,
@@ -24494,7 +24513,7 @@
     },
     {
       "id": "rainbow-islands-the-story-of-bubble-bobble-2",
-      "title_zh": "彩虹岛 - 泡泡龙 2",
+      "title_zh": "彩虹岛",
       "title_en": "Rainbow Islands: The Story of Bubble Bobble 2",
       "title_ja": "レインボーアイランド",
       "is_cross_region": true,
@@ -24936,7 +24955,7 @@
     },
     {
       "id": "bases-loaded-ii-second-season",
-      "title_zh": "满垒王 2",
+      "title_zh": "燃烧棒球88决定版",
       "title_en": "Bases Loaded II: Second Season",
       "title_ja": "燃えろ!!プロ野球'88決定版",
       "is_cross_region": true,
@@ -26042,7 +26061,7 @@
     },
     {
       "id": "maniac-mansion",
-      "title_zh": "疯狂大楼",
+      "title_zh": "疯狂大楼/狂气之馆",
       "title_en": "Maniac Mansion",
       "title_ja": "マニアックマンション",
       "is_cross_region": true,
@@ -26263,7 +26282,7 @@
     },
     {
       "id": "snoopy-s-silly-sports-spectacular",
-      "title_zh": "史努比的趣味运动会",
+      "title_zh": "唐老鸭",
       "title_en": "Snoopy's Silly Sports Spectacular",
       "title_ja": "ドナルドダック",
       "is_cross_region": true,
@@ -26362,7 +26381,7 @@
     },
     {
       "id": "8-eyes",
-      "title_zh": "八眼传说",
+      "title_zh": "八眼宝石",
       "title_en": "8 Eyes",
       "title_ja": "エイト・アイズ",
       "is_cross_region": true,
@@ -26515,7 +26534,7 @@
     },
     {
       "id": "vegas-dream",
-      "title_zh": "赌城之梦",
+      "title_zh": "赌城拉斯维加斯",
       "title_en": "Vegas Dream",
       "title_ja": "VIVA LASVEGAS",
       "is_cross_region": true,
@@ -27796,7 +27815,7 @@
     },
     {
       "id": "gyruss",
-      "title_zh": "太空射击战",
+      "title_zh": "太空射击传",
       "title_en": "Gyruss",
       "title_ja": "ジャイラス",
       "is_cross_region": true,
@@ -28345,7 +28364,7 @@
     },
     {
       "id": "paperboy",
-      "title_zh": "送报童",
+      "title_zh": "送报员",
       "title_en": "Paperboy",
       "title_ja": "ペーパーボーイ",
       "is_cross_region": true,
@@ -28841,7 +28860,7 @@
     },
     {
       "id": "michael-andretti-s-world-gp",
-      "title_zh": "麦可安德瑞提之世界格兰披治大赛车",
+      "title_zh": "中屿悟F1英雄",
       "title_en": "Michael Andretti's World GP",
       "title_ja": "中嶋悟F-1ヒーロー",
       "is_cross_region": true,
@@ -29604,7 +29623,7 @@
     },
     {
       "id": "rollerball",
-      "title_zh": "滚转弹珠台",
+      "title_zh": "超级弹珠柜",
       "title_en": "Rollerball",
       "title_ja": "ローラーボール",
       "is_cross_region": true,
@@ -29998,7 +30017,7 @@
     },
     {
       "id": "guerrilla-war",
-      "title_zh": "古巴战士",
+      "title_zh": "古巴战士/革命英雄",
       "title_en": "Guerrilla War",
       "title_ja": "ゲバラ",
       "is_cross_region": true,
@@ -30215,7 +30234,7 @@
     },
     {
       "id": "casino-kid",
-      "title_zh": "赌城小子",
+      "title_zh": "百万小子：梦幻的帝王编",
       "title_en": "Casino Kid",
       "title_ja": "100万$キッド 幻の帝王編",
       "is_cross_region": true,
@@ -30892,7 +30911,7 @@
     },
     {
       "id": "tecmo-bowl",
-      "title_zh": "Tecmo美式足球",
+      "title_zh": "特库摩橄榄球",
       "title_en": "Tecmo Bowl",
       "title_ja": "テクモボウル",
       "is_cross_region": true,
@@ -32075,7 +32094,7 @@
     },
     {
       "id": "rock-n-ball",
-      "title_zh": "摇滚弹珠台",
+      "title_zh": "家庭弹珠台",
       "title_en": "Rock 'n Ball",
       "title_ja": "ファミリーピンボール",
       "is_cross_region": true,
@@ -32469,7 +32488,7 @@
     },
     {
       "id": "adventures-of-lolo",
-      "title_zh": "蛋王子大冒险",
+      "title_zh": "蛋王子",
       "title_en": "Adventures of Lolo",
       "title_ja": "アドベンチャーズ オブ ロロ",
       "is_cross_region": true,
@@ -33318,7 +33337,7 @@
     },
     {
       "id": "baseball-stars",
-      "title_zh": "棒球之星",
+      "title_zh": "明星棒球赛：目标三冠王",
       "title_en": "Baseball Stars",
       "title_ja": "ベースボールスター めざせ三冠王",
       "is_cross_region": true,
@@ -33530,7 +33549,7 @@
     },
     {
       "id": "little-ninja-brothers",
-      "title_zh": "超级中国人 2",
+      "title_zh": "超级中国人2：龙孩儿",
       "title_en": "Little Ninja Brothers",
       "title_ja": "スーパーチャイニーズ2 ドラゴンキッド",
       "is_cross_region": true,
@@ -35199,7 +35218,7 @@
     },
     {
       "id": "circus-caper",
-      "title_zh": "马戏团大冒险",
+      "title_zh": "疯狂老哥",
       "title_en": "Circus Caper",
       "title_ja": "燃える!お兄さん",
       "is_cross_region": true,
@@ -35379,7 +35398,7 @@
     },
     {
       "id": "shingen-the-ruler",
-      "title_zh": "武田信玄 2",
+      "title_zh": "武田信玄2",
       "title_en": "Shingen the Ruler",
       "title_ja": "武田信玄2",
       "is_cross_region": true,
@@ -35666,7 +35685,7 @@
     },
     {
       "id": "castlequest",
-      "title_zh": "精致之城",
+      "title_zh": "奇幻大冒险",
       "title_en": "Castlequest",
       "title_ja": "キャッスルクエスト",
       "is_cross_region": true,
@@ -36470,7 +36489,7 @@
     },
     {
       "id": "thunderbirds",
-      "title_zh": "雷鸟神机队",
+      "title_zh": "雷鸟号",
       "title_en": "Thunderbirds",
       "title_ja": "サンダーバード",
       "is_cross_region": true,
@@ -37148,7 +37167,7 @@
     },
     {
       "id": "baseball-simulator-1-000",
-      "title_zh": "模拟棒球",
+      "title_zh": "超人棒球",
       "title_en": "Baseball Simulator 1.000",
       "title_ja": "超人ウルトラベースボール",
       "is_cross_region": true,
@@ -37254,7 +37273,7 @@
     },
     {
       "id": "dusty-diamond-s-all-star-softball",
-      "title_zh": "全明星垒球",
+      "title_zh": "垒球天国",
       "title_en": "Dusty Diamond's All-Star Softball",
       "title_ja": "ソフトボール天国",
       "is_cross_region": true,
@@ -37525,7 +37544,7 @@
     },
     {
       "id": "dungeon-magic-sword-of-the-elements",
-      "title_zh": "地城魔法 - 元素之剑",
+      "title_zh": "巫术魔洞：魔剑的元素",
       "title_en": "Dungeon Magic: Sword of the Elements",
       "title_ja": "ダンジョン&マジック",
       "is_cross_region": true,
@@ -38141,7 +38160,7 @@
     },
     {
       "id": "championship-bowling",
-      "title_zh": "保龄球锦标赛",
+      "title_zh": "冠军杯保龄球",
       "title_en": "Championship Bowling",
       "title_ja": "チャンピオンシップボウリング",
       "is_cross_region": true,
@@ -38437,7 +38456,7 @@
     },
     {
       "id": "rescue-the-embassy-mission",
-      "title_zh": "人质大作战 - 大使馆抢救任务",
+      "title_zh": "抢救人质",
       "title_en": "Rescue: The Embassy Mission",
       "title_ja": "ホステージ",
       "is_cross_region": true,
@@ -38999,7 +39018,7 @@
     },
     {
       "id": "bad-news-baseball",
-      "title_zh": "坏消息棒球",
+      "title_zh": "激斗棒球",
       "title_en": "Bad News Baseball",
       "title_ja": "激闘スタジアム!!",
       "is_cross_region": true,
@@ -39142,7 +39161,7 @@
     },
     {
       "id": "pinball-quest",
-      "title_zh": "弹珠台高手",
+      "title_zh": "弹珠柜高手",
       "title_en": "Pinball Quest",
       "title_ja": "ピンボールクエスト",
       "is_cross_region": true,
@@ -39293,7 +39312,7 @@
     },
     {
       "id": "top-gun-the-second-mission",
-      "title_zh": "捍卫战士 2",
+      "title_zh": "捍卫战士2/凌云壮志2",
       "title_en": "Top Gun: The Second Mission",
       "title_ja": "トップガン2 デュアルファイターズ",
       "is_cross_region": true,
@@ -39600,7 +39619,7 @@
     },
     {
       "id": "batman",
-      "title_zh": "蝙蝠侠：电子游戏",
+      "title_zh": "蝙蝠侠",
       "title_en": "Batman",
       "title_ja": "バットマン",
       "is_cross_region": true,
@@ -41024,7 +41043,7 @@
     },
     {
       "id": "castle-of-dragon",
-      "title_zh": "龙之军团",
+      "title_zh": "战斗龙单位",
       "title_en": "Castle of Dragon",
       "title_ja": "ドラゴンユニット",
       "is_cross_region": true,
@@ -41078,7 +41097,7 @@
     },
     {
       "id": "adventures-of-lolo-2",
-      "title_zh": "蛋王子大冒险 2",
+      "title_zh": "蛋王子2",
       "title_en": "Adventures of Lolo 2",
       "title_ja": "アドベンチャーズ オブ ロロII",
       "is_cross_region": true,
@@ -41313,7 +41332,7 @@
     },
     {
       "id": "heavy-barrel",
-      "title_zh": "重装机枪",
+      "title_zh": "午夜攻击/重装战士",
       "title_en": "Heavy Barrel",
       "title_ja": "ヘビーバレル",
       "is_cross_region": true,
@@ -41919,7 +41938,7 @@
     },
     {
       "id": "yo-noid",
-      "title_zh": "溜溜球大师",
+      "title_zh": "假面忍者花丸",
       "title_en": "Yo! Noid",
       "title_ja": "仮面の忍者 花丸",
       "is_cross_region": true,
@@ -42025,7 +42044,7 @@
     },
     {
       "id": "boulder-dash",
-      "title_zh": "推石小子",
+      "title_zh": "寻宝大进击",
       "title_en": "Boulder Dash",
       "title_ja": "バルダーダッシュ",
       "is_cross_region": true,
@@ -42772,7 +42791,7 @@
     },
     {
       "id": "crystalis",
-      "title_zh": "天神之剑",
+      "title_zh": "天神之剑：遥远地天空奏鸣曲",
       "title_en": "Crystalis",
       "title_ja": "ゴッドスレイヤー はるか天空のソナタ",
       "is_cross_region": true,
@@ -44170,7 +44189,7 @@
     },
     {
       "id": "rally-bike",
-      "title_zh": "冲刺野郎",
+      "title_zh": "卫刺野郎",
       "title_en": "Rally Bike",
       "title_ja": "ダッシュ野郎",
       "is_cross_region": true,
@@ -44277,7 +44296,7 @@
     },
     {
       "id": "s-c-a-t-special-cybernetic-attack-team",
-      "title_zh": "最终任务",
+      "title_zh": "最后任务/飞天魂斗罗",
       "title_en": "S.C.A.T.: Special Cybernetic Attack Team",
       "title_ja": "ファイナルミッション",
       "is_cross_region": true,
@@ -44339,7 +44358,7 @@
     },
     {
       "id": "bandit-kings-of-ancient-china",
-      "title_zh": "水浒传 - 天命之誓",
+      "title_zh": "水浒传·天命之誓",
       "title_en": "Bandit Kings of Ancient China",
       "title_ja": "水滸伝・天命の誓い",
       "is_cross_region": true,
@@ -44851,7 +44870,7 @@
     },
     {
       "id": "palamedes",
-      "title_zh": "智慧方块",
+      "title_zh": "骰子方块",
       "title_en": "Palamedes",
       "title_ja": "パラメデス",
       "is_cross_region": true,
@@ -45212,7 +45231,7 @@
     },
     {
       "id": "bases-loaded-3",
-      "title_zh": "满垒王 3",
+      "title_zh": "燃烧棒球90感动篇",
       "title_en": "Bases Loaded 3",
       "title_ja": "燃えプロ'90感動編",
       "is_cross_region": true,
@@ -46011,7 +46030,7 @@
     },
     {
       "id": "journey-to-silius",
-      "title_zh": "星际魂斗罗",
+      "title_zh": "星际魂斗罗/最终殖民地",
       "title_en": "Journey to Silius",
       "title_ja": "ラフワールド",
       "is_cross_region": true,
@@ -46876,7 +46895,7 @@
     },
     {
       "id": "little-nemo-the-dream-master",
-      "title_zh": "梦之勇士",
+      "title_zh": "梦之勇士/睡衣英雄",
       "title_en": "Little Nemo: The Dream Master",
       "title_ja": "NEMO パジャマヒーロー",
       "is_cross_region": true,
@@ -47257,7 +47276,7 @@
     },
     {
       "id": "spot-the-video-game",
-      "title_zh": "斑点棋",
+      "title_zh": "点子精灵",
       "title_en": "Spot: The Video Game",
       "title_ja": "SPOT",
       "is_cross_region": true,
@@ -47430,7 +47449,7 @@
     },
     {
       "id": "ultimate-basketball",
-      "title_zh": "泰德终极篮球",
+      "title_zh": "泰德篮球",
       "title_en": "Ultimate Basketball",
       "title_ja": "タイトー バスケットボール",
       "is_cross_region": true,
@@ -48078,7 +48097,7 @@
     },
     {
       "id": "totally-rad",
-      "title_zh": "魔法约翰",
+      "title_zh": "神奇王子",
       "title_en": "Totally Rad",
       "title_ja": "マジックジョン",
       "is_cross_region": true,
@@ -48266,7 +48285,7 @@
     },
     {
       "id": "gremlins-2-the-new-batch",
-      "title_zh": "小魔怪 2 - 新种诞生",
+      "title_zh": "小精灵2：新种诞生",
       "title_en": "Gremlins 2: The New Batch",
       "title_ja": "グレムリン2 -新種誕生-",
       "is_cross_region": true,
@@ -49209,7 +49228,7 @@
     },
     {
       "id": "puzznic",
-      "title_zh": "钻石方块",
+      "title_zh": "神奇方块",
       "title_en": "Puzznic",
       "title_ja": "パズニック",
       "is_cross_region": true,
@@ -49382,7 +49401,7 @@
     },
     {
       "id": "werewolf-the-last-warrior",
-      "title_zh": "超人狼战记",
+      "title_zh": "超人狼战记：战狼",
       "title_en": "Werewolf: The Last Warrior",
       "title_ja": "超人狼戦記 WARWOLF",
       "is_cross_region": true,
@@ -49444,7 +49463,7 @@
     },
     {
       "id": "wwf-wrestlemania-challenge",
-      "title_zh": "世界摔角联盟 - 狂热摔角锦标赛",
+      "title_zh": "WWF摔角",
       "title_en": "WWF WrestleMania Challenge",
       "title_ja": "WWFレッスルマニアチャレンジ",
       "is_cross_region": true,
@@ -49850,7 +49869,7 @@
     },
     {
       "id": "parodius-da",
-      "title_zh": "Q版沙罗曼蛇",
+      "title_zh": "疯狂大射击",
       "title_en": "Parodius Da!",
       "title_ja": "パロディウスだ!",
       "is_cross_region": true,
@@ -50085,7 +50104,7 @@
     },
     {
       "id": "jackie-chan-s-action-kung-fu",
-      "title_zh": "成龙",
+      "title_zh": "成龙之龙",
       "title_en": "Jackie Chan's Action Kung Fu",
       "title_ja": "ジャッキーチェン",
       "is_cross_region": true,
@@ -50418,7 +50437,7 @@
     },
     {
       "id": "thunder-lightning",
-      "title_zh": "雷电",
+      "title_zh": "家庭砖块/雷公弹",
       "title_en": "Thunder & Lightning",
       "title_ja": "ファミリーブロック",
       "is_cross_region": true,
@@ -50652,7 +50671,7 @@
     },
     {
       "id": "tecmo-world-cup-soccer",
-      "title_zh": "Tecmo世界杯足球",
+      "title_zh": "特库摩世界杯足球赛",
       "title_en": "Tecmo World Cup Soccer",
       "title_ja": "テクモ ワールドカップサッカー",
       "is_cross_region": true,
@@ -50774,7 +50793,7 @@
     },
     {
       "id": "whomp-em",
-      "title_zh": "西游记世界 2 - 天上界的魔神",
+      "title_zh": "西游记世界2：天上界的魔神",
       "title_en": "Whomp 'Em",
       "title_ja": "西遊記ワールドII 天上界の魔神",
       "is_cross_region": true,
@@ -51118,7 +51137,7 @@
     },
     {
       "id": "zombie-nation",
-      "title_zh": "僵尸国度",
+      "title_zh": "暴坊天狗",
       "title_en": "Zombie Nation",
       "title_ja": "暴れん坊天狗",
       "is_cross_region": true,
@@ -51451,7 +51470,7 @@
     },
     {
       "id": "sword-master",
-      "title_zh": "剑术大师",
+      "title_zh": "剑之达人",
       "title_en": "Sword Master",
       "title_ja": "ソードマスター",
       "is_cross_region": true,
@@ -51775,7 +51794,7 @@
     },
     {
       "id": "advanced-dungeons-dragons-heroes-of-the-lance",
-      "title_zh": "高级地下城与龙 - 长枪英雄",
+      "title_zh": "龙与地下城：长枪英雄",
       "title_en": "Advanced Dungeons & Dragons: Heroes of the Lance",
       "title_ja": "Advanced Dungeons & Dragons ヒーローオブランス",
       "is_cross_region": true,
@@ -51927,7 +51946,7 @@
     },
     {
       "id": "championship-rally",
-      "title_zh": "火爆越野赛车 - 世界越野赛车锦标赛",
+      "title_zh": "刺激赛车",
       "title_en": "Championship Rally",
       "title_ja": "エキサイティング・ラリー",
       "is_cross_region": true,
@@ -52182,7 +52201,7 @@
     },
     {
       "id": "over-horizon",
-      "title_zh": "超越地平线",
+      "title_zh": "飞越地平线",
       "title_en": "Over Horizon",
       "title_ja": "オーバーホライゾン",
       "is_cross_region": true,
@@ -52782,7 +52801,7 @@
     },
     {
       "id": "golf-grand-slam",
-      "title_zh": "高尔夫大满贯",
+      "title_zh": "高尔夫锦标赛",
       "title_en": "Golf Grand Slam",
       "title_ja": "ゴルフグランドスラム",
       "is_cross_region": true,
@@ -53091,7 +53110,7 @@
     },
     {
       "id": "isolated-warrior",
-      "title_zh": "马克司战士 - 惑星戒严令",
+      "title_zh": "行星戒严令",
       "title_en": "Isolated Warrior",
       "title_ja": "マックスウォーリアー 惑星戒厳令",
       "is_cross_region": true,
@@ -53198,7 +53217,7 @@
     },
     {
       "id": "metal-storm",
-      "title_zh": "重力装甲",
+      "title_zh": "重力装甲：金属风暴",
       "title_en": "Metal Storm",
       "title_ja": "重力装甲メタルストーム",
       "is_cross_region": true,
@@ -54178,7 +54197,7 @@
     },
     {
       "id": "laser-invasion",
-      "title_zh": "救难任务",
+      "title_zh": "救援任务",
       "title_en": "Laser Invasion",
       "title_ja": "ガンサイト",
       "is_cross_region": true,
@@ -54301,7 +54320,7 @@
     },
     {
       "id": "advanced-dungeons-dragons-hillsfar",
-      "title_zh": "高级地下城与龙 - 远山",
+      "title_zh": "龙与地下城：幽城宝藏",
       "title_en": "Advanced Dungeons & Dragons: Hillsfar",
       "title_ja": "Advanced Dungeons & Dragons ヒルズファー",
       "is_cross_region": true,
@@ -54736,7 +54755,7 @@
     },
     {
       "id": "robocop-2",
-      "title_zh": "机器战警 2",
+      "title_zh": "机器战警2",
       "title_en": "RoboCop 2",
       "title_ja": "ロボコップ2",
       "is_cross_region": true,
@@ -54863,7 +54882,7 @@
     },
     {
       "id": "rockin-kats",
-      "title_zh": "纽约摇滚猫",
+      "title_zh": "纽约小子",
       "title_en": "Rockin' Kats",
       "title_ja": "N.Y.ニャンキーズ",
       "is_cross_region": true,
@@ -55150,7 +55169,7 @@
     },
     {
       "id": "magic-darts",
-      "title_zh": "魔术飞镖",
+      "title_zh": "飞镖大赛",
       "title_en": "Magic Darts",
       "title_ja": "マジック・ダーツ",
       "is_cross_region": true,
@@ -55294,7 +55313,7 @@
     },
     {
       "id": "vice-project-doom",
-      "title_zh": "GUN-DEC",
+      "title_zh": "迪克火枪",
       "title_en": "Vice: Project Doom",
       "title_ja": "ガンデック",
       "is_cross_region": true,
@@ -56041,7 +56060,7 @@
     },
     {
       "id": "castelian",
-      "title_zh": "城堡猪",
+      "title_zh": "大嘴鸟乐园",
       "title_en": "Castelian",
       "title_ja": "キョロちゃんランド",
       "is_cross_region": true,
@@ -56296,7 +56315,7 @@
     },
     {
       "id": "advanced-dungeons-dragons-pool-of-radiance",
-      "title_zh": "高级地下城与龙 - 光芒之池",
+      "title_zh": "龙与地下城：光芒之池",
       "title_en": "Advanced Dungeons & Dragons: Pool of Radiance",
       "title_ja": "AD&Dプール・オブ・レイディアンス",
       "is_cross_region": true,
@@ -57010,7 +57029,7 @@
     },
     {
       "id": "toki",
-      "title_zh": "JUJU传说",
+      "title_zh": "JuJu传说",
       "title_en": "Toki",
       "title_ja": "JuJu伝説",
       "is_cross_region": true,
@@ -58368,7 +58387,7 @@
     },
     {
       "id": "super-spy-hunter",
-      "title_zh": "超级间谍猎人",
+      "title_zh": "方程序战斗赛车",
       "title_en": "Super Spy Hunter",
       "title_ja": "バトルフォーミュラ",
       "is_cross_region": true,
@@ -59643,7 +59662,7 @@
     },
     {
       "id": "bases-loaded-4",
-      "title_zh": "满垒王 4",
+      "title_zh": "燃烧棒球最强篇",
       "title_en": "Bases Loaded 4",
       "title_ja": "燃えプロ最強編",
       "is_cross_region": true,
@@ -59844,7 +59863,7 @@
     },
     {
       "id": "rampart",
-      "title_zh": "领国战役",
+      "title_zh": "领国战役/领土大战",
       "title_en": "Rampart",
       "title_ja": "ランパート",
       "is_cross_region": true,
@@ -59898,7 +59917,7 @@
     },
     {
       "id": "batman-return-of-the-joker",
-      "title_zh": "蝙蝠侠 2 - 小丑的复仇",
+      "title_zh": "炸药蝙蝠侠",
       "title_en": "Batman: Return of the Joker",
       "title_ja": "ダイナマイトバットマン",
       "is_cross_region": true,
@@ -60062,7 +60081,7 @@
     },
     {
       "id": "tecmo-super-bowl",
-      "title_zh": "Tecmo超级美式足球",
+      "title_zh": "特库摩超级美式橄榄球",
       "title_en": "Tecmo Super Bowl",
       "title_ja": "テクモスーパーボウル",
       "is_cross_region": true,
@@ -60206,7 +60225,7 @@
     },
     {
       "id": "tiny-toon-adventures",
-      "title_zh": "兔宝宝大冒险",
+      "title_zh": "兔宝宝历险记",
       "title_en": "Tiny Toon Adventures",
       "title_ja": "タイニートゥーン アドベンチャーズ",
       "is_cross_region": true,
@@ -60259,7 +60278,7 @@
     },
     {
       "id": "tom-and-jerry",
-      "title_zh": "猫和老鼠",
+      "title_zh": "汤姆和杰瑞",
       "title_en": "Tom and Jerry",
       "title_ja": "トムとジェリー&タッフィー",
       "is_cross_region": true,
@@ -61230,7 +61249,7 @@
     },
     {
       "id": "hudson-hawk",
-      "title_zh": "终极神鹰",
+      "title_zh": "哈得森之鹰",
       "title_en": "Hudson Hawk",
       "title_ja": "ハドソン・ホーク",
       "is_cross_region": true,
@@ -61412,7 +61431,7 @@
     },
     {
       "id": "bucky-o-hare",
-      "title_zh": "月球英雄",
+      "title_zh": "外星战将",
       "title_en": "Bucky O'Hare",
       "title_ja": "バッキーオヘア",
       "is_cross_region": true,
@@ -61539,7 +61558,7 @@
     },
     {
       "id": "goal-two",
-      "title_zh": "足球得点王 2",
+      "title_zh": "足球GOAL！",
       "title_en": "Goal! Two",
       "title_ja": "GOAL!!",
       "is_cross_region": true,
@@ -62184,7 +62203,7 @@
     },
     {
       "id": "fire-n-ice",
-      "title_zh": "所罗门之钥 2",
+      "title_zh": "所罗门之钥2：库尔敏岛救出作战",
       "title_en": "Fire 'n Ice",
       "title_ja": "ソロモンの鍵2",
       "is_cross_region": true,
@@ -62957,7 +62976,7 @@
     },
     {
       "id": "star-wars-the-empire-strikes-back",
-      "title_zh": "星际大战 - 帝国大反击",
+      "title_zh": "星球大战：帝国大反击",
       "title_en": "Star Wars: The Empire Strikes Back",
       "title_ja": "スターウォーズ 帝国の逆襲",
       "is_cross_region": true,
@@ -63418,7 +63437,7 @@
     },
     {
       "id": "hook",
-      "title_zh": "铁钩船长",
+      "title_zh": "虎克船长",
       "title_en": "Hook",
       "title_ja": "Hook(フック)",
       "is_cross_region": true,
@@ -63805,7 +63824,7 @@
     },
     {
       "id": "panic-restaurant",
-      "title_zh": "超级厨师之美食家世界",
+      "title_zh": "小厨师",
       "title_en": "Panic Restaurant",
       "title_ja": "わんぱくコックンのグルメワールド",
       "is_cross_region": true,
@@ -64154,7 +64173,7 @@
     },
     {
       "id": "ferrari-grand-prix-challenge",
-      "title_zh": "法拉利挑战赛",
+      "title_zh": "法拉利大赛车",
       "title_en": "Ferrari Grand Prix Challenge",
       "title_ja": "フェラーリ Grand Prix Challenge",
       "is_cross_region": true,
@@ -64282,7 +64301,7 @@
     },
     {
       "id": "capcom-s-gold-medal-challenge-92",
-      "title_zh": "卡普空的金牌挑战 '92",
+      "title_zh": "巴塞罗那奥运92",
       "title_en": "Capcom's Gold Medal Challenge '92",
       "title_ja": "CAPCOMバルセロナ'92",
       "is_cross_region": true,
@@ -65686,7 +65705,7 @@
     },
     {
       "id": "power-blade-2",
-      "title_zh": "刀锋斗士 2",
+      "title_zh": "救助上尉",
       "title_en": "Power Blade 2",
       "title_ja": "キャプテンセイバー",
       "is_cross_region": true,
@@ -67304,7 +67323,7 @@
     },
     {
       "id": "rod-land",
-      "title_zh": "罗德大陆",
+      "title_zh": "妖精物语",
       "title_en": "Rod Land",
       "title_ja": "妖精物語ロッドランド",
       "is_cross_region": true,
@@ -68438,7 +68457,7 @@
     },
     {
       "id": "bubble-bobble-part-2",
-      "title_zh": "泡泡龙 2",
+      "title_zh": "泡泡龙2",
       "title_en": "Bubble Bobble Part 2",
       "title_ja": "バブルボブル2",
       "is_cross_region": true,
@@ -68528,7 +68547,7 @@
     },
     {
       "id": "pro-sport-hockey",
-      "title_zh": "美国冰上曲棍球",
+      "title_zh": "美式曲棍球",
       "title_en": "Pro Sport Hockey",
       "title_ja": "USA ICE HOCKEY in FC",
       "is_cross_region": true,
@@ -71847,7 +71866,7 @@
     },
     {
       "id": "mario-bros",
-      "title_zh": "马力欧兄弟",
+      "title_zh": "马力欧兄弟/水管马力欧",
       "title_en": "Mario Bros.",
       "title_ja": "マリオブラザーズ",
       "is_cross_region": true,
@@ -72200,7 +72219,7 @@
     },
     {
       "id": "wild-gunman",
-      "title_zh": "荒野枪手",
+      "title_zh": "荒野枪手（光线枪）",
       "title_en": "Wild Gunman",
       "title_ja": "ワイルドガンマン",
       "is_cross_region": true,
@@ -72261,7 +72280,7 @@
     },
     {
       "id": "duck-hunt",
-      "title_zh": "打鸭子",
+      "title_zh": "打鸭子（光线枪）",
       "title_en": "Duck Hunt",
       "title_ja": "ダックハント",
       "is_cross_region": true,
@@ -72399,7 +72418,7 @@
     },
     {
       "id": "hogan-s-alley",
-      "title_zh": "警技射击",
+      "title_zh": "警技射击（光线枪）",
       "title_en": "Hogan's Alley",
       "title_ja": "ホーガンズアレイ",
       "is_cross_region": true,
@@ -72921,7 +72940,7 @@
     },
     {
       "id": "excitebike",
-      "title_zh": "越野机车",
+      "title_zh": "越野机车/火爆机车赛",
       "title_en": "Excitebike",
       "title_ja": "エキサイトバイク",
       "is_cross_region": true,
@@ -73337,7 +73356,7 @@
     },
     {
       "id": "wrecking-crew",
-      "title_zh": "拆屋工",
+      "title_zh": "拆屋工/玛丽工人",
       "title_en": "Wrecking Crew",
       "title_ja": "レッキングクルー",
       "is_cross_region": true,
@@ -73536,7 +73555,7 @@
     },
     {
       "id": "star-force",
-      "title_zh": "星际力量",
+      "title_zh": "星际力量/雷鸟号",
       "title_en": "Star Force",
       "title_ja": "スターフォース",
       "is_cross_region": true,
@@ -73659,7 +73678,7 @@
     },
     {
       "id": "road-fighter",
-      "title_zh": "公路战士",
+      "title_zh": "公路战士/马路英雄",
       "title_en": "Road Fighter",
       "title_ja": "ロードファイター",
       "is_cross_region": true,
@@ -73717,6 +73736,67 @@
         "timestamp": "16:15",
         "seconds": 975,
         "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=975"
+      }
+    },
+    {
+      "id": "family-computer-robot-block-set",
+      "title_zh": "机器人组合套件",
+      "title_en": "Family Computer Robot Block Set",
+      "title_ja": "ブロックセット",
+      "is_cross_region": true,
+      "platforms": [
+        "FC",
+        "NES"
+      ],
+      "publishers": [
+        "任天堂"
+      ],
+      "wiki_url": "",
+      "release_dates": {
+        "japan": "1985年7月26日",
+        "north_america": "1985年10月18日",
+        "europe": "1986年9月"
+      },
+      "versions": {
+        "NES": {
+          "platform": "NES",
+          "platform_name": "Nintendo Entertainment System",
+          "title_zh": "叠加方块",
+          "title_en": "Stack-Up",
+          "title_ja": "",
+          "release_date": "1985年10月18日",
+          "release_date_na": "1985年10月18日",
+          "release_date_pal": "1986年9月",
+          "publisher": "任天堂",
+          "wiki_url": "",
+          "publisher_wiki_url": "https://zh.wikipedia.org/wiki/%E4%BB%BB%E5%A4%A9%E5%A0%82",
+          "title_zh_source": "rom-name-cn",
+          "region": "NA/PAL"
+        },
+        "FC": {
+          "platform": "FC",
+          "platform_name": "Family Computer",
+          "title_zh": "机器人组合套件",
+          "title_en": "Family Computer Robot Block Set",
+          "title_ja": "ブロックセット",
+          "release_date": "1985年7月26日",
+          "release_date_na": "",
+          "release_date_pal": "",
+          "publisher": "任天堂",
+          "wiki_url": "",
+          "publisher_wiki_url": "",
+          "title_zh_source": "wikipedia",
+          "region": "JP"
+        }
+      },
+      "video": {
+        "bvid": "BV1e5RnYxEaS",
+        "aid": 114142916646841,
+        "video_title": "【雷文】红白机游戏终极鉴赏05期-1985年6-7月 | 4K",
+        "chapter_name": "机器人方块套件",
+        "timestamp": "25:11",
+        "seconds": 1511,
+        "url": "https://www.bilibili.com/video/BV1e5RnYxEaS/?t=1511"
       }
     },
     {
@@ -74110,11 +74190,19 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1riQRYtE2J",
+        "aid": 114188047358774,
+        "video_title": "【雷文】红白机游戏终极鉴赏07期-1985年11月 | 4K",
+        "chapter_name": "汉堡时间",
+        "timestamp": "16:42",
+        "seconds": 1002,
+        "url": "https://www.bilibili.com/video/BV1riQRYtE2J/?t=1002"
+      }
     },
     {
       "id": "lunar-pool",
-      "title_zh": "月宫桌球",
+      "title_zh": "月宫桌球/花式台球",
       "title_en": "Lunar Pool",
       "title_ja": "ルナーボール",
       "is_cross_region": true,
@@ -74237,7 +74325,7 @@
     },
     {
       "id": "chubby-cherub",
-      "title_zh": "胖天使",
+      "title_zh": "Q太郎",
       "title_en": "Chubby Cherub",
       "title_ja": "オバケのQ太郎 ワンワンパニック",
       "is_cross_region": true,
@@ -74286,7 +74374,15 @@
           "region": "JP"
         }
       },
-      "video": null
+      "video": {
+        "bvid": "BV1pDXxYJEaf",
+        "aid": 114206854683236,
+        "video_title": "【雷文】红白机游戏终极鉴赏08期-1985年12月 | 4K",
+        "chapter_name": "小鬼Q太郎 汪汪恐慌",
+        "timestamp": "16:41",
+        "seconds": 1001,
+        "url": "https://www.bilibili.com/video/BV1pDXxYJEaf/?t=1001"
+      }
     },
     {
       "id": "bomberman",
@@ -74492,7 +74588,7 @@
     },
     {
       "id": "tag-team-wrestling",
-      "title_zh": "双人组职业摔角",
+      "title_zh": "组合摔跤",
       "title_en": "Tag Team Wrestling",
       "title_ja": "タッグチームプロレスリング",
       "is_cross_region": true,
@@ -74747,7 +74843,7 @@
     },
     {
       "id": "mighty-bomb-jack",
-      "title_zh": "炸弹人杰克",
+      "title_zh": "炸弹人杰克/小飞侠",
       "title_en": "Mighty Bomb Jack",
       "title_ja": "マイティボンジャック",
       "is_cross_region": true,
@@ -75117,7 +75213,7 @@
     },
     {
       "id": "star-soldier",
-      "title_zh": "星际战机",
+      "title_zh": "星际战士",
       "title_en": "Star Soldier",
       "title_ja": "スターソルジャー",
       "is_cross_region": true,
@@ -75363,7 +75459,7 @@
     },
     {
       "id": "solomon-s-key",
-      "title_zh": "所罗门之匙",
+      "title_zh": "所罗门之钥",
       "title_en": "Solomon's Key",
       "title_ja": "ソロモンの鍵",
       "is_cross_region": true,
@@ -75563,7 +75659,7 @@
     },
     {
       "id": "alpha-mission",
-      "title_zh": "阿尔法任务 - 装甲争夺战",
+      "title_zh": "ASO战机",
       "title_en": "Alpha Mission",
       "title_ja": "ASO",
       "is_cross_region": true,
@@ -76047,7 +76143,7 @@
     },
     {
       "id": "karate-champ",
-      "title_zh": "空手道",
+      "title_zh": "猛龙过江",
       "title_en": "Karate Champ",
       "title_ja": "カラテチャンプ",
       "is_cross_region": true,
@@ -76097,19 +76193,11 @@
           "region": "JP"
         }
       },
-      "video": {
-        "bvid": "BV1riQRYtE2J",
-        "aid": 114188047358774,
-        "video_title": "【雷文】红白机游戏终极鉴赏07期-1985年11月 | 4K",
-        "chapter_name": "空手道",
-        "timestamp": "22:52",
-        "seconds": 1372,
-        "url": "https://www.bilibili.com/video/BV1riQRYtE2J/?t=1372"
-      }
+      "video": null
     },
     {
       "id": "othello",
-      "title_zh": "奥赛罗棋",
+      "title_zh": "黑白棋",
       "title_en": "Othello",
       "title_ja": "オセロ",
       "is_cross_region": true,
@@ -76558,7 +76646,7 @@
     },
     {
       "id": "r-b-i-baseball",
-      "title_zh": "RBI棒球",
+      "title_zh": "职业棒球 家庭竞技场",
       "title_en": "R.B.I. Baseball",
       "title_ja": "プロ野球ファミリースタジアム",
       "is_cross_region": true,
@@ -76796,7 +76884,7 @@
     },
     {
       "id": "trojan",
-      "title_zh": "斗者挽歌",
+      "title_zh": "斗者的挽歌",
       "title_en": "Trojan",
       "title_ja": "闘いの挽歌",
       "is_cross_region": true,
@@ -77219,7 +77307,7 @@
     },
     {
       "id": "rush-n-attack",
-      "title_zh": "绿色兵团",
+      "title_zh": "绿色兵团/绿扁帽部队",
       "title_en": "Rush'n Attack",
       "title_ja": "グリーンベレー",
       "is_cross_region": true,
@@ -77404,7 +77492,7 @@
     },
     {
       "id": "rygar",
-      "title_zh": "未来战士",
+      "title_zh": "未来战士/阿格斯战士",
       "title_en": "Rygar",
       "title_ja": "アルゴスの戦士 はちゃめちゃ大進撃",
       "is_cross_region": true,
@@ -77465,7 +77553,7 @@
     },
     {
       "id": "castlevania",
-      "title_zh": "恶魔城",
+      "title_zh": "恶魔城ROM复刻版",
       "title_en": "Castlevania",
       "title_ja": "悪魔城ドラキュラ",
       "is_cross_region": true,
@@ -77542,7 +77630,7 @@
     },
     {
       "id": "side-pocket",
-      "title_zh": "花式撞球",
+      "title_zh": "花式台球",
       "title_en": "Side Pocket",
       "title_ja": "サイドポケット",
       "is_cross_region": true,
@@ -77665,7 +77753,7 @@
     },
     {
       "id": "ring-king",
-      "title_zh": "家庭拳击",
+      "title_zh": "火爆拳击",
       "title_en": "Ring King",
       "title_ja": "ファミリーボクシング",
       "is_cross_region": true,
@@ -77727,7 +77815,7 @@
     },
     {
       "id": "bases-loaded",
-      "title_zh": "满垒王",
+      "title_zh": "燃烧棒球",
       "title_en": "Bases Loaded",
       "title_ja": "燃えろ!!プロ野球",
       "is_cross_region": true,
@@ -77919,7 +78007,7 @@
     },
     {
       "id": "legacy-of-the-wizard",
-      "title_zh": "屠龙剑IV 屠龙家族",
+      "title_zh": "屠龙剑VI 屠龙家族",
       "title_en": "Legacy of the Wizard",
       "title_ja": "ドラゴンスレイヤーIV ドラスレファミリー",
       "is_cross_region": true,
@@ -78035,7 +78123,7 @@
     },
     {
       "id": "robowarrior",
-      "title_zh": "机器人战士之王",
+      "title_zh": "轰炸之王",
       "title_en": "Robowarrior",
       "title_ja": "ボンバーキング",
       "is_cross_region": true,
@@ -78159,7 +78247,7 @@
     },
     {
       "id": "the-legend-of-zelda",
-      "title_zh": "塞尔达传说",
+      "title_zh": "塞尔达传说ROM复刻版",
       "title_en": "The Legend of Zelda",
       "title_ja": "ゼルダの伝説1",
       "is_cross_region": true,
@@ -78297,7 +78385,7 @@
     },
     {
       "id": "defender-ii",
-      "title_zh": "毁灭入侵者 2",
+      "title_zh": "时空门",
       "title_en": "Defender II",
       "title_ja": "スター・ゲイト",
       "is_cross_region": true,
@@ -78420,7 +78508,7 @@
     },
     {
       "id": "mike-tyson-s-punch-out",
-      "title_zh": "迈克·泰森的拳无虚发",
+      "title_zh": "拳王泰森的拳无虚发",
       "title_en": "Mike Tyson's Punch-Out!!",
       "title_ja": "マイクタイソン・パンチアウト!!",
       "is_cross_region": true,
@@ -78473,7 +78561,7 @@
     },
     {
       "id": "millipede",
-      "title_zh": "杀虫大战",
+      "title_zh": "杀虫大战：巨大昆虫的反击",
       "title_en": "Millipede",
       "title_ja": "ミリピード 巨大昆虫の逆襲",
       "is_cross_region": true,
@@ -78535,7 +78623,7 @@
     },
     {
       "id": "kid-niki-radical-ninja",
-      "title_zh": "快杰洋枪丸",
+      "title_zh": "快杰洋枪",
       "title_en": "Kid Niki: Radical Ninja",
       "title_ja": "快傑ヤンチャ丸",
       "is_cross_region": true,
@@ -78783,7 +78871,7 @@
     },
     {
       "id": "top-gun",
-      "title_zh": "捍卫战士",
+      "title_zh": "捍卫战士/凌云壮志",
       "title_en": "Top Gun",
       "title_ja": "トップガン",
       "is_cross_region": true,
@@ -78967,7 +79055,7 @@
     },
     {
       "id": "wizards-warriors",
-      "title_zh": "巫术",
+      "title_zh": "传说骑士：艾尔洛德",
       "title_en": "Wizards & Warriors",
       "title_ja": "伝説の騎士エルロンド",
       "is_cross_region": true,
@@ -79145,7 +79233,7 @@
     },
     {
       "id": "ice-hockey",
-      "title_zh": "冰球",
+      "title_zh": "冰上曲棍球",
       "title_en": "Ice Hockey",
       "title_ja": "スティックハンター",
       "is_cross_region": true,
@@ -79285,7 +79373,7 @@
     },
     {
       "id": "metal-gear",
-      "title_zh": "合金装备",
+      "title_zh": "合金装备/燃烧坦克",
       "title_en": "Metal Gear",
       "title_ja": "メタルギア",
       "is_cross_region": true,
@@ -79524,7 +79612,7 @@
     },
     {
       "id": "gun-smoke",
-      "title_zh": "荒野大镖客",
+      "title_zh": "西部神枪手",
       "title_en": "Gun.Smoke",
       "title_ja": "ガンスモーク",
       "is_cross_region": true,
@@ -79944,7 +80032,7 @@
     },
     {
       "id": "dr-jekyll-and-mr-hyde",
-      "title_zh": "化身博士",
+      "title_zh": "化身博士/彷魔之刻",
       "title_en": "Dr. Jekyll and Mr. Hyde",
       "title_ja": "ジーキル博士の彷魔が刻",
       "is_cross_region": true,
@@ -80006,7 +80094,7 @@
     },
     {
       "id": "racket-attack",
-      "title_zh": "燃烧职业网球",
+      "title_zh": "燃烧网球",
       "title_en": "Racket Attack",
       "title_ja": "燃えろ!!プロテニス",
       "is_cross_region": true,
@@ -80067,7 +80155,7 @@
     },
     {
       "id": "desert-commander",
-      "title_zh": "沙漠之狐",
+      "title_zh": "沙漠之狐：战车战略",
       "title_en": "Desert Commander",
       "title_ja": "戦車戦略 砂漠の狐",
       "is_cross_region": true,
@@ -80129,7 +80217,7 @@
     },
     {
       "id": "tecmo-cup-soccer-game",
-      "title_zh": "Tecmo足球",
+      "title_zh": "天使之翼/足球小将",
       "title_en": "Tecmo Cup Soccer Game",
       "title_ja": "キャプテン翼",
       "is_cross_region": true,
@@ -80251,7 +80339,7 @@
     },
     {
       "id": "princess-tomato-in-the-salad-kingdom",
-      "title_zh": "沙拉王国的蕃茄公主",
+      "title_zh": "番茄公主",
       "title_en": "Princess Tomato in the Salad Kingdom",
       "title_ja": "サラダの国のトマト姫",
       "is_cross_region": true,
@@ -80488,7 +80576,7 @@
     },
     {
       "id": "rainbow-islands-the-story-of-bubble-bobble-2",
-      "title_zh": "彩虹岛 - 泡泡龙 2",
+      "title_zh": "彩虹岛",
       "title_en": "Rainbow Islands: The Story of Bubble Bobble 2",
       "title_ja": "レインボーアイランド",
       "is_cross_region": true,
@@ -80549,7 +80637,7 @@
     },
     {
       "id": "bases-loaded-ii-second-season",
-      "title_zh": "满垒王 2",
+      "title_zh": "燃烧棒球88决定版",
       "title_en": "Bases Loaded II: Second Season",
       "title_ja": "燃えろ!!プロ野球'88決定版",
       "is_cross_region": true,
@@ -80671,7 +80759,7 @@
     },
     {
       "id": "maniac-mansion",
-      "title_zh": "疯狂大楼",
+      "title_zh": "疯狂大楼/狂气之馆",
       "title_en": "Maniac Mansion",
       "title_ja": "マニアックマンション",
       "is_cross_region": true,
@@ -80847,7 +80935,7 @@
     },
     {
       "id": "snoopy-s-silly-sports-spectacular",
-      "title_zh": "史努比的趣味运动会",
+      "title_zh": "唐老鸭",
       "title_en": "Snoopy's Silly Sports Spectacular",
       "title_ja": "ドナルドダック",
       "is_cross_region": true,
@@ -80909,7 +80997,7 @@
     },
     {
       "id": "8-eyes",
-      "title_zh": "八眼传说",
+      "title_zh": "八眼宝石",
       "title_en": "8 Eyes",
       "title_ja": "エイト・アイズ",
       "is_cross_region": true,
@@ -81025,7 +81113,7 @@
     },
     {
       "id": "vegas-dream",
-      "title_zh": "赌城之梦",
+      "title_zh": "赌城拉斯维加斯",
       "title_en": "Vegas Dream",
       "title_ja": "VIVA LASVEGAS",
       "is_cross_region": true,
@@ -81462,7 +81550,7 @@
     },
     {
       "id": "gyruss",
-      "title_zh": "太空射击战",
+      "title_zh": "太空射击传",
       "title_en": "Gyruss",
       "title_ja": "ジャイラス",
       "is_cross_region": true,
@@ -81585,7 +81673,7 @@
     },
     {
       "id": "paperboy",
-      "title_zh": "送报童",
+      "title_zh": "送报员",
       "title_en": "Paperboy",
       "title_ja": "ペーパーボーイ",
       "is_cross_region": true,
@@ -81647,7 +81735,7 @@
     },
     {
       "id": "michael-andretti-s-world-gp",
-      "title_zh": "麦可安德瑞提之世界格兰披治大赛车",
+      "title_zh": "中屿悟F1英雄",
       "title_en": "Michael Andretti's World GP",
       "title_ja": "中嶋悟F-1ヒーロー",
       "is_cross_region": true,
@@ -81762,7 +81850,7 @@
     },
     {
       "id": "rollerball",
-      "title_zh": "滚转弹珠台",
+      "title_zh": "超级弹珠柜",
       "title_en": "Rollerball",
       "title_ja": "ローラーボール",
       "is_cross_region": true,
@@ -81939,7 +82027,7 @@
     },
     {
       "id": "guerrilla-war",
-      "title_zh": "古巴战士",
+      "title_zh": "古巴战士/革命英雄",
       "title_en": "Guerrilla War",
       "title_ja": "ゲバラ",
       "is_cross_region": true,
@@ -82000,7 +82088,7 @@
     },
     {
       "id": "casino-kid",
-      "title_zh": "赌城小子",
+      "title_zh": "百万小子：梦幻的帝王编",
       "title_en": "Casino Kid",
       "title_ja": "100万$キッド 幻の帝王編",
       "is_cross_region": true,
@@ -82124,7 +82212,7 @@
     },
     {
       "id": "tecmo-bowl",
-      "title_zh": "Tecmo美式足球",
+      "title_zh": "特库摩橄榄球",
       "title_en": "Tecmo Bowl",
       "title_ja": "テクモボウル",
       "is_cross_region": true,
@@ -82185,7 +82273,7 @@
     },
     {
       "id": "rock-n-ball",
-      "title_zh": "摇滚弹珠台",
+      "title_zh": "家庭弹珠台",
       "title_en": "Rock 'n Ball",
       "title_ja": "ファミリーピンボール",
       "is_cross_region": true,
@@ -82362,7 +82450,7 @@
     },
     {
       "id": "adventures-of-lolo",
-      "title_zh": "蛋王子大冒险",
+      "title_zh": "蛋王子",
       "title_en": "Adventures of Lolo",
       "title_ja": "アドベンチャーズ オブ ロロ",
       "is_cross_region": true,
@@ -82555,7 +82643,7 @@
     },
     {
       "id": "baseball-stars",
-      "title_zh": "棒球之星",
+      "title_zh": "明星棒球赛：目标三冠王",
       "title_en": "Baseball Stars",
       "title_ja": "ベースボールスター めざせ三冠王",
       "is_cross_region": true,
@@ -82677,7 +82765,7 @@
     },
     {
       "id": "little-ninja-brothers",
-      "title_zh": "超级中国人 2",
+      "title_zh": "超级中国人2：龙孩儿",
       "title_en": "Little Ninja Brothers",
       "title_ja": "スーパーチャイニーズ2 ドラゴンキッド",
       "is_cross_region": true,
@@ -83031,7 +83119,7 @@
     },
     {
       "id": "circus-caper",
-      "title_zh": "马戏团大冒险",
+      "title_zh": "疯狂老哥",
       "title_en": "Circus Caper",
       "title_ja": "燃える!お兄さん",
       "is_cross_region": true,
@@ -83092,7 +83180,7 @@
     },
     {
       "id": "shingen-the-ruler",
-      "title_zh": "武田信玄 2",
+      "title_zh": "武田信玄2",
       "title_en": "Shingen the Ruler",
       "title_ja": "武田信玄2",
       "is_cross_region": true,
@@ -83207,7 +83295,7 @@
     },
     {
       "id": "castlequest",
-      "title_zh": "精致之城",
+      "title_zh": "奇幻大冒险",
       "title_en": "Castlequest",
       "title_ja": "キャッスルクエスト",
       "is_cross_region": true,
@@ -83392,7 +83480,7 @@
     },
     {
       "id": "thunderbirds",
-      "title_zh": "雷鸟神机队",
+      "title_zh": "雷鸟号",
       "title_en": "Thunderbirds",
       "title_ja": "サンダーバード",
       "is_cross_region": true,
@@ -83578,7 +83666,7 @@
     },
     {
       "id": "baseball-simulator-1-000",
-      "title_zh": "模拟棒球",
+      "title_zh": "超人棒球",
       "title_en": "Baseball Simulator 1.000",
       "title_ja": "超人ウルトラベースボール",
       "is_cross_region": true,
@@ -83639,7 +83727,7 @@
     },
     {
       "id": "dusty-diamond-s-all-star-softball",
-      "title_zh": "全明星垒球",
+      "title_zh": "垒球天国",
       "title_en": "Dusty Diamond's All-Star Softball",
       "title_ja": "ソフトボール天国",
       "is_cross_region": true,
@@ -83701,7 +83789,7 @@
     },
     {
       "id": "dungeon-magic-sword-of-the-elements",
-      "title_zh": "地城魔法 - 元素之剑",
+      "title_zh": "巫术魔洞：魔剑的元素",
       "title_en": "Dungeon Magic: Sword of the Elements",
       "title_ja": "ダンジョン&マジック",
       "is_cross_region": true,
@@ -83825,7 +83913,7 @@
     },
     {
       "id": "championship-bowling",
-      "title_zh": "保龄球锦标赛",
+      "title_zh": "冠军杯保龄球",
       "title_en": "Championship Bowling",
       "title_ja": "チャンピオンシップボウリング",
       "is_cross_region": true,
@@ -83949,7 +84037,7 @@
     },
     {
       "id": "rescue-the-embassy-mission",
-      "title_zh": "人质大作战 - 大使馆抢救任务",
+      "title_zh": "抢救人质",
       "title_en": "Rescue: The Embassy Mission",
       "title_ja": "ホステージ",
       "is_cross_region": true,
@@ -84011,7 +84099,7 @@
     },
     {
       "id": "bad-news-baseball",
-      "title_zh": "坏消息棒球",
+      "title_zh": "激斗棒球",
       "title_en": "Bad News Baseball",
       "title_ja": "激闘スタジアム!!",
       "is_cross_region": true,
@@ -84072,7 +84160,7 @@
     },
     {
       "id": "pinball-quest",
-      "title_zh": "弹珠台高手",
+      "title_zh": "弹珠柜高手",
       "title_en": "Pinball Quest",
       "title_ja": "ピンボールクエスト",
       "is_cross_region": true,
@@ -84133,7 +84221,7 @@
     },
     {
       "id": "top-gun-the-second-mission",
-      "title_zh": "捍卫战士 2",
+      "title_zh": "捍卫战士2/凌云壮志2",
       "title_en": "Top Gun: The Second Mission",
       "title_ja": "トップガン2 デュアルファイターズ",
       "is_cross_region": true,
@@ -84239,7 +84327,7 @@
     },
     {
       "id": "batman",
-      "title_zh": "蝙蝠侠：电子游戏",
+      "title_zh": "蝙蝠侠",
       "title_en": "Batman",
       "title_ja": "バットマン",
       "is_cross_region": true,
@@ -84605,7 +84693,7 @@
     },
     {
       "id": "castle-of-dragon",
-      "title_zh": "龙之军团",
+      "title_zh": "战斗龙单位",
       "title_en": "Castle of Dragon",
       "title_ja": "ドラゴンユニット",
       "is_cross_region": true,
@@ -84659,7 +84747,7 @@
     },
     {
       "id": "adventures-of-lolo-2",
-      "title_zh": "蛋王子大冒险 2",
+      "title_zh": "蛋王子2",
       "title_en": "Adventures of Lolo 2",
       "title_ja": "アドベンチャーズ オブ ロロII",
       "is_cross_region": true,
@@ -84783,7 +84871,7 @@
     },
     {
       "id": "heavy-barrel",
-      "title_zh": "重装机枪",
+      "title_zh": "午夜攻击/重装战士",
       "title_en": "Heavy Barrel",
       "title_ja": "ヘビーバレル",
       "is_cross_region": true,
@@ -84897,7 +84985,7 @@
     },
     {
       "id": "yo-noid",
-      "title_zh": "溜溜球大师",
+      "title_zh": "假面忍者花丸",
       "title_en": "Yo! Noid",
       "title_ja": "仮面の忍者 花丸",
       "is_cross_region": true,
@@ -84958,7 +85046,7 @@
     },
     {
       "id": "boulder-dash",
-      "title_zh": "推石小子",
+      "title_zh": "寻宝大进击",
       "title_en": "Boulder Dash",
       "title_ja": "バルダーダッシュ",
       "is_cross_region": true,
@@ -85020,7 +85108,7 @@
     },
     {
       "id": "crystalis",
-      "title_zh": "天神之剑",
+      "title_zh": "天神之剑：遥远地天空奏鸣曲",
       "title_en": "Crystalis",
       "title_ja": "ゴッドスレイヤー はるか天空のソナタ",
       "is_cross_region": true,
@@ -85196,7 +85284,7 @@
     },
     {
       "id": "rally-bike",
-      "title_zh": "冲刺野郎",
+      "title_zh": "卫刺野郎",
       "title_en": "Rally Bike",
       "title_ja": "ダッシュ野郎",
       "is_cross_region": true,
@@ -85258,7 +85346,7 @@
     },
     {
       "id": "s-c-a-t-special-cybernetic-attack-team",
-      "title_zh": "最终任务",
+      "title_zh": "最后任务/飞天魂斗罗",
       "title_en": "S.C.A.T.: Special Cybernetic Attack Team",
       "title_ja": "ファイナルミッション",
       "is_cross_region": true,
@@ -85320,7 +85408,7 @@
     },
     {
       "id": "bandit-kings-of-ancient-china",
-      "title_zh": "水浒传 - 天命之誓",
+      "title_zh": "水浒传·天命之誓",
       "title_en": "Bandit Kings of Ancient China",
       "title_ja": "水滸伝・天命の誓い",
       "is_cross_region": true,
@@ -85504,7 +85592,7 @@
     },
     {
       "id": "palamedes",
-      "title_zh": "智慧方块",
+      "title_zh": "骰子方块",
       "title_en": "Palamedes",
       "title_ja": "パラメデス",
       "is_cross_region": true,
@@ -85566,7 +85654,7 @@
     },
     {
       "id": "bases-loaded-3",
-      "title_zh": "满垒王 3",
+      "title_zh": "燃烧棒球90感动篇",
       "title_en": "Bases Loaded 3",
       "title_ja": "燃えプロ'90感動編",
       "is_cross_region": true,
@@ -85804,7 +85892,7 @@
     },
     {
       "id": "journey-to-silius",
-      "title_zh": "星际魂斗罗",
+      "title_zh": "星际魂斗罗/最终殖民地",
       "title_en": "Journey to Silius",
       "title_ja": "ラフワールド",
       "is_cross_region": true,
@@ -85989,7 +86077,7 @@
     },
     {
       "id": "little-nemo-the-dream-master",
-      "title_zh": "梦之勇士",
+      "title_zh": "梦之勇士/睡衣英雄",
       "title_en": "Little Nemo: The Dream Master",
       "title_ja": "NEMO パジャマヒーロー",
       "is_cross_region": true,
@@ -86050,7 +86138,7 @@
     },
     {
       "id": "spot-the-video-game",
-      "title_zh": "斑点棋",
+      "title_zh": "点子精灵",
       "title_en": "Spot: The Video Game",
       "title_ja": "SPOT",
       "is_cross_region": true,
@@ -86112,7 +86200,7 @@
     },
     {
       "id": "ultimate-basketball",
-      "title_zh": "泰德终极篮球",
+      "title_zh": "泰德篮球",
       "title_en": "Ultimate Basketball",
       "title_ja": "タイトー バスケットボール",
       "is_cross_region": true,
@@ -86297,7 +86385,7 @@
     },
     {
       "id": "totally-rad",
-      "title_zh": "魔法约翰",
+      "title_zh": "神奇王子",
       "title_en": "Totally Rad",
       "title_ja": "マジックジョン",
       "is_cross_region": true,
@@ -86358,7 +86446,7 @@
     },
     {
       "id": "gremlins-2-the-new-batch",
-      "title_zh": "小魔怪 2 - 新种诞生",
+      "title_zh": "小精灵2：新种诞生",
       "title_en": "Gremlins 2: The New Batch",
       "title_ja": "グレムリン2 -新種誕生-",
       "is_cross_region": true,
@@ -86481,7 +86569,7 @@
     },
     {
       "id": "puzznic",
-      "title_zh": "钻石方块",
+      "title_zh": "神奇方块",
       "title_en": "Puzznic",
       "title_ja": "パズニック",
       "is_cross_region": true,
@@ -86543,7 +86631,7 @@
     },
     {
       "id": "werewolf-the-last-warrior",
-      "title_zh": "超人狼战记",
+      "title_zh": "超人狼战记：战狼",
       "title_en": "Werewolf: The Last Warrior",
       "title_ja": "超人狼戦記 WARWOLF",
       "is_cross_region": true,
@@ -86605,7 +86693,7 @@
     },
     {
       "id": "wwf-wrestlemania-challenge",
-      "title_zh": "世界摔角联盟 - 狂热摔角锦标赛",
+      "title_zh": "WWF摔角",
       "title_en": "WWF WrestleMania Challenge",
       "title_ja": "WWFレッスルマニアチャレンジ",
       "is_cross_region": true,
@@ -86712,7 +86800,7 @@
     },
     {
       "id": "parodius-da",
-      "title_zh": "Q版沙罗曼蛇",
+      "title_zh": "疯狂大射击",
       "title_en": "Parodius Da!",
       "title_ja": "パロディウスだ!",
       "is_cross_region": true,
@@ -86836,7 +86924,7 @@
     },
     {
       "id": "jackie-chan-s-action-kung-fu",
-      "title_zh": "成龙",
+      "title_zh": "成龙之龙",
       "title_en": "Jackie Chan's Action Kung Fu",
       "title_ja": "ジャッキーチェン",
       "is_cross_region": true,
@@ -87021,7 +87109,7 @@
     },
     {
       "id": "thunder-lightning",
-      "title_zh": "雷电",
+      "title_zh": "家庭砖块/雷公弹",
       "title_en": "Thunder & Lightning",
       "title_ja": "ファミリーブロック",
       "is_cross_region": true,
@@ -87075,7 +87163,7 @@
     },
     {
       "id": "tecmo-world-cup-soccer",
-      "title_zh": "Tecmo世界杯足球",
+      "title_zh": "特库摩世界杯足球赛",
       "title_en": "Tecmo World Cup Soccer",
       "title_ja": "テクモ ワールドカップサッカー",
       "is_cross_region": true,
@@ -87197,7 +87285,7 @@
     },
     {
       "id": "whomp-em",
-      "title_zh": "西游记世界 2 - 天上界的魔神",
+      "title_zh": "西游记世界2：天上界的魔神",
       "title_en": "Whomp 'Em",
       "title_ja": "西遊記ワールドII 天上界の魔神",
       "is_cross_region": true,
@@ -87258,7 +87346,7 @@
     },
     {
       "id": "zombie-nation",
-      "title_zh": "僵尸国度",
+      "title_zh": "暴坊天狗",
       "title_en": "Zombie Nation",
       "title_ja": "暴れん坊天狗",
       "is_cross_region": true,
@@ -87382,7 +87470,7 @@
     },
     {
       "id": "sword-master",
-      "title_zh": "剑术大师",
+      "title_zh": "剑之达人",
       "title_en": "Sword Master",
       "title_ja": "ソードマスター",
       "is_cross_region": true,
@@ -87444,7 +87532,7 @@
     },
     {
       "id": "advanced-dungeons-dragons-heroes-of-the-lance",
-      "title_zh": "高级地下城与龙 - 长枪英雄",
+      "title_zh": "龙与地下城：长枪英雄",
       "title_en": "Advanced Dungeons & Dragons: Heroes of the Lance",
       "title_ja": "Advanced Dungeons & Dragons ヒーローオブランス",
       "is_cross_region": true,
@@ -87559,7 +87647,7 @@
     },
     {
       "id": "championship-rally",
-      "title_zh": "火爆越野赛车 - 世界越野赛车锦标赛",
+      "title_zh": "刺激赛车",
       "title_en": "Championship Rally",
       "title_ja": "エキサイティング・ラリー",
       "is_cross_region": true,
@@ -87613,7 +87701,7 @@
     },
     {
       "id": "over-horizon",
-      "title_zh": "超越地平线",
+      "title_zh": "飞越地平线",
       "title_en": "Over Horizon",
       "title_ja": "オーバーホライゾン",
       "is_cross_region": true,
@@ -87729,7 +87817,7 @@
     },
     {
       "id": "golf-grand-slam",
-      "title_zh": "高尔夫大满贯",
+      "title_zh": "高尔夫锦标赛",
       "title_en": "Golf Grand Slam",
       "title_ja": "ゴルフグランドスラム",
       "is_cross_region": true,
@@ -87853,7 +87941,7 @@
     },
     {
       "id": "isolated-warrior",
-      "title_zh": "马克司战士 - 惑星戒严令",
+      "title_zh": "行星戒严令",
       "title_en": "Isolated Warrior",
       "title_ja": "マックスウォーリアー 惑星戒厳令",
       "is_cross_region": true,
@@ -87915,7 +88003,7 @@
     },
     {
       "id": "metal-storm",
-      "title_zh": "重力装甲",
+      "title_zh": "重力装甲：金属风暴",
       "title_en": "Metal Storm",
       "title_ja": "重力装甲メタルストーム",
       "is_cross_region": true,
@@ -87976,7 +88064,7 @@
     },
     {
       "id": "laser-invasion",
-      "title_zh": "救难任务",
+      "title_zh": "救援任务",
       "title_en": "Laser Invasion",
       "title_ja": "ガンサイト",
       "is_cross_region": true,
@@ -88099,7 +88187,7 @@
     },
     {
       "id": "advanced-dungeons-dragons-hillsfar",
-      "title_zh": "高级地下城与龙 - 远山",
+      "title_zh": "龙与地下城：幽城宝藏",
       "title_en": "Advanced Dungeons & Dragons: Hillsfar",
       "title_ja": "Advanced Dungeons & Dragons ヒルズファー",
       "is_cross_region": true,
@@ -88161,7 +88249,7 @@
     },
     {
       "id": "robocop-2",
-      "title_zh": "机器战警 2",
+      "title_zh": "机器战警2",
       "title_en": "RoboCop 2",
       "title_ja": "ロボコップ2",
       "is_cross_region": true,
@@ -88214,7 +88302,7 @@
     },
     {
       "id": "rockin-kats",
-      "title_zh": "纽约摇滚猫",
+      "title_zh": "纽约小子",
       "title_en": "Rockin' Kats",
       "title_ja": "N.Y.ニャンキーズ",
       "is_cross_region": true,
@@ -88276,7 +88364,7 @@
     },
     {
       "id": "magic-darts",
-      "title_zh": "魔术飞镖",
+      "title_zh": "飞镖大赛",
       "title_en": "Magic Darts",
       "title_ja": "マジック・ダーツ",
       "is_cross_region": true,
@@ -88338,7 +88426,7 @@
     },
     {
       "id": "vice-project-doom",
-      "title_zh": "GUN-DEC",
+      "title_zh": "迪克火枪",
       "title_en": "Vice: Project Doom",
       "title_ja": "ガンデック",
       "is_cross_region": true,
@@ -88577,7 +88665,7 @@
     },
     {
       "id": "castelian",
-      "title_zh": "城堡猪",
+      "title_zh": "大嘴鸟乐园",
       "title_en": "Castelian",
       "title_ja": "キョロちゃんランド",
       "is_cross_region": true,
@@ -88639,7 +88727,7 @@
     },
     {
       "id": "advanced-dungeons-dragons-pool-of-radiance",
-      "title_zh": "高级地下城与龙 - 光芒之池",
+      "title_zh": "龙与地下城：光芒之池",
       "title_en": "Advanced Dungeons & Dragons: Pool of Radiance",
       "title_ja": "AD&Dプール・オブ・レイディアンス",
       "is_cross_region": true,
@@ -88755,7 +88843,7 @@
     },
     {
       "id": "toki",
-      "title_zh": "JUJU传说",
+      "title_zh": "JuJu传说",
       "title_en": "Toki",
       "title_ja": "JuJu伝説",
       "is_cross_region": true,
@@ -89029,7 +89117,7 @@
     },
     {
       "id": "super-spy-hunter",
-      "title_zh": "超级间谍猎人",
+      "title_zh": "方程序战斗赛车",
       "title_en": "Super Spy Hunter",
       "title_ja": "バトルフォーミュラ",
       "is_cross_region": true,
@@ -89297,7 +89385,7 @@
     },
     {
       "id": "bases-loaded-4",
-      "title_zh": "满垒王 4",
+      "title_zh": "燃烧棒球最强篇",
       "title_en": "Bases Loaded 4",
       "title_ja": "燃えプロ最強編",
       "is_cross_region": true,
@@ -89350,7 +89438,7 @@
     },
     {
       "id": "rampart",
-      "title_zh": "领国战役",
+      "title_zh": "领国战役/领土大战",
       "title_en": "Rampart",
       "title_ja": "ランパート",
       "is_cross_region": true,
@@ -89404,7 +89492,7 @@
     },
     {
       "id": "batman-return-of-the-joker",
-      "title_zh": "蝙蝠侠 2 - 小丑的复仇",
+      "title_zh": "炸药蝙蝠侠",
       "title_en": "Batman: Return of the Joker",
       "title_ja": "ダイナマイトバットマン",
       "is_cross_region": true,
@@ -89457,7 +89545,7 @@
     },
     {
       "id": "tecmo-super-bowl",
-      "title_zh": "Tecmo超级美式足球",
+      "title_zh": "特库摩超级美式橄榄球",
       "title_en": "Tecmo Super Bowl",
       "title_ja": "テクモスーパーボウル",
       "is_cross_region": true,
@@ -89564,7 +89652,7 @@
     },
     {
       "id": "tiny-toon-adventures",
-      "title_zh": "兔宝宝大冒险",
+      "title_zh": "兔宝宝历险记",
       "title_en": "Tiny Toon Adventures",
       "title_ja": "タイニートゥーン アドベンチャーズ",
       "is_cross_region": true,
@@ -89617,7 +89705,7 @@
     },
     {
       "id": "tom-and-jerry",
-      "title_zh": "猫和老鼠",
+      "title_zh": "汤姆和杰瑞",
       "title_en": "Tom and Jerry",
       "title_ja": "トムとジェリー&タッフィー",
       "is_cross_region": true,
@@ -89885,7 +89973,7 @@
     },
     {
       "id": "hudson-hawk",
-      "title_zh": "终极神鹰",
+      "title_zh": "哈得森之鹰",
       "title_en": "Hudson Hawk",
       "title_ja": "ハドソン・ホーク",
       "is_cross_region": true,
@@ -89993,7 +90081,7 @@
     },
     {
       "id": "bucky-o-hare",
-      "title_zh": "月球英雄",
+      "title_zh": "外星战将",
       "title_en": "Bucky O'Hare",
       "title_ja": "バッキーオヘア",
       "is_cross_region": true,
@@ -90046,7 +90134,7 @@
     },
     {
       "id": "goal-two",
-      "title_zh": "足球得点王 2",
+      "title_zh": "足球GOAL！",
       "title_en": "Goal! Two",
       "title_ja": "GOAL!!",
       "is_cross_region": true,
@@ -90099,7 +90187,7 @@
     },
     {
       "id": "fire-n-ice",
-      "title_zh": "所罗门之钥 2",
+      "title_zh": "所罗门之钥2：库尔敏岛救出作战",
       "title_en": "Fire 'n Ice",
       "title_ja": "ソロモンの鍵2",
       "is_cross_region": true,
@@ -90206,7 +90294,7 @@
     },
     {
       "id": "star-wars-the-empire-strikes-back",
-      "title_zh": "星际大战 - 帝国大反击",
+      "title_zh": "星球大战：帝国大反击",
       "title_en": "Star Wars: The Empire Strikes Back",
       "title_ja": "スターウォーズ 帝国の逆襲",
       "is_cross_region": true,
@@ -90260,7 +90348,7 @@
     },
     {
       "id": "hook",
-      "title_zh": "铁钩船长",
+      "title_zh": "虎克船长",
       "title_en": "Hook",
       "title_ja": "Hook(フック)",
       "is_cross_region": true,
@@ -90314,7 +90402,7 @@
     },
     {
       "id": "panic-restaurant",
-      "title_zh": "超级厨师之美食家世界",
+      "title_zh": "小厨师",
       "title_en": "Panic Restaurant",
       "title_ja": "わんぱくコックンのグルメワールド",
       "is_cross_region": true,
@@ -90367,7 +90455,7 @@
     },
     {
       "id": "ferrari-grand-prix-challenge",
-      "title_zh": "法拉利挑战赛",
+      "title_zh": "法拉利大赛车",
       "title_en": "Ferrari Grand Prix Challenge",
       "title_ja": "フェラーリ Grand Prix Challenge",
       "is_cross_region": true,
@@ -90421,7 +90509,7 @@
     },
     {
       "id": "capcom-s-gold-medal-challenge-92",
-      "title_zh": "卡普空的金牌挑战 '92",
+      "title_zh": "巴塞罗那奥运92",
       "title_en": "Capcom's Gold Medal Challenge '92",
       "title_ja": "CAPCOMバルセロナ'92",
       "is_cross_region": true,
@@ -90633,7 +90721,7 @@
     },
     {
       "id": "power-blade-2",
-      "title_zh": "刀锋斗士 2",
+      "title_zh": "救助上尉",
       "title_en": "Power Blade 2",
       "title_ja": "キャプテンセイバー",
       "is_cross_region": true,
@@ -90845,7 +90933,7 @@
     },
     {
       "id": "rod-land",
-      "title_zh": "罗德大陆",
+      "title_zh": "妖精物语",
       "title_en": "Rod Land",
       "title_ja": "妖精物語ロッドランド",
       "is_cross_region": true,
@@ -90898,7 +90986,7 @@
     },
     {
       "id": "bubble-bobble-part-2",
-      "title_zh": "泡泡龙 2",
+      "title_zh": "泡泡龙2",
       "title_en": "Bubble Bobble Part 2",
       "title_ja": "バブルボブル2",
       "is_cross_region": true,
@@ -90951,7 +91039,7 @@
     },
     {
       "id": "pro-sport-hockey",
-      "title_zh": "美国冰上曲棍球",
+      "title_zh": "美式曲棍球",
       "title_en": "Pro Sport Hockey",
       "title_ja": "USA ICE HOCKEY in FC",
       "is_cross_region": true,

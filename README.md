@@ -164,6 +164,11 @@ video_mappings:
 #     set:
 #       title_zh: 家用BASIC语言
 #       publishers: ["任天堂", "Hudson Soft"]
+
+# 4. 跨版本/跨区游戏手动合并 (merge_games)：目标主游戏: 关联/合并版本
+# 作用：当美版与日版标题差异过大导致未自动识别为同款游戏时，强制合并为一个跨区游戏条目
+merge_games:
+  "Family Computer Robot Block Set": "Stack-Up"   # 亦可反向以美版为主名："Stack-Up": "Family Computer Robot Block Set"
 ```
 
 修改保存后直接运行 `python fetch_fc_nes.py` 或 `python fetch_fc_nes.py --build`，程序会纯从本地 `data/raw` 原始数据读取，并在秒级内根据您的修改重新生成全格式发布数据！
