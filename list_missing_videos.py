@@ -186,6 +186,10 @@ def print_names_only(missing_games: List[Dict[str, Any]], lang: str = "zh"):
 
 def export_to_file(missing_games: List[Dict[str, Any]], output_path: str, lang: str = "zh"):
     """将缺失视频的游戏列表导出为指定文件 (txt, csv, json)"""
+    out_dir = os.path.dirname(os.path.abspath(output_path))
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+
     ext = os.path.splitext(output_path)[1].lower()
 
     if ext == ".json":
@@ -234,7 +238,7 @@ def export_to_file(missing_games: List[Dict[str, Any]], output_path: str, lang: 
                 name = get_game_display_name(g, lang=lang)
                 f.write(f"{name}\n")
 
-    print(f"成功导出 {len(missing_games)} 款游戏列表至: {output_path}")
+    print(f"成功导出 {len(missing_games)} 款游戏列表至: {os.path.abspath(output_path)}")
 
 
 def main():
@@ -246,9 +250,9 @@ def main():
   python list_missing_videos.py -n               # 仅输出游戏名称（每行一个）
   python list_missing_videos.py -n --lang en     # 仅输出英文名称
   python list_missing_videos.py -p NES           # 仅筛选 NES 平台无视频的游戏
-  python list_missing_videos.py -o missing.txt   # 导出为纯文本名称文件
-  python list_missing_videos.py -o missing.csv   # 导出为 CSV 报表
-  python list_missing_videos.py -o missing.yaml  # 导出为 YAML 模板 (方便调整配置)
+  python list_missing_videos.py -o missing.txt   # 导出为纯文本名称文件 (自动存入 temp/missing.txt)
+  python list_missing_videos.py -o missing.csv   # 导出为 CSV 报表 (自动存入 temp/missing.csv)
+  python list_missing_videos.py -o missing.yaml  # 导出为 YAML 模板 (自动存入 temp/missing.yaml)
   python list_missing_videos.py --count          # 仅显示统计数量
 """
     )
@@ -322,7 +326,10 @@ def main():
 
     # 5. 导出文件
     if args.output:
-        export_to_file(missing_games, args.output, lang=args.lang)
+        out_path = args.output
+        if not os.path.dirname(out_path):
+            out_path = os.path.join("temp", out_path)
+        export_to_file(missing_games, out_path, lang=args.lang)
         return
 
     # 6. 终端打印

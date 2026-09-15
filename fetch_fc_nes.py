@@ -474,40 +474,62 @@ class BilibiliMatcher:
         self.game_by_id = {g["id"]: g for g in games}
         self.game_by_title_zh = {g["title_zh"]: g for g in games if g.get("title_zh")}
         self.lookup: Dict[str, List[Dict[str, Any]]] = {}
-        self.external_map: Dict[str, Dict[str, Any]] = {}
-        self.external_normalized_map: Dict[str, Dict[str, Any]] = {}
+        self.external_map: Dict[str, List[Dict[str, Any]]] = {}
+        self.external_normalized_map: Dict[str, List[Dict[str, Any]]] = {}
 
         # 1. 优先加载用户可编辑的外部 YAML 调整配置中的视频规则 (格式: 游戏中文名/ID: 视频章节名)
         ext_rules = load_external_video_mapping(yaml_mapping_path)
         for game_ident, chapter_val in ext_rules.items():
             # 优先识别目标游戏 (ID、中文名、英文名、日文名)
+            target_games = []
             target_game = self.game_by_id.get(game_ident) or self.game_by_title_zh.get(game_ident)
             if not target_game:
                 for g in self.games:
                     if game_ident in (g.get("title_en"), g.get("title_ja")):
                         target_game = g
                         break
+            if target_game:
+                target_games.append(target_game)
 
-            # 容错反向兼容：如果 game_ident 未识别为游戏，而 chapter_val 识别为游戏
-            if not target_game and isinstance(chapter_val, str):
-                rev_game = self.game_by_id.get(chapter_val) or self.game_by_title_zh.get(chapter_val)
-                if rev_game:
-                    target_game = rev_game
+            # 容错反向兼容：如果 game_ident 未识别为游戏，而 chapter_val 识别为游戏 (支持单游戏或列表)
+            if not target_games:
+                chap_candidates = chapter_val if isinstance(chapter_val, list) else [chapter_val]
+                for cv in chap_candidates:
+                    if isinstance(cv, str):
+                        tg = self.game_by_id.get(cv) or self.game_by_title_zh.get(cv)
+                        if not tg:
+                            for g in self.games:
+                                if cv in (g.get("title_en"), g.get("title_ja")):
+                                    tg = g
+                                    break
+                        if tg and tg not in target_games:
+                            target_games.append(tg)
+                if target_games:
                     chapter_val = game_ident
 
-            if target_game:
+            if target_games:
                 chapters = [chapter_val] if isinstance(chapter_val, str) else list(chapter_val)
                 for ch in chapters:
                     ch_str = str(ch).strip()
-                    self.external_map[ch_str] = target_game
+                    if ch_str not in self.external_map:
+                        self.external_map[ch_str] = []
+                    for tg in target_games:
+                        if tg not in self.external_map[ch_str]:
+                            self.external_map[ch_str].append(tg)
+
                     norm_key = normalize_text(ch_str)
                     if norm_key:
-                        self.external_normalized_map[norm_key] = target_game
+                        if norm_key not in self.external_normalized_map:
+                            self.external_normalized_map[norm_key] = []
+                        for tg in target_games:
+                            if tg not in self.external_normalized_map[norm_key]:
+                                self.external_normalized_map[norm_key].append(tg)
             else:
                 logger.warning(f"外部 YAML 视频映射中未找到目标游戏: '{game_ident}' -> '{chapter_val}'")
 
         if self.external_map:
-            logger.info(f"已加载外部视频对齐映射规则 ({yaml_mapping_path}): 成功加载 {len(self.external_map)} 条自定义规则")
+            total_rules = sum(len(gl) for gl in self.external_map.values())
+            logger.info(f"已加载外部视频对齐映射规则 ({yaml_mapping_path}): 成功加载 {len(self.external_map)} 个章节模式、对应 {total_rules} 条游戏对齐规则")
 
         self._build_index(alias_json_path)
 
@@ -553,8 +575,8 @@ class BilibiliMatcher:
             except Exception as e:
                 logger.warning(f"加载 rom-name-cn 别名库失败: {e}")
 
-    def match_segment(self, segment: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """为单个视频分段匹配对应的游戏实体"""
+    def match_segment_all(self, segment: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """为单个视频分段匹配对应的全部游戏实体 (支持合辑分段一对多对齐多款游戏)"""
         raw_name = segment.get("chapter_name", "")
         video_year = segment.get("video_year")
 
@@ -565,29 +587,41 @@ class BilibiliMatcher:
                 candidates.extend([p.strip() for p in raw_name.split(sep) if len(p.strip()) >= 2])
 
         # 2. 最高优先级：查找用户在 YAML 文件中配置的外部映射规则
+        ext_hits: List[Dict[str, Any]] = []
         for cand in candidates:
             if cand in self.external_map:
-                return self.external_map[cand]
+                ext_hits.extend(self.external_map[cand])
             nc = normalize_text(cand)
             if nc and nc in self.external_normalized_map:
-                return self.external_normalized_map[nc]
+                ext_hits.extend(self.external_normalized_map[nc])
 
-        for k in sorted(self.external_map.keys(), key=len, reverse=True):
-            if len(k) >= 3 and k in raw_name:
-                return self.external_map[k]
+        if not ext_hits:
+            for k in sorted(self.external_map.keys(), key=len, reverse=True):
+                if len(k) >= 3 and k in raw_name:
+                    ext_hits.extend(self.external_map[k])
+                    break
+
+        if ext_hits:
+            unique_ext = []
+            seen_ids = set()
+            for g in ext_hits:
+                if g["id"] not in seen_ids:
+                    seen_ids.add(g["id"])
+                    unique_ext.append(g)
+            return unique_ext
 
         # 3. 查显式人工内置映射表 (优先精确匹配候选词，再降序匹配包含长词)
         for cand in candidates:
             if cand in MANUAL_ALIAS_MAP:
                 gid = MANUAL_ALIAS_MAP[cand]
                 if gid in self.game_by_id:
-                    return self.game_by_id[gid]
+                    return [self.game_by_id[gid]]
 
         for k in sorted(MANUAL_ALIAS_MAP.keys(), key=len, reverse=True):
             if len(k) >= 4 and k in raw_name:
                 gid = MANUAL_ALIAS_MAP[k]
                 if gid in self.game_by_id:
-                    return self.game_by_id[gid]
+                    return [self.game_by_id[gid]]
 
         matched_candidates = []
 
@@ -613,14 +647,14 @@ class BilibiliMatcher:
                             break
 
         if not matched_candidates:
-            return None
+            return []
 
         # 去重
         unique_matched = list({g["id"]: g for g in matched_candidates}.values())
         if len(unique_matched) == 1:
-            return unique_matched[0]
+            return unique_matched
 
-        # 3. 多候选时利用发售年份定锚 (Temporal Disambiguation)
+        # 4. 多候选时利用发售年份定锚 (Temporal Disambiguation)
         if video_year:
             best_game = None
             min_diff = 999
@@ -634,9 +668,14 @@ class BilibiliMatcher:
                         min_diff = diff
                         best_game = g
             if best_game and min_diff <= 2:
-                return best_game
+                return [best_game]
 
-        return unique_matched[0]
+        return unique_matched
+
+    def match_segment(self, segment: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """为单个视频分段匹配对应的游戏实体 (单游戏兼容接口)"""
+        hits = self.match_segment_all(segment)
+        return hits[0] if hits else None
 
 
 def attach_bilibili_videos_to_games(
@@ -645,7 +684,7 @@ def attach_bilibili_videos_to_games(
     segments_path: str = "data/raw/bilibili_segments_raw.json",
     yaml_mapping_path: str = "adjustments.yaml"
 ) -> Dict[str, Any]:
-    """将 Bilibili 视频分段匹配并挂载到游戏列表中"""
+    """将 Bilibili 视频分段匹配并挂载到游戏列表中 (支持一个章节分段对齐多款游戏)"""
     if segments is None:
         # 若未直接传入分段列表，依次尝试 data/raw 与本地缓存
         if not os.path.exists(segments_path):
@@ -667,8 +706,8 @@ def attach_bilibili_videos_to_games(
     matched_game_ids = set()
 
     for seg in segments:
-        hit_game = matcher.match_segment(seg)
-        if hit_game:
+        hit_games = matcher.match_segment_all(seg)
+        for hit_game in hit_games:
             # 挂载视频信息 (如果已有，保留最早或最匹配的)
             if not hit_game.get("video"):
                 hit_game["video"] = {
@@ -682,6 +721,7 @@ def attach_bilibili_videos_to_games(
                 }
                 matched_count += 1
                 matched_game_ids.add(hit_game["id"])
+
 
     # 对于没有匹配到视频的游戏，显式置为 null
     for g in games:

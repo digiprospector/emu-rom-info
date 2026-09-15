@@ -219,3 +219,6 @@ __marimo__/
 
 # Project cache
 cache/
+
+data/
+temp/
