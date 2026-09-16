@@ -5,7 +5,7 @@
 列出 Bilibili 视频解说章节中未被游戏库匹配的游戏名称
 
 本程序从 B 站合集分段数据中提取所有游戏章节名，
-结合当前游戏数据库 (data/fc_nes_games.json) 以及 adjustments.yaml 调整配置与别名库，
+结合当前游戏数据库 (data/fc_nes_games.json) 以及 override.yaml 调整配置与别名库，
 利用项目的对齐匹配引擎 (BilibiliMatcher)，筛选出尚未对齐到任何 FC / NES / FDS 游戏的 B 站游戏名称，
 并导出为干净的纯文本 (.txt) 文档。
 """
@@ -83,7 +83,7 @@ def load_games_data(games_path: str) -> List[Dict[str, Any]]:
 def find_unmatched_bilibili_games(
     segments: List[Dict[str, Any]],
     games: List[Dict[str, Any]],
-    yaml_mapping_path: str = "adjustments.yaml",
+    yaml_mapping_path: str = "override.yaml",
     alias_json_path: str = "rom-name-cn/name_alias(Chinese).json"
 ) -> Tuple[List[str], List[Dict[str, Any]], int]:
     """
@@ -198,9 +198,10 @@ def main():
         help="指定游戏库数据 json 文件路径（默认自动查找 data/fc_nes_games.json）"
     )
     parser.add_argument(
-        "--adjustments",
-        default="adjustments.yaml",
-        help="指定调整规则配置文件路径（默认为 adjustments.yaml）"
+        "--override", "--adjustments", "--adjust",
+        dest="override",
+        default="override.yaml",
+        help="指定调整规则配置文件路径（默认为 override.yaml）"
     )
 
     args = parser.parse_args()
@@ -233,7 +234,13 @@ def main():
         sys.exit(1)
 
     # 2. 执行匹配分析
-    adj_path = os.path.abspath(args.adjustments) if os.path.exists(args.adjustments) else "adjustments.yaml"
+    adj_path = args.override
+    if not os.path.exists(adj_path):
+        for cand in ["override.yaml", "adjustments.yaml", "adjust.yaml"]:
+            if os.path.exists(cand):
+                adj_path = cand
+                break
+    adj_path = os.path.abspath(adj_path) if os.path.exists(adj_path) else "override.yaml"
     alias_path = os.path.join(CURRENT_DIR, "rom-name-cn", "name_alias(Chinese).json")
     if not os.path.exists(alias_path):
         alias_path = "rom-name-cn/name_alias(Chinese).json"

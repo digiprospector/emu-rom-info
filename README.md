@@ -119,7 +119,7 @@ flowchart TD
 ```text
 emu-rom-info/
 ├── fetch_fc_nes.py         # 单一全能核心程序 (抓取 Raw、读取 Adjustments、融合 DAT/rom-name-cn、导出全格式及校验)
-├── adjustments.yaml        # 用户可自由编辑的调整配置文件 (视频章节与游戏对齐等调整规则)
+├── override.yaml           # 用户可自由编辑的调整配置文件 (视频章节与游戏对齐等调整规则，兼容 adjustments.yaml)
 ├── rom-name-cn/            # Git 子模块：权威中文名对照与别名字典
 ├── Nintendo - ... .dat     # No-Intro 官方 Parent-Clone 数据库
 ├── data/                   # 结构化数据存储与应用发布目录
@@ -139,9 +139,9 @@ emu-rom-info/
 
 ---
 
-## 用户自定义调整配置 (`adjustments.yaml`)
+## 用户自定义调整配置 (`override.yaml`)
 
-本项目支持在根目录下的 [`adjustments.yaml`](file:///c:/walt/git/hub/emu-rom-info/adjustments.yaml) 中定义多种数据微调方式。程序在第二阶段基于 Raw 原始数据生成全格式发布数据时，会自动读取并应用这些调整规则：
+本项目支持在根目录下的 [`override.yaml`](file:///c:/walt/git/hub/emu-rom-info/override.yaml)（同时兼容 `adjustments.yaml`）中定义多种数据微调方式。程序在第二阶段基于 Raw 原始数据生成全格式发布数据时，会自动读取并应用这些调整规则：
 
 ```yaml
 # 1. 游戏中文译名调整 (title_zh)：将指定的中文译名修改为自定义名称
@@ -227,15 +227,15 @@ print("补全后中文名:", fester["title_zh"])  # 费斯特的冒险
 
 ```bash
 # 1. 默认两阶段流程：
-#    - 若 data/raw 存在：直接基于 raw 数据和 adjustments.yaml 秒级生成全格式发布数据；
+#    - 若 data/raw 存在：直接基于 raw 数据和 override.yaml 秒级生成全格式发布数据；
 #    - 若 data/raw 不存在：自动先抓取并持久化保存为 raw 格式，再执行发布生成。
 python fetch_fc_nes.py
 
-# 2. 仅基于 Raw 数据构建 (无网络请求，极速响应，适合调整 adjustments.yaml 后使用)
+# 2. 仅基于 Raw 数据构建 (无网络请求，极速响应，适合调整 override.yaml 后使用)
 python fetch_fc_nes.py --build
 
-# 3. 指定外部调整规则配置文件
-python fetch_fc_nes.py --adjustments my_adjust.yaml
+# 3. 指定外部调整规则配置文件 (支持 --override 或 --adjustments)
+python fetch_fc_nes.py --override my_adjust.yaml
 
 # 4. 强制重新抓取网络原始数据并持久化到 data/raw/
 python fetch_fc_nes.py --fetch-raw

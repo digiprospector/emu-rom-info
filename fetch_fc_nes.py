@@ -28,7 +28,9 @@ import pickle
 import logging
 import urllib.request
 import xml.etree.ElementTree as ET
-from typing import Dict, List, Any, Optional, Tuple, Set
+import unicodedata
+from typing import Dict, List, Any, Optional, Tuple, Set, Union
+from collections import OrderedDict
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from urllib.parse import urljoin, unquote
@@ -286,13 +288,15 @@ def extract_year(date_str: Optional[str]) -> Optional[int]:
     return int(m.group(1)) if m else None
 
 
-def load_adjustments_config(yaml_path: str = "adjustments.yaml") -> Dict[str, Any]:
-    """加载用户自定义调整配置文件 (支持多维调整方式：title_zh, video_mappings, games)"""
+def load_adjustments_config(yaml_path: str = "override.yaml") -> Dict[str, Any]:
+    """加载用户自定义调整配置文件 (优先 override.yaml，兼容 adjustments.yaml 与 adjust.yaml)"""
     target_path = yaml_path
     if not os.path.exists(target_path):
-        alt_path = "adjust.yaml" if yaml_path == "adjustments.yaml" else "adjustments.yaml"
-        if os.path.exists(alt_path):
-            target_path = alt_path
+        candidates = ["override.yaml", "adjustments.yaml", "adjust.yaml"]
+        for c in candidates:
+            if os.path.exists(c):
+                target_path = c
+                break
         else:
             return {}
 
@@ -401,14 +405,14 @@ def load_adjustments_config(yaml_path: str = "adjustments.yaml") -> Dict[str, An
         return {}
 
 
-def load_external_video_mapping(yaml_path: str = "adjustments.yaml") -> Dict[str, str]:
+def load_external_video_mapping(yaml_path: str = "override.yaml") -> Dict[str, str]:
     """兼容旧接口：从调整配置文件中获取视频映射规则"""
     config = load_adjustments_config(yaml_path)
     return config.get("video_mappings", {})
 
 
-def apply_game_adjustments(games: List[Dict[str, Any]], yaml_path: str = "adjustments.yaml") -> int:
-    """基于 adjustments.yaml 修改游戏属性 (如将 title_zh 从培基语音修改为家用BASIC语言)"""
+def apply_game_adjustments(games: List[Dict[str, Any]], yaml_path: str = "override.yaml") -> int:
+    """基于 override.yaml 修改游戏属性 (如将 title_zh 从培基语音修改为家用BASIC语言)"""
     config = load_adjustments_config(yaml_path)
     if not config:
         return 0
@@ -458,7 +462,7 @@ def apply_game_adjustments(games: List[Dict[str, Any]], yaml_path: str = "adjust
                         logger.info(f"应用 adjustments 调整游戏属性 (ID: {g_id}): {f_name} = {f_val}")
 
     if modified_count > 0:
-        logger.info(f"已成功应用 adjustments.yaml 中的调整规则，共修改 {modified_count} 处游戏属性")
+        logger.info(f"已成功应用 override.yaml 中的调整规则，共修改 {modified_count} 处游戏属性")
 
     return modified_count
 
@@ -468,7 +472,7 @@ class BilibiliMatcher:
         self, 
         games: List[Dict[str, Any]], 
         alias_json_path: str = "rom-name-cn/name_alias(Chinese).json",
-        yaml_mapping_path: str = "adjustments.yaml"
+        yaml_mapping_path: str = "override.yaml"
     ):
         self.games = games
         self.game_by_id = {g["id"]: g for g in games}
@@ -586,7 +590,7 @@ class BilibiliMatcher:
             if sep in raw_name:
                 candidates.extend([p.strip() for p in raw_name.split(sep) if len(p.strip()) >= 2])
 
-        # 2. 最高优先级：查找用户在 YAML 文件中配置的外部映射规则
+        # 2. 最高优先级：查找用户在 YAML 文件中配置的外部映射规则 (精确候选匹配)
         ext_hits: List[Dict[str, Any]] = []
         for cand in candidates:
             if cand in self.external_map:
@@ -594,12 +598,6 @@ class BilibiliMatcher:
             nc = normalize_text(cand)
             if nc and nc in self.external_normalized_map:
                 ext_hits.extend(self.external_normalized_map[nc])
-
-        if not ext_hits:
-            for k in sorted(self.external_map.keys(), key=len, reverse=True):
-                if len(k) >= 3 and k in raw_name:
-                    ext_hits.extend(self.external_map[k])
-                    break
 
         if ext_hits:
             unique_ext = []
@@ -610,21 +608,15 @@ class BilibiliMatcher:
                     unique_ext.append(g)
             return unique_ext
 
-        # 3. 查显式人工内置映射表 (优先精确匹配候选词，再降序匹配包含长词)
+        # 3. 查显式人工内置映射表精确匹配
         for cand in candidates:
             if cand in MANUAL_ALIAS_MAP:
                 gid = MANUAL_ALIAS_MAP[cand]
                 if gid in self.game_by_id:
                     return [self.game_by_id[gid]]
 
-        for k in sorted(MANUAL_ALIAS_MAP.keys(), key=len, reverse=True):
-            if len(k) >= 4 and k in raw_name:
-                gid = MANUAL_ALIAS_MAP[k]
-                if gid in self.game_by_id:
-                    return [self.game_by_id[gid]]
-
+        # 4. 游戏库自带属性精确匹配 (含后缀清理)
         matched_candidates = []
-
         for cand in candidates:
             # 直接匹配
             nc = normalize_text(cand)
@@ -636,8 +628,25 @@ class BilibiliMatcher:
             if clean_c and clean_c in self.lookup:
                 matched_candidates.extend(self.lookup[clean_c])
 
+        # 5. 兜底模糊匹配：只有当前面所有精确匹配均未命中时，才进行包含/子串匹配
         if not matched_candidates:
-            # 尝试子串包含匹配 (长度 >= 4)
+            # 5.1 尝试外部 YAML 调整规则长词包含匹配
+            for k in sorted(self.external_map.keys(), key=len, reverse=True):
+                if len(k) >= 3 and k in raw_name:
+                    matched_candidates.extend(self.external_map[k])
+                    break
+
+        if not matched_candidates:
+            # 5.2 尝试内置别名长词包含
+            for k in sorted(MANUAL_ALIAS_MAP.keys(), key=len, reverse=True):
+                if len(k) >= 4 and k in raw_name:
+                    gid = MANUAL_ALIAS_MAP[k]
+                    if gid in self.game_by_id:
+                        matched_candidates.append(self.game_by_id[gid])
+                        break
+
+        if not matched_candidates:
+            # 5.3 尝试游戏库索引子串包含匹配 (长度 >= 4)
             for cand in candidates:
                 nc = normalize_text(cand)
                 if len(nc) >= 4:
@@ -682,7 +691,7 @@ def attach_bilibili_videos_to_games(
     games: List[Dict[str, Any]], 
     segments: Optional[List[Dict[str, Any]]] = None,
     segments_path: str = "data/raw/bilibili_segments_raw.json",
-    yaml_mapping_path: str = "adjustments.yaml"
+    yaml_mapping_path: str = "override.yaml"
 ) -> Dict[str, Any]:
     """将 Bilibili 视频分段匹配并挂载到游戏列表中 (支持一个章节分段对齐多款游戏)"""
     if segments is None:
@@ -2672,9 +2681,17 @@ DEFAULT_HEADERS = {
 }
 
 
+def generate_game_id(title_en: Optional[str] = "", title_zh: Optional[str] = "", title_ja: Optional[str] = "", fallback: str = "") -> str:
+    """基于英文名、中文名或日文名生成 URL 安全的标准小写 Slug 游戏 ID"""
+    slug_seed = (title_en or "").strip() or (title_zh or "").strip() or (title_ja or "").strip()
+    slug = re.sub(r'[^a-zA-Z0-9]+', '-', slug_seed).strip('-').lower()
+    return slug or fallback
+
+
 @dataclass
 class FcNesRawRecord:
     """单平台原始记录"""
+    id: str
     platform: str
     platform_name: str
     title_zh: str
@@ -2785,8 +2802,10 @@ def parse_nes_page(html: str) -> List[FcNesRawRecord]:
         wiki_url = extract_wiki_link(col_zh) or extract_wiki_link(col_en)
         publisher_wiki_url = extract_wiki_link(col_pub)
         main_release_date = date_na if date_na else date_pal
+        game_id = generate_game_id(title_en, title_zh, "", fallback=f"nes-{len(games)+1}")
 
         game = FcNesRawRecord(
+            id=game_id,
             platform="NES",
             platform_name=FC_NES_WIKI_URLS["NES"]["name"],
             title_zh=title_zh,
@@ -2831,8 +2850,10 @@ def parse_fc_or_fds_page(html: str, platform_code: str) -> List[FcNesRawRecord]:
             or extract_wiki_link(col_en)
         )
         publisher_wiki_url = extract_wiki_link(col_pub)
+        game_id = generate_game_id(title_en, title_zh, title_ja, fallback=f"{platform_code.lower()}-{len(games)+1}")
 
         game = FcNesRawRecord(
+            id=game_id,
             platform=platform_code,
             platform_name=FC_NES_WIKI_URLS[platform_code]["name"],
             title_zh=title_zh,
@@ -2992,6 +3013,126 @@ class RomNameCnHelper:
             return False
         return (n2 in self.dat_clone_links.get(n1, set())) or (n1 in self.dat_clone_links.get(n2, set()))
 
+    @staticmethod
+    def _clean_ascii(text: str) -> str:
+        """剥离重音符号 (如 Déjà Vu -> Deja Vu)"""
+        if not text:
+            return ""
+        nfkd = unicodedata.normalize('NFKD', text)
+        return ''.join([c for c in nfkd if not unicodedata.combining(c)])
+
+    @classmethod
+    def get_name_variants(cls, name: str) -> List[str]:
+        """为英文名生成多种可能在 No-Intro 中存在的规范化变体"""
+        if not name:
+            return []
+        variants = [name]
+
+        # 剥离重音符号
+        ascii_name = cls._clean_ascii(name)
+        if ascii_name != name:
+            variants.append(ascii_name)
+
+        # 剥离品牌与厂商所有格前缀 (如 Disney's Aladdin -> Aladdin)
+        brand_stripped = re.sub(r"^(Disney's|Walt Disney's|Capcom's|Konami's)\s+", "", name, flags=re.I)
+        if brand_stripped != name:
+            variants.append(brand_stripped)
+
+        expanded = []
+        for v in variants:
+            expanded.append(v)
+            if ":" in v:
+                expanded.append(v.replace(":", " -"))
+                expanded.append(v.replace(":", ""))
+            if "&" in v:
+                expanded.append(v.replace("&", "and"))
+                expanded.append(v.replace("&", "-"))
+                expanded.append(v.replace("&", " "))
+            if "°" in v:
+                expanded.append(v.replace("°", ""))
+                expanded.append(v.replace("°", " Degrees"))
+
+        final_variants = []
+        for v in expanded:
+            final_variants.append(v)
+            # 整体定冠词 The / A / An 转换
+            m_the = re.match(r'^(The|A|An)\s+(.*)$', v, re.I)
+            if m_the:
+                art, rest = m_the.group(1), m_the.group(2)
+                final_variants.append(f"{rest}, {art}")
+            m_the_end = re.search(r'^(.*?),\s*(The|A|An)$', v, re.I)
+            if m_the_end:
+                rest, art = m_the_end.group(1), m_the_end.group(2)
+                final_variants.append(f"{art} {rest}")
+
+            # 副标题定冠词倒置: "The Title: Subtitle" -> "Title, The - Subtitle"
+            for sep in [":", " - "]:
+                if sep in v:
+                    parts = v.split(sep, 1)
+                    main_part, sub_part = parts[0].strip(), parts[1].strip()
+                    m_sub = re.match(r'^(The|A|An)\s+(.*)$', main_part, re.I)
+                    if m_sub:
+                        art, rest = m_sub.group(1), m_sub.group(2)
+                        final_variants.append(f"{rest}, {art} - {sub_part}")
+
+        seen = set()
+        res = []
+        for v in final_variants:
+            s = v.strip()
+            if s and s not in seen:
+                seen.add(s)
+                res.append(s)
+        return res
+
+    def lookup_cn(
+        self,
+        en_titles: Union[str, List[str]],
+        zh_titles: Optional[Union[str, List[str]]] = None
+    ) -> str:
+        """
+        从 rom-name-cn 对照库中匹配权威中文名
+        (支持 Unicode 重音分解、冠词倒置、厂商前缀剥离、标点转换、DAT克隆关联及别名字典)
+        """
+        if isinstance(en_titles, str):
+            en_candidates = [en_titles]
+        else:
+            en_candidates = list(en_titles)
+
+        for orig_en in en_candidates:
+            if not orig_en:
+                continue
+            variants = self.get_name_variants(orig_en)
+            for en in variants:
+                # 1. 直接 lookup
+                cn = self.lookup_cn_by_en(en)
+                if cn:
+                    return cn
+                # 2. DAT 克隆组关联查找
+                norm = normalize_text(en)
+                if norm in self.dat_clone_links:
+                    for clone_norm in self.dat_clone_links[norm]:
+                        if clone_norm in self.en_to_cn:
+                            return self.en_to_cn[clone_norm]
+                # 3. 尝试去除 'and' 的 norm
+                norm_no_and = normalize_text(en.replace('&', '').replace(' and ', ''))
+                if norm_no_and in self.en_to_cn:
+                    return self.en_to_cn[norm_no_and]
+
+        # 4. 若英文未命中，尝试用已有的中文名查 rom-name-cn 的 alias_map 规范名
+        if zh_titles:
+            zh_candidates = [zh_titles] if isinstance(zh_titles, str) else list(zh_titles)
+            for zh in zh_candidates:
+                if not zh:
+                    continue
+                canon = self.canonical_cn(zh)
+                norm_zh = normalize_text(zh)
+                if norm_zh in self.alias_map:
+                    for main_name, val in self.alias_map.items():
+                        if val == canon:
+                            return canon
+
+        return ""
+
 
 def is_same_fc_nes_game(
     g1: Dict[str, Any],
@@ -3077,7 +3218,7 @@ def merge_fc_nes_records(
     custom_merges: Optional[List[Tuple[str, str]]] = None
 ) -> List[Dict[str, Any]]:
     """
-    结合 DAT 克隆关系、rom-name-cn 以及用户自定义 adjustments.yaml，将美版 (NES) 与日版 (FC/FDS) 同款游戏聚类合并
+    结合 DAT 克隆关系、rom-name-cn 以及用户自定义 override.yaml，将美版 (NES) 与日版 (FC/FDS) 同款游戏聚类合并
     """
     indexed_records = []
     enriched_zh_count = 0
@@ -3152,7 +3293,7 @@ def merge_fc_nes_records(
         for j in range(i + 1, n):
             r2 = indexed_records[j]
             if r1["platform"] != r2["platform"]:
-                # 优先检查用户在 adjustments.yaml 中声明的自定义合并规则
+                # 优先检查用户在 override.yaml 中声明的自定义合并规则
                 is_custom_merged = False
                 matched_rule = ""
                 if custom_merge_links:
@@ -3323,12 +3464,146 @@ def merge_fc_nes_records(
     return unified_games
 
 
+def parse_date_tuple(d: Optional[str]) -> Optional[Tuple[int, int, int]]:
+    """从日期文本中提取 (year, month, day) 排序元组，解析失败返回 None"""
+    if not d:
+        return None
+    m_year = re.search(r'(\d{4})', str(d))
+    if not m_year:
+        return None
+    year = int(m_year.group(1))
+    m_month = re.search(r'(\d{1,2})\s*月', str(d))
+    month = int(m_month.group(1)) if m_month else 1
+    m_day = re.search(r'(\d{1,2})\s*日', str(d))
+    day = int(m_day.group(1)) if m_day else 1
+    return (year, month, day)
+
+
+def merge_raw_records_by_id(
+    raw_records: List[Dict[str, Any]],
+    helper: Optional[RomNameCnHelper] = None
+) -> Dict[str, Any]:
+    """
+    将 Raw 记录中具有相同 ID 的多平台条目合并为一款游戏：
+    1. 相同的项放外层，不同的项保留在 versions 中；
+    2. 从 rom-name-cn 匹配权威中文译名 title_cn；
+    3. 每个游戏的 release_date 取全部版本中的最早发售日；
+    4. 整体游戏列表按该最早 release_date 进行升序排序。
+    """
+    if helper is None:
+        try:
+            helper = RomNameCnHelper(workspace_dir=".")
+        except Exception as e:
+            logger.warning(f"初始化 RomNameCnHelper 失败: {e}")
+            helper = None
+
+    grouped: Dict[str, List[Dict[str, Any]]] = OrderedDict()
+    for r in raw_records:
+        gid = r.get("id")
+        if not gid:
+            gid = generate_game_id(r.get("title_en"), r.get("title_zh"), r.get("title_ja"))
+        grouped.setdefault(gid, []).append(r)
+
+    merged_tuples: List[Tuple[Tuple[int, int, int], OrderedDict]] = []
+    platform_order = {"FC": 1, "FDS": 2, "NES": 3}
+
+    for gid, rec_list in grouped.items():
+        sorted_recs = sorted(rec_list, key=lambda x: platform_order.get(x.get("platform", ""), 99))
+
+        # 提取外层公共项 (相同的项放外层)
+        title_zh = next((r["title_zh"] for r in sorted_recs if r.get("title_zh")), "")
+        title_en = next((r["title_en"] for r in sorted_recs if r.get("title_en")), "")
+        title_ja = next((r["title_ja"] for r in sorted_recs if r.get("title_ja")), "")
+        wiki_url = next((r["wiki_url"] for r in sorted_recs if r.get("wiki_url")), "")
+
+        # 从 rom-name-cn 对照库中匹配权威中文名 title_cn
+        title_cn = ""
+        if helper:
+            ens = [r["title_en"] for r in sorted_recs if r.get("title_en")]
+            zhs = [r["title_zh"] for r in sorted_recs if r.get("title_zh")]
+            title_cn = helper.lookup_cn(ens, zh_titles=zhs)
+
+        # 收集全部版本的所有发售日并选择最早的一个
+        all_dates = []
+        for r in sorted_recs:
+            for k in ["release_date", "release_date_na", "release_date_pal"]:
+                val = (r.get(k) or "").strip()
+                if val:
+                    all_dates.append(val)
+
+        valid_dates = []
+        for d in all_dates:
+            t = parse_date_tuple(d)
+            if t:
+                valid_dates.append((t, d))
+
+        if valid_dates:
+            sort_tuple, earliest_release_date = min(valid_dates, key=lambda x: x[0])
+        else:
+            sort_tuple = (9999, 99, 99)
+            earliest_release_date = all_dates[0] if all_dates else ""
+
+        outer_common = {
+            "title_zh": title_zh,
+            "title_cn": title_cn,
+            "title_en": title_en,
+            "title_ja": title_ja,
+            "release_date": earliest_release_date,
+            "wiki_url": wiki_url
+        }
+
+        versions: Dict[str, Any] = OrderedDict()
+        for r in sorted_recs:
+            plat = r.get("platform", "")
+            if not plat:
+                continue
+
+            ver_dict: Dict[str, Any] = OrderedDict()
+            # 提取版本特有的不同字段 (发售日、北美日、欧洲日、发行商等)
+            for k in ["release_date", "release_date_na", "release_date_pal", "publisher", "publisher_wiki_url"]:
+                val = (r.get(k) or "").strip()
+                if val:
+                    ver_dict[k] = val
+
+            # 如果该版本的名称或链接与外层公共项不同，才在 version 内部记录
+            for k in ["title_zh", "title_en", "title_ja", "wiki_url"]:
+                val = (r.get(k) or "").strip()
+                outer_val = outer_common.get(k, "")
+                if val and val != outer_val:
+                    ver_dict[k] = val
+
+            versions[plat] = ver_dict
+
+        item = OrderedDict([
+            ("id", gid),
+            ("title_zh", title_zh),
+            ("title_cn", title_cn),
+            ("title_en", title_en),
+            ("title_ja", title_ja),
+            ("release_date", earliest_release_date),
+            ("wiki_url", wiki_url),
+            ("versions", versions)
+        ])
+        merged_tuples.append((sort_tuple, item))
+
+    # 按照全部 release date 里最早的发售日升序排序，次级排序 key 为游戏 ID
+    merged_tuples.sort(key=lambda x: (x[0], x[1]["id"]))
+    sorted_games = [it[1] for it in merged_tuples]
+
+    return {
+        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "total_games": len(sorted_games),
+        "total_raw_records": len(raw_records),
+        "games": sorted_games
+    }
+
+
 def save_raw_data(
     raw_records: List[Dict[str, Any]], 
     bilibili_segments: List[Dict[str, Any]], 
     raw_dir: str = "data/raw"
 ) -> None:
-    """将下载与解析得到的原始数据持久化保存为 raw 格式 (JSON 与 CSV)"""
+    """将下载与解析得到的原始数据持久化保存为 raw 格式 (JSON 与 CSV) 并生成按 ID 合并的 JSON"""
     os.makedirs(raw_dir, exist_ok=True)
     
     # 1. 保存维基原始条目 JSON
@@ -3352,7 +3627,14 @@ def save_raw_data(
                 writer.writerow(r)
         logger.info(f"已保存维基原始报表 CSV: {wiki_csv_path}")
 
-    # 3. 保存 B 站原始分段章节 JSON
+    # 3. 保存按 ID 合并相同游戏的维基 JSON (wiki_games_merged.json)
+    merged_dataset = merge_raw_records_by_id(raw_records)
+    wiki_merged_json_path = os.path.join(raw_dir, "wiki_games_merged.json")
+    with open(wiki_merged_json_path, "w", encoding="utf-8") as f:
+        json.dump(merged_dataset, f, ensure_ascii=False, indent=2)
+    logger.info(f"已保存按 ID 合并的维基游戏 JSON: {wiki_merged_json_path} (共 {merged_dataset['total_games']} 款游戏)")
+
+    # 4. 保存 B 站原始分段章节 JSON
     bili_json_path = os.path.join(raw_dir, "bilibili_segments_raw.json")
     with open(bili_json_path, "w", encoding="utf-8") as f:
         json.dump({
@@ -3425,11 +3707,11 @@ def fetch_raw_data(
 def build_from_raw(
     raw_dir: str = "data/raw",
     output_dir: str = "data",
-    yaml_adjust_path: str = "adjustments.yaml",
+    yaml_adjust_path: str = "override.yaml",
     raw_records: Optional[List[Dict[str, Any]]] = None,
     bilibili_segments: Optional[List[Dict[str, Any]]] = None
 ) -> Dict[str, Any]:
-    """第二阶段：纯从 raw 数据读取，根据用户自定义 adjustments.yaml 生成全格式数据"""
+    """第二阶段：纯从 raw 数据读取，根据用户自定义 override.yaml 生成全格式数据"""
     if raw_records is None or bilibili_segments is None:
         logger.info(f"正在从本地 Raw 目录读取原始数据: {raw_dir}")
         raw_records, bilibili_segments = load_raw_data(raw_dir=raw_dir)
@@ -3437,6 +3719,17 @@ def build_from_raw(
     # 加载 No-Intro DAT 与 rom-name-cn 对照库
     logger.info("正在加载 No-Intro DAT 克隆组与 rom-name-cn 对照库...")
     helper = RomNameCnHelper(workspace_dir=".")
+
+    # 同步生成并更新按 ID 合并相同游戏的维基 JSON (wiki_games_merged.json，含 rom-name-cn 权威匹配 title_cn)
+    if raw_records:
+        try:
+            merged_dataset = merge_raw_records_by_id(raw_records, helper=helper)
+            merged_json_path = os.path.join(raw_dir, "wiki_games_merged.json")
+            with open(merged_json_path, "w", encoding="utf-8") as f:
+                json.dump(merged_dataset, f, ensure_ascii=False, indent=2)
+            logger.info(f"已同步生成按 ID 合并的 Raw 维基 JSON: {merged_json_path} (共 {merged_dataset['total_games']} 款游戏)")
+        except Exception as e:
+            logger.warning(f"生成 wiki_games_merged.json 失败: {e}")
 
     # 加载用户自定义调整配置中的游戏合并规则 (merge_games)
     adjust_config = load_adjustments_config(yaml_adjust_path)
@@ -3446,11 +3739,11 @@ def build_from_raw(
     logger.info(f"正在基于 DAT 克隆树、rom-name-cn 及自定义调整配置 ({yaml_adjust_path}) 对齐合并美版与日版游戏...")
     unified_games = merge_fc_nes_records(raw_records, helper, custom_merges=custom_merges)
 
-    # 执行游戏属性调整 (应用用户自定义 adjustments.yaml 中的 title_zh 等修改)
+    # 执行游戏属性调整 (应用用户自定义 override.yaml 中的 title_zh 等修改)
     logger.info(f"正在结合用户自定义调整配置 ({yaml_adjust_path}) 调整游戏属性...")
     apply_game_adjustments(unified_games, yaml_path=yaml_adjust_path)
 
-    # 对齐挂载 B 站视频 (应用用户自定义 adjustments.yaml)
+    # 对齐挂载 B 站视频 (应用用户自定义 override.yaml)
     logger.info(f"正在结合用户自定义调整配置 ({yaml_adjust_path}) 对齐挂载 B 站视频章节...")
     video_stats = attach_bilibili_videos_to_games(
         unified_games, 
@@ -3532,7 +3825,7 @@ def collect_fc_nes_games(
     cache_dir: Optional[str] = "cache",
     timeout: int = 30,
     force_refresh: bool = False,
-    yaml_mapping_path: str = "adjustments.yaml"
+    yaml_mapping_path: str = "override.yaml"
 ) -> Dict[str, Any]:
     """兼容旧接口：自动执行 Raw 抓取与发布构建"""
     raw_dir = "data/raw"
@@ -3918,13 +4211,13 @@ def run_verifications():
     # 验证外部 YAML 调整规则生效 (title_zh 修改与视频对齐)
     basic_game = next((g for g in games if g["id"] == "basic-family"), None)
     assert basic_game is not None, "未找到 basic-family 游戏条目"
-    assert basic_game["title_zh"] == "家用BASIC语言", f"培基语音 title_zh 应通过 adjustments.yaml 调整为家用BASIC语言，实为: {basic_game['title_zh']}"
+    assert basic_game["title_zh"] == "家用BASIC语言", f"培基语音 title_zh 应通过 override.yaml 调整为家用BASIC语言，实为: {basic_game['title_zh']}"
     assert basic_game.get("video") is not None, "家用BASIC语言应匹配到解说视频"
     assert basic_game["video"]["chapter_name"] == "家用BASIC语言", f"匹配章节应为家用BASIC语言，实为: {basic_game['video']['chapter_name']}"
 
     basic_v3 = next((g for g in games if g["id"] == "family-basic-v3"), None)
     assert basic_v3 is not None, "未找到 family-basic-v3 游戏条目"
-    assert basic_v3["title_zh"] == "家用BASIC语言V3", f"培基语音第三版 title_zh 应通过 adjustments.yaml 调整为家用BASIC语言V3，实为: {basic_v3['title_zh']}"
+    assert basic_v3["title_zh"] == "家用BASIC语言V3", f"培基语音第三版 title_zh 应通过 override.yaml 调整为家用BASIC语言V3，实为: {basic_v3['title_zh']}"
     print(f"  [OK] 外部 YAML 调整验证: 《{basic_game['title_zh']}》与《{basic_v3['title_zh']}》的 title_zh 属性修改及视频绑定校验成功")
         
     # 验证 Raw 原始数据持久化文件
@@ -3993,10 +4286,10 @@ def main():
         help="网页与 API 缓存目录 (默认: cache/)"
     )
     parser.add_argument(
-        "--adjustments", "--adjust",
+        "--override", "--adjustments", "--adjust",
         dest="adjustments",
-        default="adjustments.yaml",
-        help="用户可编辑的自定义调整规则 YAML 文件路径 (默认: adjustments.yaml)"
+        default="override.yaml",
+        help="用户可编辑的自定义调整规则 YAML 文件路径 (默认: override.yaml)"
     )
     parser.add_argument(
         "--fetch-raw",
@@ -4006,7 +4299,7 @@ def main():
     parser.add_argument(
         "--build",
         action="store_true",
-        help="仅从本地 raw 数据和 adjustments.yaml 生成全套发布数据"
+        help="仅从本地 raw 数据和 override.yaml 生成全套发布数据"
     )
     parser.add_argument(
         "--refresh",
@@ -4077,7 +4370,7 @@ def main():
         )
         print(f"[OK] Raw 原始数据已成功持久化至: {args.raw_dir}")
 
-    # 5. 基于 Raw 原始数据与用户自定义 adjustments.yaml 执行构建与全格式导出
+    # 5. 基于 Raw 原始数据与用户自定义 override.yaml 执行构建与全格式导出
     print("=" * 65)
     print(f"【阶段二】从 Raw 数据出发，结合调整配置 ({args.adjustments}) 生成全格式数据...")
     print(" (融合 No-Intro DAT、rom-name-cn 与 B站编年史视频)")
@@ -4118,7 +4411,7 @@ def main():
     excel_path = os.path.join(out_dir, "fc_nes_games.xlsx")
 
     print("\n所有 FC/NES 整合数据与前端页面已成功保存！")
-    print(f"1. Raw 原始数据目录:  {args.raw_dir} (wiki_games_raw.json/csv, bilibili_segments_raw.json)")
+    print(f"1. Raw 原始数据目录:  {args.raw_dir} (wiki_games_raw.json/csv, wiki_games_merged.json, bilibili_segments_raw.json)")
     print(f"2. JSON 数据结构:     {json_path}")
     print(f"3. Pickle 二进制对象: {pickle_path}")
     print(f"4. Python 代码模块:   {py_module_path} (可直接 import FC_NES_GAMES)")
