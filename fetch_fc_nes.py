@@ -3810,6 +3810,7 @@ def build_from_raw(
     csv_path = os.path.join(output_dir, "fc_nes_games.csv")
     excel_path = os.path.join(output_dir, "fc_nes_games.xlsx")
     html_path = os.path.join(output_dir, "fc_nes_games.html")
+    bili_match_path = os.path.join(output_dir, "bilibili_match.yaml")
 
     save_to_json(dataset, json_path)
     save_to_pickle(dataset, pickle_path)
@@ -3817,6 +3818,7 @@ def build_from_raw(
     save_to_csv(dataset["games"], csv_path)
     save_to_excel(dataset, excel_path)
     save_to_html(dataset, html_path)
+    save_to_bilibili_match_yaml(dataset["games"], bili_match_path)
 
     return dataset
 
@@ -4073,6 +4075,61 @@ def save_to_html(data: Dict[str, Any] = None, filepath: str = "data/fc_nes_games
     """生成并保存现代化交互式前端 HTML 文件（自包含内嵌完整数据，无需外部 js）"""
     generate_fc_nes_html(output_file=filepath, dataset=data)
     logger.info(f"已保存 HTML 交互式前端页面: {filepath}")
+
+
+def save_to_bilibili_match_yaml(games: List[Dict[str, Any]], filepath: str = "data/bilibili_match.yaml") -> None:
+    """保存成功匹配到 B 站解说视频的游戏 ID 与对应分段章节名称清单至 YAML 文件"""
+    os.makedirs(os.path.dirname(os.path.abspath(filepath)), exist_ok=True)
+
+    match_dict: Dict[str, str] = OrderedDict()
+    matched_games_count = 0
+
+    for g in games:
+        v = g.get("video")
+        if not v or not v.get("chapter_name"):
+            continue
+
+        chapter_name = str(v["chapter_name"]).strip()
+        matched_games_count += 1
+
+        # 1. 记录游戏主 ID
+        g_id = (g.get("id") or "").strip()
+        if g_id and g_id not in match_dict:
+            match_dict[g_id] = chapter_name
+
+        # 2. 同步记录各版本（FC/FDS/NES 等）的原始条目 ID (如存在且不同)
+        for ver in g.get("versions", {}).values():
+            ver_id = (ver.get("id") or "").strip()
+            if ver_id and ver_id not in match_dict:
+                match_dict[ver_id] = chapter_name
+
+    lines = [
+        "# ==============================================================================",
+        "# Bilibili 视频分段章节对齐清单 (bilibili_match.yaml)",
+        "# 自动生成于 build 构建阶段，记录所有成功匹配到 B 站解说视频的游戏 ID 与对应章节名称",
+        f"# 生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        f"# 游戏总数: {matched_games_count} 款 (含各版本原始 ID 共 {len(match_dict)} 条规则)",
+        "# ==============================================================================",
+        ""
+    ]
+    for k, val in match_dict.items():
+        k_str = json.dumps(k, ensure_ascii=False)
+        val_str = json.dumps(val, ensure_ascii=False)
+        lines.append(f"  {k_str}: {val_str}")
+
+    content = "\n".join(lines) + "\n"
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+    logger.info(f"已保存 B 站视频匹配清单 YAML: {filepath} (共 {len(match_dict)} 条规则)")
+
+    # 同步在项目根目录下生成一份 bilibili_match.yaml，方便直接查阅
+    root_filepath = "bilibili_match.yaml"
+    if os.path.abspath(filepath) != os.path.abspath(root_filepath):
+        try:
+            with open(root_filepath, "w", encoding="utf-8") as f:
+                f.write(content)
+        except Exception as e:
+            logger.debug(f"在根目录同步 bilibili_match.yaml 失败: {e}")
 
 
 # ==============================================================================
@@ -4409,6 +4466,8 @@ def main():
     py_module_path = os.path.join(out_dir, "fc_nes_games.py")
     csv_path = os.path.join(out_dir, "fc_nes_games.csv")
     excel_path = os.path.join(out_dir, "fc_nes_games.xlsx")
+    html_path = os.path.join(out_dir, "fc_nes_games.html")
+    bili_match_path = os.path.join(out_dir, "bilibili_match.yaml")
 
     print("\n所有 FC/NES 整合数据与前端页面已成功保存！")
     print(f"1. Raw 原始数据目录:  {args.raw_dir} (wiki_games_raw.json/csv, wiki_games_merged.json, bilibili_segments_raw.json)")
@@ -4418,6 +4477,7 @@ def main():
     print(f"5. CSV 表格导出:      {csv_path} (含 B站视频时间轴)")
     print(f"6. Excel 格式文件:    {excel_path} (富样式、首行冻结、含超链接)")
     print(f"7. HTML 交互式前端:   {html_path} (自包含内嵌数据，含资源下载中心)")
+    print(f"8. B站匹配清单 YAML:  {bili_match_path} (已同步生成根目录 bilibili_match.yaml)")
 
 
 if __name__ == "__main__":
