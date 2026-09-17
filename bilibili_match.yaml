@@ -1,8 +1,8 @@
 # ==============================================================================
 # Bilibili 视频分段章节对齐清单 (bilibili_match.yaml)
 # 自动生成于 build 构建阶段，记录所有成功匹配到 B 站解说视频的游戏 ID 与对应章节名称
-# 生成时间: 2026-09-16 17:42:16
-# 游戏总数: 879 款 (含各版本原始 ID 共 1018 条规则)
+# 生成时间: 2026-09-17 11:48:58
+# 游戏总数: 877 款 (含各版本原始 ID 共 1015 条规则)
 # ==============================================================================
 
   "donkey-kong": "大金刚"
@@ -187,8 +187,6 @@
   "buggy-popper": "金龟跳车"
   "puroresu-famicom-wrestling-association": "美式摔跤"
   "urusei-yatsura-lum-no-wedding-bell": "福星小子"
-  "sansuu-4-nen-keisan-game": "算数四年级"
-  "sansuu-5-6-nen-keisan-game": "算数五六年级"
   "mississippi-satsujin-jiken": "密西西比杀人事件"
   "ginga-denshou-galaxy-odyssey": "银河传承"
   "super-star-force": "超级星际力量-时空历的秘密"
@@ -211,7 +209,6 @@
   "transformers-convoy-no-nazo": "变形金刚"
   "spelunker": "地底探险"
   "hottaaman-no-chitei-tanken": "地底探险"
-  #继续开始
   "gall-force-eternal-story": "银河女战士"
   "r-b-i-baseball": "职业棒球-家庭竞技场"
   "pro-yakyuu-family-stadium": "职业棒球-家庭竞技场"
@@ -233,6 +230,7 @@
   "knight-lore-majou-no-ookami-otoko": "骑士物语/魔城之狼"
   "kieta-princess": "公主消失记"
   "layla": "女超人蕾拉"
+  "family-trainer-no-2-running-stadium": "家庭教练系列 田径竞技场"
   "star-voyager": "宇宙创世纪"
   "cosmo-genesis": "宇宙创世纪"
   "seikima-2-akuma-no-gyakushuu": "圣饥魔Ⅱ 恶魔的逆袭"
@@ -285,8 +283,6 @@
   "cocona-world": "可可娜世界"
   "relics-ankoku-yousai": "暗黑要塞"
   "morita-kazuo-no-shougi": "森田将棋"
-  "fist-of-the-north-star": "北斗之拳2 世纪末救世主传说"
-  "hokuto-no-ken-2-seikimatsu-kyuuseishu-densetsu": "北斗之拳2 世纪末救世主传说"
   "fuuun-shourinken": "风云少林拳"
   "renegade": "热血硬派国夫君"
   "nekketsu-kouha-kunio-kun": "热血硬派国夫君"
@@ -700,6 +696,7 @@
   "american-dream": "美国之梦"
   "maharaja": "印度战记"
   "meiji-ishin": "明治维新"
+  "okkotoshi-puzzle-tonjan": "小猪仓库番"
   "thunderbirds": "雷鸟号"
   "uninvited": "恶魔招待状"
   "akuma-no-shoutaijou": "恶魔招待状"
@@ -709,7 +706,6 @@
   "koushien": "甲子园"
   "world-super-tennis": "世界杯网球赛"
   "venus-senki": "金星战记"
-  "hokuto-no-ken-3-shin-seiki-souzou-seiken-restuden": "北斗之拳3 新世纪创造 凄拳列传"
   "kattobi-douji": "童儿"
   "baseball-simulator-1-000": "超人棒球"
   "choujin-ultra-baseball": "超人棒球"
