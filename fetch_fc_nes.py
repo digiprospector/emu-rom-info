@@ -750,65 +750,157 @@ def attach_bilibili_videos_to_games(
 # ==============================================================================
 
 HTML_TEMPLATE = r"""<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>任天堂 NES 与红白机 (FC/FDS) 游戏库 - 跨区整合数据库</title>
+  <title>任天堂 NES 与红白机 (FC/FDS) 游戏库 - 跨区整合数据库 [NEO-BRUTALIST PLAYFUL]</title>
   <meta name="description" content="任天堂 NES 与红白机 (FC/FDS) 跨区整合游戏信息库，深度融合 No-Intro DAT 克隆树与 rom-name-cn 权威对照库，美日同款游戏一站式检索。">
   <style>
+    /* ==========================================================================
+       NEO-BRUTALIST PLAYFUL (俏皮野兽派) 双主题自包含样式表 (明亮 / 暗黑一键瞬切)
+       规范遵循：绝对直角、纯黑粗边框(4px)、微旋转(<=3度)、彩色硬边缘阴影、
+       严禁任何 Emoji/渐变/模糊、Toy Spring 玩具弹性动画与 Joyful Press 压扁反馈
+       ========================================================================== */
+
     :root {
-      --bg-primary: #0a0e17;
-      --bg-secondary: #111827;
-      --bg-card: rgba(17, 24, 39, 0.75);
-      --bg-card-hover: rgba(30, 41, 59, 0.85);
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-glow: rgba(230, 0, 18, 0.4);
-      --text-main: #f3f4f6;
-      --text-sub: #9ca3af;
-      --text-muted: #6b7280;
-      
-      --nintendo-red: #e60012;
-      --nintendo-red-glow: rgba(230, 0, 18, 0.3);
-      --badge-nes: #3b82f6;
-      --badge-fc: #ef4444;
-      --badge-fds: #f59e0b;
-      --badge-cross: #10b981;
-      --accent-cyan: #06b6d4;
-      
-      --radius-sm: 6px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      /* 明亮模式配色 */
+      --bg-canvas: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-sub: #fafafa;
+      --border-black: #000000;
+      --text-black: #000000;
+      --text-white: #ffffff;
+      --text-sub: #2d3748;
+      --grid-line: rgba(0, 0, 0, 0.05);
+
+      /* 俏皮野兽派五大多彩核心色 */
+      --color-red: #ff6b6b;
+      --color-cyan: #4ecdc4;
+      --color-yellow: #ffe66d;
+      --color-mint: #95e1d3;
+      --color-coral: #f38181;
+
+      /* 彩色实体硬边缘阴影 (零模糊半径) */
+      --shadow-sm: 4px 4px 0 0 #000000;
+      --shadow-md: 6px 6px 0 0 #000000;
+      --shadow-lg: 8px 8px 0 0 #000000;
+      --shadow-xl: 12px 12px 0 0 #000000;
+      --shadow-cyan: 6px 6px 0 0 var(--color-cyan);
+      --shadow-red: 6px 6px 0 0 var(--color-red);
+      --shadow-yellow: 6px 6px 0 0 var(--color-yellow);
+      --shadow-coral: 8px 8px 0 0 var(--color-coral);
+
+      /* 弹性过渡缓动 (Toy Spring) */
+      --spring-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition-spring: all 300ms var(--spring-ease);
+
+      /* 字体栈 */
+      --font-heading: "Arial Black", Impact, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", Monaco, Consolas, monospace;
     }
 
-    * {
+    /* 暗黑模式覆盖变量 (Dark Neo-Brutalist Playful - 沉稳暗化色板) */
+    [data-theme="dark"] {
+      --bg-canvas: #0e0e12;
+      --bg-card: #181820;
+      --bg-card-sub: #131318;
+      --border-black: #000000;
+      --text-black: #f7fafc;
+      --text-white: #ffffff;
+      --text-sub: #94a3b8;
+      --grid-line: rgba(255, 255, 255, 0.04);
+
+      /* 核心有色区域暗化：低明度、低饱和、沉稳雅致复古色板，绝不晃眼 */
+      --color-red: #822929;      /* 暗砖红 */
+      --color-cyan: #1a5654;     /* 墨青 / 湖青 */
+      --color-yellow: #614b14;   /* 沉稳暗金 / 古铜金 */
+      --color-mint: #1c4d3f;     /* 深墨薄荷绿 */
+      --color-coral: #732c2c;    /* 暗深珊瑚红 */
+
+      --shadow-sm: 4px 4px 0 0 #000000;
+      --shadow-md: 6px 6px 0 0 #000000;
+      --shadow-lg: 8px 8px 0 0 #000000;
+      --shadow-xl: 12px 12px 0 0 #000000;
+      --shadow-cyan: 6px 6px 0 0 var(--color-cyan);
+      --shadow-red: 6px 6px 0 0 var(--color-red);
+      --shadow-yellow: 6px 6px 0 0 var(--color-yellow);
+      --shadow-coral: 8px 8px 0 0 var(--color-coral);
+    }
+
+    /* 严禁任何圆角 */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      border-radius: 0 !important;
     }
 
     body {
-      background-color: var(--bg-primary);
+      background-color: var(--bg-canvas);
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(230, 0, 18, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        linear-gradient(to right, var(--grid-line) 2px, transparent 2px),
+        linear-gradient(to bottom, var(--grid-line) 2px, transparent 2px);
+      background-size: 32px 32px;
+      color: var(--text-black);
+      font-family: var(--font-mono);
       min-height: 100vh;
-      line-height: 1.5;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background-color 150ms ease-out;
     }
 
-    /* 顶部导航与英雄区域 */
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 顶部俏皮微倾斜横幅装饰条 (无 Emoji，纯 SVG + 几何装饰) */
+    .playful-ticker {
+      background: var(--color-yellow);
+      color: #000000;
+      border-bottom: 4px solid var(--border-black);
+      padding: 8px 16px;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      justify-content: space-between;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    [data-theme="dark"] .playful-ticker {
+      background: #000000;
+      color: var(--color-yellow);
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .geo-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--color-red);
+      border: 2px solid var(--border-black);
+      transform: rotate(-2deg);
+    }
+
+    /* 顶部导航 Header */
     header {
-      background: rgba(10, 14, 23, 0.8);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-card);
+      border-bottom: 4px solid var(--border-black);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 200;
+      box-shadow: 0 4px 0 0 rgba(0,0,0,0.2);
     }
 
     .navbar {
@@ -825,511 +917,544 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       text-decoration: none;
-      color: inherit;
+      color: var(--text-black);
     }
 
     .brand-logo {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #e60012 0%, #99000a 100%);
-      border-radius: var(--radius-sm);
+      width: 46px;
+      height: 46px;
+      background: var(--color-red);
+      color: #ffffff;
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
+      font-family: var(--font-heading);
       font-weight: 900;
-      font-size: 1.15rem;
-      letter-spacing: -0.5px;
-      box-shadow: 0 4px 12px var(--nintendo-red-glow);
+      font-size: 1.4rem;
+      line-height: 1;
+      transform: rotate(-2.5deg);
+      transition: var(--transition-spring);
+    }
+
+    .brand:hover .brand-logo {
+      transform: rotate(2.5deg) scale(1.08);
+      box-shadow: var(--shadow-cyan);
     }
 
     .brand-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 1.38rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      text-transform: uppercase;
     }
 
     .brand-subtitle {
       font-size: 0.8rem;
+      font-weight: 800;
       color: var(--text-sub);
+      margin-top: 2px;
+      letter-spacing: -0.2px;
     }
 
     .header-links {
       display: flex;
-      gap: 12px;
       align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .nav-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-color);
-      color: var(--text-sub);
+    /* 俏皮野兽派通用按钮 */
+    .playful-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 0.86rem;
+      padding: 9px 16px;
+      border: 4px solid var(--border-black);
+      background: var(--bg-card);
+      color: var(--text-black);
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition-spring);
+      transform: rotate(-1deg);
+    }
+
+    .playful-btn:hover {
+      transform: translateY(-4px) scale(1.05) rotate(1.5deg);
+      box-shadow: 8px 8px 0 0 var(--color-red);
+      background-color: var(--color-yellow);
+      color: #000000;
+    }
+
+    /* 核心交互物理：压扁反馈 (Joyful Press) */
+    .playful-btn:active {
+      transform: translate(4px, 4px) scale(0.95) rotate(0deg);
+      box-shadow: 0 0 0 0 #000000;
+    }
+
+    /* 主题切换开关专属按钮 */
+    .btn-theme-toggle {
+      background: #1c1c24;
+      color: #ffffff;
+      transform: rotate(1.2deg);
+    }
+    .btn-theme-toggle:hover {
+      background: var(--color-yellow);
+      color: #000000;
+      box-shadow: 8px 8px 0 0 var(--color-cyan);
+    }
+
+    .btn-download-nav {
+      background: var(--color-cyan);
+      color: #000000;
+      transform: rotate(-1deg);
+    }
+    .btn-download-nav:hover {
+      background: var(--color-yellow);
+      transform: translateY(-4px) scale(1.05) rotate(1.5deg);
+      box-shadow: 8px 8px 0 0 var(--color-cyan);
+    }
+
+    /* 视图切换按钮组 */
+    .view-toggle {
+      display: inline-flex;
+      border: 4px solid var(--border-black);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-sm);
+      transform: rotate(0.8deg);
+      transition: var(--transition-spring);
+    }
+
+    .view-btn {
       padding: 7px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      text-decoration: none;
-      transition: var(--transition);
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 0.82rem;
+      background: transparent;
+      border: none;
+      color: var(--text-black);
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
-      user-select: none;
+      transition: background-color 0ms;
     }
 
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: var(--text-main);
-      border-color: rgba(255, 255, 255, 0.2);
+    .view-btn:first-child {
+      border-right: 4px solid var(--border-black);
     }
 
-    /* 导航栏专属下载按钮 */
-    .btn-download-nav {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #34d399;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+    .view-btn:hover {
+      background: var(--color-yellow);
+      color: #000000;
     }
 
-    .btn-download-nav:hover {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(6, 182, 212, 0.3) 100%);
-      color: #fff;
-      border-color: #34d399;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
-      transform: translateY(-1px);
+    .view-btn.active {
+      background: var(--border-black);
+      color: var(--color-yellow);
     }
 
-    /* 容器布局 */
+    /* 主布局 */
     main {
       max-width: 1440px;
       margin: 0 auto;
-      padding: 24px 24px 60px;
+      padding: 24px 24px 80px 24px;
     }
 
-    /* 统计看板 */
+    /* 统计看板 Stats Bar (微倾斜与多彩卡片) */
     .stats-bar {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
     }
 
     .stat-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 16px 20px;
-      backdrop-filter: blur(8px);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-md);
+      padding: 16px 16px;
       position: relative;
-      overflow: hidden;
-      transition: var(--transition);
+      cursor: default;
+      transition: var(--transition-spring);
+    }
+
+    .stat-card:nth-child(odd) {
+      transform: rotate(-1deg);
+    }
+    .stat-card:nth-child(even) {
+      transform: rotate(1deg);
     }
 
     .stat-card:hover {
-      border-color: rgba(255, 255, 255, 0.15);
-      transform: translateY(-2px);
+      transform: translateY(-6px) scale(1.04) rotate(-1.8deg);
+      box-shadow: 10px 10px 0 0 var(--hover-shadow-color, var(--color-cyan));
+      background-color: var(--color-yellow) !important;
     }
 
-    .stat-card::before {
-      content: '';
+    .stat-card:hover .stat-value,
+    .stat-card:hover .stat-label {
+      color: #000000 !important;
+    }
+
+    .stat-card::after {
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--accent, var(--nintendo-red));
+      right: 0;
+      height: 8px;
+      background: var(--accent-color, var(--border-black));
+      border-bottom: 2px solid var(--border-black);
     }
 
     .stat-value {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.2;
-      font-feature-settings: "tnum";
+      font-family: var(--font-heading);
+      font-size: 2.35rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-top: 6px;
+      margin-bottom: 6px;
+      color: var(--text-black);
+      letter-spacing: -1px;
     }
 
     .stat-label {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
+      font-weight: 900;
       color: var(--text-sub);
-      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.25;
     }
 
-    /* 筛选与搜索工具条 */
+    /* 筛选与搜索面板 */
     .filter-panel {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(8px);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-lg);
+      padding: 22px;
+      margin-bottom: 28px;
+      position: relative;
     }
 
     .search-row {
       display: flex;
-      gap: 14px;
-      align-items: center;
+      gap: 16px;
       flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 18px;
     }
 
     .search-wrapper {
       flex: 1;
-      min-width: 260px;
+      min-width: 280px;
       position: relative;
+      display: flex;
+      align-items: center;
     }
 
     .search-icon {
       position: absolute;
       left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
       pointer-events: none;
+      color: var(--text-black);
+      display: flex;
+      align-items: center;
+      font-weight: 900;
     }
 
     .search-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 11px 16px 11px 42px;
-      color: var(--text-main);
+      height: 50px;
+      padding: 0 16px 0 46px;
+      background: var(--bg-card-sub);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-black);
+      font-family: var(--font-mono);
       font-size: 0.95rem;
+      font-weight: 800;
       outline: none;
-      transition: var(--transition);
+      transition: var(--transition-spring);
     }
 
     .search-input:focus {
-      border-color: var(--nintendo-red);
-      box-shadow: 0 0 0 3px var(--nintendo-red-glow);
-    }
-
-    .search-input::placeholder {
-      color: var(--text-muted);
+      box-shadow: 6px 6px 0 0 var(--color-cyan);
+      border-color: var(--border-black);
+      transform: translateY(-2px);
     }
 
     .select-controls {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .custom-select {
+      height: 50px;
+      padding: 0 34px 0 16px;
+      background: var(--bg-card-sub);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-black);
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 900;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23000000' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 14px;
+      transition: var(--transition-spring);
+    }
+
+    [data-theme="dark"] .custom-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    }
+
+    .custom-select option {
+      background: var(--bg-card);
+      color: var(--text-black);
+    }
+
+    .custom-select:focus {
+      box-shadow: 6px 6px 0 0 var(--color-yellow);
+      transform: translateY(-2px);
+    }
+
+    /* 过滤器药丸胶囊按钮组 (Filter Pills) */
+    .filter-pills {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
     }
 
-    .custom-select {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      color: var(--text-main);
-      font-size: 0.9rem;
-      outline: none;
-      cursor: pointer;
-      min-width: 150px;
-    }
-
-    .custom-select:focus {
-      border-color: var(--nintendo-red);
-    }
-
-    .filter-pills {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
     .filter-pill {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-color);
-      color: var(--text-sub);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      background: var(--bg-card-sub);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-black);
+      padding: 8px 16px;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 0.82rem;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       user-select: none;
+      transition: var(--transition-spring);
+    }
+
+    .filter-pill:nth-child(odd) {
+      transform: rotate(-1deg);
+    }
+    .filter-pill:nth-child(even) {
+      transform: rotate(1deg);
     }
 
     .filter-pill:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-main);
+      transform: translateY(-3px) scale(1.06) rotate(1.5deg);
+      box-shadow: 6px 6px 0 0 var(--color-red);
+      background: var(--color-yellow);
+      color: #000000;
+    }
+
+    .filter-pill:active {
+      transform: translate(3px, 3px) scale(0.95);
+      box-shadow: 0 0 0 0 #000;
     }
 
     .filter-pill.active {
-      background: #fff;
-      color: #000;
-      border-color: #fff;
-      font-weight: 600;
+      background: var(--border-black);
+      color: var(--text-white);
+      box-shadow: 0 0 0 0 #000;
+      transform: translate(2px, 2px) rotate(0deg);
     }
 
     .filter-pill.pill-cross.active {
-      background: var(--badge-cross);
-      color: #fff;
-      border-color: var(--badge-cross);
+      background: var(--color-mint);
+      color: #000000;
     }
 
     .filter-pill.pill-video.active {
-      background: #fb7299;
-      color: #fff;
-      border-color: #fb7299;
+      background: var(--color-red);
+      color: #ffffff;
     }
 
     .filter-pill.pill-nes.active {
-      background: var(--badge-nes);
-      color: #fff;
-      border-color: var(--badge-nes);
+      background: var(--color-cyan);
+      color: #000000;
     }
 
     .filter-pill.pill-fc.active {
-      background: var(--badge-fc);
-      color: #fff;
-      border-color: var(--badge-fc);
+      background: var(--color-coral);
+      color: #000000;
     }
 
     .filter-pill.pill-fds.active {
-      background: var(--badge-fds);
-      color: #fff;
-      border-color: var(--badge-fds);
+      background: var(--color-yellow);
+      color: #000000;
     }
 
-    /* 视图切换与结果信息 */
+    /* 结果统计信息条 */
     .results-info-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
-      font-size: 0.875rem;
-      color: var(--text-sub);
+      font-weight: 900;
+      font-size: 0.95rem;
       flex-wrap: wrap;
       gap: 12px;
+      padding: 4px 2px;
+      color: var(--text-black);
     }
 
     .result-count-highlight {
-      color: var(--nintendo-red);
-      font-weight: 700;
+      background: var(--color-yellow);
+      color: #000000;
+      padding: 3px 10px;
+      border: 3px solid var(--border-black);
+      box-shadow: 3px 3px 0 0 var(--color-cyan);
+      font-weight: 900;
+      font-size: 1.05rem;
+      display: inline-block;
+      transform: rotate(-1.5deg);
     }
 
-    .view-toggle {
-      display: flex;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-    }
-
-    .view-btn {
-      background: transparent;
-      border: none;
-      padding: 6px 12px;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      transition: var(--transition);
-    }
-
-    .view-btn.active {
-      background: rgba(255, 255, 255, 0.12);
-      color: var(--text-main);
-      font-weight: 600;
-    }
-
-    /* 徽章 Badge 样式 */
+    /* 徽章 Badge 规范系统 */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      line-height: 1.3;
-      white-space: nowrap;
-    }
-
-    .badge-nes {
-      background: rgba(59, 130, 246, 0.18);
-      color: #60a5fa;
-      border: 1px solid rgba(59, 130, 246, 0.35);
-    }
-
-    .badge-fc {
-      background: rgba(239, 68, 68, 0.18);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.35);
-    }
-
-    .badge-fds {
-      background: rgba(245, 158, 11, 0.18);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-    }
-
-    .badge-cross {
-      background: rgba(16, 185, 129, 0.18);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-    }
-
-    /* B站解说视频徽章与卡片样式 */
-    .bili-btn, .bili-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(251, 114, 153, 0.15);
-      border: 1px solid rgba(251, 114, 153, 0.4);
-      color: #fb7299;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: var(--transition);
+      padding: 4px 8px;
+      font-family: var(--font-mono);
+      font-weight: 900;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      border: 3px solid var(--border-black);
       line-height: 1.2;
+      box-shadow: 2px 2px 0 0 #000;
       white-space: nowrap;
     }
 
-    .bili-btn:hover, .bili-tag:hover {
-      background: #fb7299;
-      color: #fff;
-      border-color: #fb7299;
-      box-shadow: 0 0 10px rgba(251, 114, 153, 0.5);
-    }
+    .badge-cross { background: var(--color-mint); color: #000; }
+    .badge-nes   { background: var(--color-cyan); color: #000; }
+    .badge-fc    { background: var(--color-coral); color: #000; }
+    .badge-fds   { background: var(--color-yellow); color: #000; }
 
-    .bili-icon-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: rgba(251, 114, 153, 0.15);
-      border: 1px solid rgba(251, 114, 153, 0.4);
-      color: #fb7299;
-      text-decoration: none;
-      transition: var(--transition);
-      box-shadow: 0 2px 6px rgba(251, 114, 153, 0.15);
-    }
-
-    .bili-icon-btn:hover {
-      background: #fb7299;
-      color: #fff;
-      border-color: #fb7299;
-      transform: scale(1.12);
-      box-shadow: 0 4px 12px rgba(251, 114, 153, 0.45);
-    }
-
-    .bili-card {
-      margin-top: 16px;
-      background: rgba(251, 114, 153, 0.08);
-      border: 1px solid rgba(251, 114, 153, 0.3);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    /* 表格视图 */
+    /* 密集表格样式 Table View */
     .table-container {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-lg);
       overflow-x: auto;
+      margin-bottom: 28px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       text-align: left;
     }
 
+    thead {
+      background: var(--border-black);
+      color: #ffffff;
+    }
+
     th {
-      background: rgba(17, 24, 39, 0.95);
-      padding: 12px 14px;
-      color: var(--text-sub);
-      font-weight: 600;
-      border-bottom: 1px solid var(--border-color);
+      padding: 14px 16px;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 0.86rem;
+      letter-spacing: 0.5px;
+      border-right: 3px solid #333;
       white-space: nowrap;
-      font-size: 0.85rem;
+    }
+
+    th:last-child {
+      border-right: none;
+    }
+
+    tbody tr {
+      border-bottom: 3px solid var(--border-black);
+      cursor: pointer;
+      transition: background-color 0ms;
+      background: var(--bg-card);
+      color: var(--text-black);
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--bg-card-sub);
+    }
+
+    tbody tr:hover {
+      background: var(--color-yellow) !important;
+      color: #000000 !important;
+    }
+
+    tbody tr:hover strong,
+    tbody tr:hover .sub-val,
+    tbody tr:hover .publisher-tag {
+      color: #000000 !important;
     }
 
     td {
-      padding: 10px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: var(--text-main);
+      padding: 12px 16px;
       vertical-align: middle;
+      border-right: 3px solid rgba(0, 0, 0, 0.25);
     }
 
-    tr:hover td {
-      background: rgba(255, 255, 255, 0.03);
-      cursor: pointer;
+    td:last-child {
+      border-right: none;
     }
 
-    /* 表格上下子格子（英文/日文、美版/日版） */
     .split-cell-box {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      min-width: 150px;
     }
 
     .sub-cell {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.83rem;
-      line-height: 1.35;
-      transition: background 0.15s ease;
-    }
-
-    .sub-cell:hover {
-      background: rgba(255, 255, 255, 0.07);
-    }
-
-    .sub-cell-top {
-      border-left: 2.5px solid #3b82f6;
-    }
-
-    .sub-cell-bottom {
-      border-left: 2.5px solid #ef4444;
+      gap: 8px;
+      font-size: 0.82rem;
     }
 
     .sub-tag {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 3px;
-      flex-shrink: 0;
-      letter-spacing: 0.3px;
-      line-height: 1.2;
+      padding: 2px 6px;
+      font-weight: 900;
+      font-size: 0.68rem;
+      border: 2px solid var(--border-black);
+      line-height: 1.1;
+      white-space: nowrap;
     }
 
-    .tag-en { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
-    .tag-ja { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
-    .tag-na { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
-    .tag-jp { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .tag-en { background: #cbd5e0; color: #000; }
+    .tag-ja { background: var(--color-red); color: #fff; }
+    .tag-na { background: var(--color-cyan); color: #000; }
+    .tag-jp { background: var(--color-coral); color: #000; }
 
     .sub-val {
+      font-weight: 800;
+      color: var(--text-black);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1337,417 +1462,678 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     .sub-val-ja {
-      color: var(--text-sub);
+      font-size: 0.8rem;
     }
 
-    /* 网格卡片视图 */
+    /* B站解说直达按钮 (雷文编年史，无 Emoji) */
+    .bili-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--color-red);
+      color: #ffffff !important;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 0.76rem;
+      border: 3px solid var(--border-black);
+      box-shadow: 3px 3px 0 0 #000;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition-spring);
+      transform: rotate(-1deg);
+    }
+
+    .bili-btn:hover {
+      background: var(--color-cyan);
+      color: #000000 !important;
+      transform: translateY(-2px) scale(1.06) rotate(1.5deg);
+      box-shadow: 5px 5px 0 0 var(--color-yellow);
+    }
+
+    .bili-btn:active {
+      transform: translate(3px, 3px) scale(0.95);
+      box-shadow: 0 0 0 0 #000;
+    }
+
+    /* 海报卡片网格视图 Grid View (微倾斜与彩色硬投影) */
     .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(315px, 1fr));
+      gap: 24px;
+      margin-bottom: 28px;
     }
 
     .game-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      backdrop-filter: blur(8px);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: var(--transition);
       cursor: pointer;
       position: relative;
+      transition: var(--transition-spring);
     }
 
+    .game-card:nth-child(3n+1) {
+      transform: rotate(-0.8deg);
+    }
+    .game-card:nth-child(3n+2) {
+      transform: rotate(0.8deg);
+    }
+    .game-card:nth-child(3n) {
+      transform: rotate(-0.4deg);
+    }
+
+    /* 卡片悬浮彩色硬投影跳跃 (Color Ping-Pong & Toy Spring) */
     .game-card:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      transform: translateY(-6px) scale(1.03) rotate(1.2deg);
+      box-shadow: 10px 10px 0 0 var(--color-cyan);
+      background-color: var(--color-yellow) !important;
+    }
+
+    .game-card:hover .game-title-zh,
+    .game-card:hover .game-title-en,
+    .game-card:hover .game-title-ja,
+    .game-card:hover .publisher-tag,
+    .game-card:hover .meta-label,
+    .game-card:hover .meta-row span {
+      color: #000000 !important;
+    }
+
+    .game-card:active {
+      transform: translate(4px, 4px) scale(0.97);
+      box-shadow: 0 0 0 0 #000;
     }
 
     .game-card.is-cross {
-      border-color: rgba(16, 185, 129, 0.3);
+      border-top-width: 8px;
     }
 
-    .game-card.is-cross::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 0 28px 28px 0;
-      border-color: transparent var(--badge-cross) transparent transparent;
-      border-top-right-radius: var(--radius-md);
+    .card-top {
+      margin-bottom: 14px;
     }
 
     .badges-row {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .game-title-zh {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #fff;
+      font-family: var(--font-heading);
+      font-size: 1.28rem;
+      font-weight: 900;
+      line-height: 1.25;
+      color: var(--text-black);
       margin-bottom: 4px;
-      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .game-title-zh .empty {
+      color: var(--text-sub);
+      font-style: italic;
+      font-size: 0.95rem;
     }
 
     .game-title-en {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
+      font-weight: 800;
       color: var(--text-sub);
       margin-bottom: 2px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      word-break: break-word;
     }
 
     .game-title-ja {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      word-break: break-word;
     }
 
     .card-meta {
-      border-top: 1px solid var(--border-color);
-      margin-top: 14px;
+      border-top: 3px solid var(--border-black);
       padding-top: 12px;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      font-size: 0.8rem;
-      color: var(--text-sub);
+      font-size: 0.82rem;
     }
 
     .meta-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
     }
 
     .meta-label {
-      color: var(--text-muted);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
     }
 
     .publisher-tag {
-      max-width: 170px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      text-align: right;
+      font-weight: 800;
+      color: var(--text-black);
     }
 
-    /* 分页控制器 */
+    /* 分页条控件 Pagination */
     .pagination-bar {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 8px;
-      margin-top: 32px;
-      margin-bottom: 48px;
       flex-wrap: wrap;
+      margin: 20px 0;
     }
 
-    .pagination-bar.pagination-bar-top {
+    .pagination-bar-top {
       margin-top: 0;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
+      justify-content: flex-end;
     }
 
     .page-btn {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      color: var(--text-sub);
       min-width: 40px;
       height: 40px;
-      padding: 0 12px;
-      border-radius: var(--radius-sm);
-      display: flex;
+      padding: 0 10px;
+      background: var(--bg-card-sub);
+      border: 3px solid var(--border-black);
+      box-shadow: 3px 3px 0 0 #000;
+      color: var(--text-black);
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 0.9rem;
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: var(--transition);
-      user-select: none;
+      transition: var(--transition-spring);
     }
 
     .page-btn:hover:not(:disabled) {
-      border-color: var(--nintendo-red);
-      color: var(--text-main);
+      background: var(--color-yellow);
+      color: #000000;
+      transform: translateY(-3px) scale(1.08) rotate(-2deg);
+      box-shadow: 5px 5px 0 0 var(--color-red);
+    }
+
+    .page-btn:active:not(:disabled) {
+      transform: translate(3px, 3px) scale(0.95);
+      box-shadow: 0 0 0 0 #000;
     }
 
     .page-btn.active {
-      background: var(--nintendo-red);
-      border-color: var(--nintendo-red);
-      color: #fff;
-      font-weight: 700;
+      background: var(--border-black);
+      color: var(--color-yellow);
+      box-shadow: 0 0 0 0 #000;
+      transform: translate(2px, 2px);
     }
 
     .page-btn:disabled {
-      opacity: 0.35;
+      opacity: 0.3;
       cursor: not-allowed;
+      box-shadow: none;
+      border-color: #718096;
     }
 
-    /* 模态弹窗 Modal 通用 */
+    /* 空状态 */
+    .empty-state {
+      background: var(--bg-card);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-lg);
+      padding: 48px 24px;
+      text-align: center;
+      margin-bottom: 28px;
+      color: var(--text-black);
+    }
+
+    .empty-state h3 {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    /* 模态弹窗系统 Modal System */
     .modal-backdrop {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
       z-index: 999;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
+      overflow-y: auto;
     }
 
     .modal-content {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      max-width: 800px;
+      background: var(--bg-card);
+      border: 5px solid var(--border-black);
+      box-shadow: var(--shadow-xl);
+      max-width: 900px;
       width: 100%;
       max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
       position: relative;
+      overflow: hidden;
+      color: var(--text-black);
     }
 
     .modal-header {
-      padding: 24px 24px 16px;
-      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-card-sub);
+      border-bottom: 4px solid var(--border-black);
+      padding: 20px 24px;
       position: relative;
     }
 
     .modal-close-btn {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      border: none;
-      color: var(--text-muted);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      cursor: pointer;
+      top: 16px;
+      right: 16px;
+      width: 38px;
+      height: 38px;
+      background: var(--bg-card);
+      border: 4px solid var(--border-black);
+      box-shadow: 3px 3px 0 0 #000;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 1.4rem;
+      line-height: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      transition: var(--transition);
+      color: var(--text-black);
+      cursor: pointer;
+      transition: var(--transition-spring);
     }
 
     .modal-close-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
+      background: var(--color-red);
+      color: #ffffff;
+      transform: translateY(-2px) scale(1.1) rotate(2deg);
+      box-shadow: 5px 5px 0 0 var(--color-cyan);
+    }
+
+    .modal-close-btn:active {
+      transform: translate(3px, 3px) scale(0.95);
+      box-shadow: 0 0 0 0 #000;
     }
 
     .modal-body {
       padding: 24px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    .version-compare-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .version-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-    }
-
-    .version-field-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
-    }
-
-    .version-field-val {
-      font-size: 0.95rem;
-      color: var(--text-main);
-      margin-bottom: 12px;
-      word-break: break-word;
-    }
-
-    .wiki-link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-color);
-      color: var(--text-sub);
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      text-decoration: none;
-      font-size: 0.85rem;
-      transition: var(--transition);
-    }
-
-    .wiki-link-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-    }
-
-    /* 数据下载中心模态网格 */
+    /* 下载中心卡片排版 */
     .download-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 18px;
     }
 
     .download-card {
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 20px;
+      background: var(--bg-card-sub);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-md);
+      padding: 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: var(--transition);
+      transition: var(--transition-spring);
+      color: var(--text-black);
     }
 
     .download-card:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 8px 8px 0 0 var(--color-yellow);
     }
 
     .download-card-header {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .download-icon {
       width: 44px;
       height: 44px;
-      border-radius: 10px;
+      border: 3px solid var(--border-black);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      box-shadow: 3px 3px 0 0 #000;
     }
 
-    .icon-excel {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .icon-csv {
-      background: rgba(59, 130, 246, 0.15);
-      color: #3b82f6;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-
-    .icon-json {
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
+    .icon-excel { background: var(--color-mint); color: #000; }
+    .icon-csv   { background: var(--color-yellow); color: #000; }
+    .icon-json  { background: var(--color-cyan); color: #000; }
 
     .download-title {
+      font-family: var(--font-heading);
       font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
+      font-weight: 900;
+      line-height: 1.2;
+      color: var(--text-black);
     }
 
     .download-badge {
       display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 4px;
-      margin-top: 2px;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 2px 6px;
+      border: 2px solid var(--border-black);
+      margin-top: 3px;
+      color: #000;
     }
 
-    .badge-excel { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
-    .badge-csv { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
-    .badge-json { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
-
     .download-desc {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
+      line-height: 1.55;
       color: var(--text-sub);
-      line-height: 1.6;
-      margin-bottom: 20px;
-      flex-grow: 1;
+      margin-bottom: 16px;
     }
 
     .download-btn {
-      display: block;
-      width: 100%;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 0.88rem;
+      text-transform: uppercase;
       padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
-      font-weight: 600;
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
       text-decoration: none;
-      transition: var(--transition);
-      box-sizing: border-box;
+      transition: var(--transition-spring);
     }
 
-    .btn-excel {
-      background: #10b981;
-      color: #fff;
-    }
-    .btn-excel:hover {
-      background: #059669;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    .btn-excel { background: var(--color-mint); color: #000; }
+    .btn-csv   { background: var(--color-yellow); color: #000; }
+    .btn-json  { background: var(--color-cyan); color: #000; }
+
+    .download-btn:hover {
+      transform: translateY(-3px) scale(1.04) rotate(-1deg);
+      box-shadow: 6px 6px 0 0 var(--color-red);
     }
 
-    .btn-csv {
-      background: #3b82f6;
-      color: #fff;
-    }
-    .btn-csv:hover {
-      background: #2563eb;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    .download-btn:active {
+      transform: translate(3px, 3px) scale(0.95);
+      box-shadow: 0 0 0 0 #000;
     }
 
-    .btn-json {
-      background: #f59e0b;
-      color: #fff;
-    }
-    .btn-json:hover {
-      background: #d97706;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    /* 版本对比卡片 */
+    .version-compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
     }
 
-    /* 空状态 */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
+    .version-card {
+      background: var(--bg-card-sub);
+      border: 3px solid var(--border-black);
+      box-shadow: var(--shadow-sm);
+      padding: 14px;
+      color: var(--text-black);
     }
 
-    .empty-state h3 {
-      font-size: 1.2rem;
+    .version-field-label {
+      font-size: 0.72rem;
+      font-weight: 900;
       color: var(--text-sub);
-      margin-bottom: 8px;
+      text-transform: uppercase;
+      margin-top: 8px;
     }
+
+    .version-field-val {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text-black);
+    }
+
+    .wiki-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: var(--bg-card);
+      border: 3px solid var(--border-black);
+      box-shadow: 3px 3px 0 0 #000;
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 0.75rem;
+      color: var(--text-black);
+      text-decoration: none;
+      transition: var(--transition-spring);
+    }
+
+    .wiki-link-btn:hover {
+      background: var(--color-yellow);
+      color: #000000;
+      transform: translateY(-2px) scale(1.05) rotate(1.5deg);
+      box-shadow: 5px 5px 0 0 var(--color-cyan);
+    }
+
+    .wiki-link-btn:active {
+      transform: translate(2px, 2px) scale(0.95);
+      box-shadow: 0 0 0 0 #000;
+    }
+
+    /* B站解说专属卡片条 */
+    .bili-card {
+      background: var(--color-yellow);
+      border: 4px solid var(--border-black);
+      box-shadow: var(--shadow-md);
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      transform: rotate(-0.5deg);
+      color: #000000;
+    }
+
+    [data-theme="dark"] .bili-card {
+      background: #181810;
+      color: #ffffff;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      body {
+        padding: 0;
+      }
+      .navbar {
+        padding: 10px 14px;
+      }
+      main {
+        padding: 14px 14px 60px 14px;
+      }
+      .brand-title {
+        font-size: 1.1rem;
+      }
+      .brand-subtitle {
+        display: none;
+      }
+      .filter-panel {
+        padding: 14px;
+      }
+      .stat-value {
+        font-size: 1.8rem;
+      }
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 暗黑模式下特定彩色组件的深度暗化适配 (遵从沉稳雅致暗调，杜绝刺眼) */
+    [data-theme="dark"] .playful-ticker {
+      background: #000000;
+      color: #b08f3a; /* 调暗黄色为暗金，醒目而不刺眼 */
+    }
+    [data-theme="dark"] .geo-dot {
+      background: var(--color-red);
+      border-color: #000000;
+    }
+
+    [data-theme="dark"] .brand-logo {
+      background: var(--color-red);
+      color: #ffffff;
+      border-color: #000000;
+    }
+
+    [data-theme="dark"] .btn-download-nav {
+      background: var(--color-cyan);
+      color: #ffffff;
+      border-color: #000000;
+    }
+    [data-theme="dark"] .btn-download-nav:hover {
+      background: var(--color-yellow);
+      color: #ffffff;
+      box-shadow: 8px 8px 0 0 #000000;
+    }
+
+    [data-theme="dark"] .btn-theme-toggle {
+      background: var(--color-yellow);
+      color: #ffffff;
+      border-color: #000000;
+    }
+    [data-theme="dark"] .btn-theme-toggle:hover {
+      background: var(--color-cyan);
+      color: #ffffff;
+      box-shadow: 8px 8px 0 0 #000000;
+    }
+
+    /* 结果统计高亮方块暗化 - 白字黑边沉稳古铜金 */
+    [data-theme="dark"] .result-count-highlight {
+      background: var(--color-yellow);
+      color: #ffffff;
+      border: 3px solid #000000;
+      box-shadow: 3px 3px 0 0 #000000;
+    }
+
+    /* 状态与类型徽章全面暗化 */
+    [data-theme="dark"] .badge {
+      color: #ffffff;
+      border-color: #000000;
+    }
+    [data-theme="dark"] .badge-cross { background: var(--color-mint); color: #ffffff; }
+    [data-theme="dark"] .badge-nes   { background: var(--color-cyan); color: #ffffff; }
+    [data-theme="dark"] .badge-fc    { background: var(--color-coral); color: #ffffff; }
+    [data-theme="dark"] .badge-fds   { background: var(--color-yellow); color: #ffffff; }
+
+    /* 表格内标签暗化 */
+    [data-theme="dark"] .tag-en { background: #28303d; color: #e2e8f0; }
+    [data-theme="dark"] .tag-ja { background: var(--color-red); color: #ffffff; }
+    [data-theme="dark"] .tag-na { background: var(--color-cyan); color: #ffffff; }
+    [data-theme="dark"] .tag-jp { background: var(--color-coral); color: #ffffff; }
+
+    /* B站解说视频直达按钮暗化 */
+    [data-theme="dark"] .bili-btn {
+      background: var(--color-red);
+      color: #ffffff !important;
+      border-color: #000000;
+    }
+    [data-theme="dark"] .bili-btn:hover {
+      background: var(--color-cyan);
+      color: #ffffff !important;
+      box-shadow: 5px 5px 0 0 #000000;
+    }
+
+    /* 药丸过滤器按钮激活态与悬停暗化 */
+    [data-theme="dark"] .filter-pill:hover {
+      background: #242432;
+      color: #ffffff;
+      box-shadow: 6px 6px 0 0 #000000;
+    }
+    [data-theme="dark"] .filter-pill.pill-cross.active { background: var(--color-mint); color: #ffffff; }
+    [data-theme="dark"] .filter-pill.pill-video.active { background: var(--color-red); color: #ffffff; }
+    [data-theme="dark"] .filter-pill.pill-nes.active   { background: var(--color-cyan); color: #ffffff; }
+    [data-theme="dark"] .filter-pill.pill-fc.active    { background: var(--color-coral); color: #ffffff; }
+    [data-theme="dark"] .filter-pill.pill-fds.active   { background: var(--color-yellow); color: #ffffff; }
+
+    /* 分页按钮暗黑高亮 */
+    [data-theme="dark"] .page-btn:hover:not(:disabled) {
+      background: #242432;
+      color: #ffffff;
+      box-shadow: 5px 5px 0 0 #000000;
+    }
+    [data-theme="dark"] .page-btn.active {
+      background: #000000;
+      color: #bfa143;
+      border-color: #bfa143;
+    }
+
+    /* 表格与卡片 Hover：沉稳深蓝灰底色，告别刺眼黄色 */
+    [data-theme="dark"] tbody tr:hover {
+      background: #242432 !important;
+      color: #ffffff !important;
+    }
+    [data-theme="dark"] tbody tr:hover strong,
+    [data-theme="dark"] tbody tr:hover .sub-val,
+    [data-theme="dark"] tbody tr:hover .publisher-tag {
+      color: #ffffff !important;
+    }
+
+    [data-theme="dark"] .game-card:hover {
+      background-color: #242432 !important;
+      box-shadow: 10px 10px 0 0 #000000;
+    }
+    [data-theme="dark"] .game-card:hover .game-title-zh,
+    [data-theme="dark"] .game-card:hover .game-title-en,
+    [data-theme="dark"] .game-card:hover .game-title-ja,
+    [data-theme="dark"] .game-card:hover .publisher-tag,
+    [data-theme="dark"] .game-card:hover .meta-label,
+    [data-theme="dark"] .game-card:hover .meta-row span {
+      color: #ffffff !important;
+    }
+
+    [data-theme="dark"] .stat-card:hover {
+      background-color: #242432 !important;
+      box-shadow: 10px 10px 0 0 #000000;
+    }
+    [data-theme="dark"] .stat-card:hover .stat-value,
+    [data-theme="dark"] .stat-card:hover .stat-label {
+      color: #ffffff !important;
+    }
+
+    /* 下载中心卡片按钮图标暗化 */
+    [data-theme="dark"] .icon-excel, [data-theme="dark"] .btn-excel { background: var(--color-mint); color: #ffffff; }
+    [data-theme="dark"] .icon-csv,   [data-theme="dark"] .btn-csv   { background: var(--color-yellow); color: #ffffff; }
+    [data-theme="dark"] .icon-json,  [data-theme="dark"] .btn-json  { background: var(--color-cyan); color: #ffffff; }
+    [data-theme="dark"] .download-card:hover { box-shadow: 8px 8px 0 0 #000000; }
+
   </style>
 </head>
 <body>
+
+  <!-- 顶部俏皮野兽派 Ticker 装饰条 (严禁任何 Emoji，纯 SVG 几何图形与大写标题) -->
+  <div class="playful-ticker">
+    <div class="ticker-item"><span class="geo-dot"></span> NINTENDO FC / FDS / NES CROSS-REGION UNIFIED ARCHIVE <span class="geo-dot"></span></div>
+    <div class="ticker-item">NO-INTRO DAT CLONE ENGINE // ROM-NAME-CN 权威对照库 // BILIBILI 视频编年史</div>
+    <div class="ticker-item"><span class="geo-dot"></span> 100% OFFLINE CAPABLE // NEO-BRUTALIST PLAYFUL</div>
+  </div>
 
   <!-- 顶部导航 -->
   <header>
@@ -1756,13 +2142,22 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         <div class="brand-logo">FC</div>
         <div>
           <div class="brand-title">任天堂 NES / 红白机游戏库</div>
-          <div class="brand-subtitle">结合 No-Intro DAT 克隆树与 rom-name-cn 跨区整合数据库</div>
+          <div class="brand-subtitle">结合 NO-INTRO DAT 克隆树与 ROM-NAME-CN 跨区整合数据库</div>
         </div>
       </a>
       <div class="header-links">
-        <button class="nav-btn btn-download-nav" id="openDownloadModalBtn" title="下载全量数据文件 (Excel/CSV/JSON)">
-          <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
-          📦 数据导出下载
+        <!-- 核心新增：明亮 / 暗黑双模式一键切换按钮 (严格采用纯 SVG，杜绝 Emoji) -->
+        <button class="playful-btn btn-theme-toggle" id="themeToggleBtn" title="切换色彩主题 (明亮 / 暗黑 / 跟随系统)">
+          <!-- 纯 SVG 矢量图标 (严格遵从无 Emoji、无圆角规范) -->
+          <svg class="icon-sun" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-system" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:none;"><rect x="2" y="3" width="20" height="14"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span id="themeToggleText">跟随系统</span>
+        </button>
+
+        <button class="playful-btn btn-download-nav" id="openDownloadModalBtn" title="下载全量数据文件 (Excel/CSV/JSON)">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          数据导出下载
         </button>
 
         <div class="view-toggle">
@@ -1770,7 +2165,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"/></svg>
             密集表格
           </button>
-          <button class="view-btn" id="viewBtnGrid" title="卡片网格视图">
+          <button class="view-btn" id="viewBtnGrid" title="海报卡片视图">
             <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg>
             海报卡片
           </button>
@@ -1780,29 +2175,29 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   </header>
 
   <main>
-    <!-- 统计看板 -->
+    <!-- 统计看板 (俏皮野兽派多彩与微倾斜) -->
     <section class="stats-bar" id="statsBar">
-      <div class="stat-card" style="--accent: var(--nintendo-red);">
+      <div class="stat-card" style="--accent-color: var(--color-red); --hover-shadow-color: var(--color-cyan);">
         <div class="stat-value" id="statTotalGames">--</div>
         <div class="stat-label">整合后独立游戏总数</div>
       </div>
-      <div class="stat-card" style="--accent: var(--badge-cross);">
+      <div class="stat-card" style="--accent-color: var(--color-mint); --hover-shadow-color: var(--color-red);">
         <div class="stat-value" id="statCrossRegion">--</div>
-        <div class="stat-label">美日同款跨区游戏 (已合并)</div>
+        <div class="stat-label">美日同款跨区 (已合并)</div>
       </div>
-      <div class="stat-card" style="--accent: var(--badge-nes);">
+      <div class="stat-card" style="--accent-color: var(--color-cyan); --hover-shadow-color: var(--color-coral);">
         <div class="stat-value" id="statNesOnly">--</div>
         <div class="stat-label">NES 欧美独占游戏</div>
       </div>
-      <div class="stat-card" style="--accent: var(--badge-fc);">
+      <div class="stat-card" style="--accent-color: var(--color-coral); --hover-shadow-color: var(--color-yellow);">
         <div class="stat-value" id="statJpOnly">--</div>
-        <div class="stat-label">日本地区独占游戏 (FC/FDS)</div>
+        <div class="stat-label">日本地区独占 (FC/FDS)</div>
       </div>
-      <div class="stat-card" style="--accent: var(--accent-cyan);">
+      <div class="stat-card" style="--accent-color: var(--color-yellow); --hover-shadow-color: var(--color-mint);">
         <div class="stat-value" id="statRawTotal">--</div>
         <div class="stat-label">维基百科原始记录总计</div>
       </div>
-      <div class="stat-card" style="--accent: #fb7299;">
+      <div class="stat-card" style="--accent-color: var(--color-red); --hover-shadow-color: var(--color-cyan);">
         <div class="stat-value" id="statVideoCount">--</div>
         <div class="stat-label">B站编年史解说视频</div>
       </div>
@@ -1813,7 +2208,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <div class="search-row">
         <div class="search-wrapper">
           <span class="search-icon">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </span>
           <input type="text" id="searchInput" class="search-input" placeholder="输入中文译名、英文名、日文名、发行商检索..." autocomplete="off">
         </div>
@@ -1834,7 +2229,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <div class="filter-pills" id="filterPills">
         <button class="filter-pill active" data-filter="all">全部游戏</button>
         <button class="filter-pill pill-cross" data-filter="cross">美日同款跨区</button>
-        <button class="filter-pill pill-video" data-filter="video" id="pillVideoBtn">📺 B站编年史解说</button>
+        <button class="filter-pill pill-video" data-filter="video" id="pillVideoBtn">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align: -2px; margin-right: 4px;"><rect x="2" y="7" width="20" height="15" rx="0"/><polyline points="17 2 12 7 7 2"/></svg>
+          B站编年史解说
+        </button>
         <button class="filter-pill pill-nes" data-filter="nes">NES (欧美版)</button>
         <button class="filter-pill pill-fc" data-filter="fc">FC (卡带)</button>
         <button class="filter-pill pill-fds" data-filter="fds">FDS (磁碟机)</button>
@@ -1845,11 +2243,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <div class="results-info-bar">
       <div>
         找到 <span id="filteredCount" class="result-count-highlight">0</span> 款游戏
-        <span id="pageInfoSpan" style="margin-left: 8px;">(第 1 / 1 页)</span>
+        <span id="pageInfoSpan" style="margin-left: 8px; font-weight: 800;">(第 1 / 1 页)</span>
       </div>
       <div>
         每页显示：
-        <select id="pageSizeSelect" class="custom-select" style="padding: 4px 8px;">
+        <select id="pageSizeSelect" class="custom-select" style="height: 38px; padding: 0 28px 0 10px;">
           <option value="36">36 款</option>
           <option value="60" selected>60 款</option>
           <option value="120">120 款</option>
@@ -1870,7 +2268,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         <thead>
           <tr>
             <th style="min-width: 150px;">中文译名</th>
-            <th style="width: 110px; text-align: center;">视频介绍</th>
+            <th style="width: 130px; text-align: center;">视频介绍</th>
             <th style="min-width: 240px;">英文名 / 日文名</th>
             <th style="min-width: 180px;">美版发售日 / 日版发售日</th>
             <th style="min-width: 130px;">主要发行商</th>
@@ -1886,7 +2284,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <p>请尝试减少筛选条件或输入不同的关键字检索。</p>
     </div>
 
-    <!-- 分页控件 -->
+    <!-- 底部翻页控件 -->
     <div class="pagination-bar" id="paginationBar"></div>
   </main>
 
@@ -1896,12 +2294,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <div class="modal-header">
         <button class="modal-close-btn" id="downloadModalCloseBtn" aria-label="关闭">&times;</button>
         <div class="badges-row">
-          <span class="badge badge-cross" style="font-size: 0.8rem;">离线资源下载</span>
-          <span class="badge badge-nes" style="font-size: 0.8rem;">全格式就绪</span>
+          <span class="badge badge-cross">离线资源下载</span>
+          <span class="badge badge-nes">全格式就绪</span>
         </div>
-        <h2 style="font-size: 1.4rem; margin-top: 6px; margin-bottom: 4px;">📦 整合数据资源导出与下载中心</h2>
-        <div style="color: var(--text-sub); font-size: 0.875rem;">
-          任天堂 NES 与红白机 (FC/FDS) 跨区整合全量数据，已生成 Excel、CSV 与 JSON 格式，均包含 B 站视频章节时间轴
+        <h2 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 900; margin-top: 6px; margin-bottom: 4px; text-transform: uppercase;">整合数据资源导出与下载中心</h2>
+        <div style="color: var(--text-sub); font-size: 0.85rem; font-weight: 800;">
+          任天堂 NES 与红白机 (FC/FDS) 跨区整合全量数据，已生成 EXCEL、CSV 与 JSON 格式，均包含 B 站视频章节时间轴
         </div>
       </div>
       <div class="modal-body">
@@ -1911,11 +2309,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <div>
               <div class="download-card-header">
                 <div class="download-icon icon-excel">
-                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M5.884 6.68a.5.5 0 1 0-.768.64L7.349 10l-2.233 2.68a.5.5 0 0 0 .768.64L8 10.748l2.116 2.572a.5.5 0 0 0 .768-.64L8.651 10l2.233-2.68a.5.5 0 0 0-.768-.64L8 9.252 5.884 6.68z"/><path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/></svg>
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 </div>
                 <div>
                   <div class="download-title">Excel 格式工作簿</div>
-                  <div class="download-badge badge-excel">.xlsx 格式</div>
+                  <div class="download-badge" style="background: var(--color-mint);">.xlsx 格式</div>
                 </div>
               </div>
               <div class="download-desc">
@@ -1926,7 +2324,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               </div>
             </div>
             <a href="fc_nes_games.xlsx" download="fc_nes_games.xlsx" class="download-btn btn-excel">
-              📥 立即下载 Excel (.xlsx)
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              立即下载 EXCEL (.XLSX)
             </a>
           </div>
 
@@ -1935,11 +2334,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <div>
               <div class="download-card-header">
                 <div class="download-icon icon-csv">
-                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/><path d="M4.603 12.087a.81.81 0 0 1-.438-.42c-.087-.183-.13-.395-.13-.636 0-.253.043-.47.13-.651.087-.182.21-.324.369-.427.16-.103.349-.155.568-.155.185 0 .349.038.491.114.143.075.253.18.33.313.078.133.117.29.117.471h-.696a.44.44 0 0 0-.156-.324.516.516 0 0 0-.341-.114.475.475 0 0 0-.385.168.742.742 0 0 0-.142.49c0 .21.047.37.142.482.095.11.223.165.385.165.143 0 .256-.041.34-.123.084-.082.137-.197.158-.344h.696a.99.99 0 0 1-.123.498.866.866 0 0 1-.341.344c-.149.083-.332.124-.55.124-.22 0-.41-.053-.57-.16z"/></svg>
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
                 <div>
                   <div class="download-title">CSV 逗号表格</div>
-                  <div class="download-badge badge-csv">.csv 格式</div>
+                  <div class="download-badge" style="background: var(--color-yellow);">.csv 格式</div>
                 </div>
               </div>
               <div class="download-desc">
@@ -1950,7 +2349,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               </div>
             </div>
             <a href="fc_nes_games.csv" download="fc_nes_games.csv" class="download-btn btn-csv">
-              📥 立即下载 CSV (.csv)
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              立即下载 CSV (.CSV)
             </a>
           </div>
 
@@ -1959,11 +2359,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <div>
               <div class="download-card-header">
                 <div class="download-icon icon-json">
-                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/><path d="M5.5 8.5A1.5 1.5 0 0 1 7 7h1v1H7a.5.5 0 0 0-.5.5v1A1.5 1.5 0 0 1 5 11v1a1.5 1.5 0 0 1 1.5 1.5H8v1H6.5A2.5 2.5 0 0 1 4 12v-1a2.5 2.5 0 0 1 1.5-2.5zm5 0A1.5 1.5 0 0 0 9 7H8v1h1a.5.5 0 0 1 .5.5v1A1.5 1.5 0 0 0 11 11v1a1.5 1.5 0 0 0-1.5 1.5H8v1h1.5A2.5 2.5 0 0 0 12 12v-1a2.5 2.5 0 0 0-1.5-2.5z"/></svg>
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                 </div>
                 <div>
                   <div class="download-title">JSON 结构化数据</div>
-                  <div class="download-badge badge-json">.json 格式</div>
+                  <div class="download-badge" style="background: var(--color-cyan);">.json 格式</div>
                 </div>
               </div>
               <div class="download-desc">
@@ -1974,7 +2374,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               </div>
             </div>
             <a href="fc_nes_games.json" download="fc_nes_games.json" class="download-btn btn-json">
-              📥 立即下载 JSON (.json)
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              立即下载 JSON (.JSON)
             </a>
           </div>
         </div>
@@ -1988,22 +2389,22 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <div class="modal-header">
         <button class="modal-close-btn" id="modalCloseBtn" aria-label="关闭">&times;</button>
         <div class="badges-row" id="modalBadges"></div>
-        <h2 id="modalTitleZh" style="font-size: 1.4rem; margin-bottom: 4px;"></h2>
-        <div id="modalTitleEn" style="color: var(--text-sub); font-size: 1rem;"></div>
-        <div id="modalTitleJa" style="color: var(--text-muted); font-size: 0.875rem;"></div>
+        <h2 id="modalTitleZh" style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 900; margin-bottom: 4px;"></h2>
+        <div id="modalTitleEn" style="color: var(--text-sub); font-size: 1rem; font-weight: 800;"></div>
+        <div id="modalTitleJa" style="color: var(--text-sub); font-size: 0.88rem; font-weight: 700;"></div>
       </div>
       <div class="modal-body">
-        <div style="background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem;">
-          <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">各地区发行日期总览</div>
-          <div style="display: flex; gap: 24px; margin-top: 6px; flex-wrap: wrap;">
-            <div>日本: <strong id="modalDateJp" style="color: var(--text-main);">--</strong></div>
-            <div>北美: <strong id="modalDateNa" style="color: var(--text-main);">--</strong></div>
-            <div>欧洲: <strong id="modalDatePal" style="color: var(--text-main);">--</strong></div>
+        <div style="background: var(--bg-card-sub); padding: 14px 18px; border: 4px solid var(--border-black); box-shadow: var(--shadow-sm); font-size: 0.9rem;">
+          <div style="color: var(--text-sub); font-size: 0.75rem; font-weight: 900; text-transform: uppercase;">各地区发行日期总览</div>
+          <div style="display: flex; gap: 24px; margin-top: 6px; flex-wrap: wrap; font-family: var(--font-heading); font-size: 0.95rem;">
+            <div>日本: <strong id="modalDateJp" style="color: var(--text-black);">--</strong></div>
+            <div>北美: <strong id="modalDateNa" style="color: var(--text-black);">--</strong></div>
+            <div>欧洲: <strong id="modalDatePal" style="color: var(--text-black);">--</strong></div>
           </div>
         </div>
 
         <div>
-          <h4 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--text-sub);">各版本详细数据对比</h4>
+          <h4 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 900; margin-bottom: 12px; text-transform: uppercase;">各版本详细数据对比</h4>
           <div class="version-compare-grid" id="modalVersionGrid"></div>
         </div>
 
@@ -2018,104 +2419,178 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   </script>
 
   <script>
-    // 全局数据状态
+    // ==========================================================================
+    // 前端核心逻辑 (无外部依赖，兼容现代各主流浏览器，内置明/暗模式一键切换)
+    // ==========================================================================
+
     let allGames = [];
     let filteredGames = [];
+    let currentView = 'table'; // 'table' | 'grid'
     let currentPage = 1;
     let pageSize = 60;
     let activeFilter = 'all';
-    let currentView = 'table'; // 默认密集表格
 
-    // 解析发售日数字，用于高精度时间线排序 (由早到晚)
+    // 日期排序辅助解析
     function parseGameDateNum(game) {
-      const dates = [
-        game.release_dates ? game.release_dates.japan : '',
-        game.release_dates ? game.release_dates.north_america : '',
-        game.release_dates ? game.release_dates.europe : ''
-      ];
-      let minVal = 99999999;
-      for (const d of dates) {
-        if (!d) continue;
-        const mYear = d.match(/(\d{4})/);
-        if (!mYear) continue;
-        const year = parseInt(mYear[1], 10);
-        const mMonth = d.match(/(\d{1,2})\s*月/);
-        const month = mMonth ? parseInt(mMonth[1], 10) : 1;
-        const mDay = d.match(/(\d{1,2})\s*日/);
-        const day = mDay ? parseInt(mDay[1], 10) : 1;
-        const val = year * 10000 + month * 100 + day;
-        if (val < minVal) minVal = val;
+      const dStr = (game.release_dates && (game.release_dates.japan || game.release_dates.north_america || game.release_dates.europe)) || '';
+      const match = dStr.match(/(\d{4})(?:[-年/](\d{1,2}))?(?:[-月/](\d{1,2}))?/);
+      if (match) {
+        const y = parseInt(match[1], 10);
+        const m = match[2] ? parseInt(match[2], 10) : 1;
+        const d = match[3] ? parseInt(match[3], 10) : 1;
+        return y * 10000 + m * 100 + d;
       }
-      return minVal;
+      return 99999999;
     }
 
-    // 初始化载入
+    // --------------------------------------------------------------------------
+    // 主题状态机系统：支持 明亮 (light) / 暗黑 (dark) / 跟随系统 (system) 三态切换
+    // 跟随系统意为：在明亮和黑暗中间，根据操作系统当前颜色偏好自动挑选
+    // --------------------------------------------------------------------------
+    let currentThemePref = localStorage.getItem('fc_nes_theme_pref') || 'system';
+
+    // 探测操作系统当前是否偏好暗色
+    function getSystemTheme() {
+      return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+
+    // 将用户偏好解析为页面当前实际生效的颜色主题 ('light' | 'dark')
+    function resolveActiveTheme(pref) {
+      if (pref === 'system') {
+        return getSystemTheme();
+      }
+      return pref === 'dark' ? 'dark' : 'light';
+    }
+
+    // 应用指定的主题偏好并持久化
+    function applyTheme(pref) {
+      currentThemePref = pref;
+      try {
+        localStorage.setItem('fc_nes_theme_pref', pref);
+      } catch (e) {}
+
+      const activeTheme = resolveActiveTheme(pref);
+      document.documentElement.setAttribute('data-theme', activeTheme);
+      updateThemeToggleUI(pref, activeTheme);
+    }
+
+    // 更新主题切换按钮的图标、文字与视觉色彩
+    function updateThemeToggleUI(pref, activeTheme) {
+      const btn = document.getElementById('themeToggleBtn');
+      const text = document.getElementById('themeToggleText');
+      if (!btn) return;
+      const sun = btn.querySelector('.icon-sun');
+      const moon = btn.querySelector('.icon-moon');
+      const sys = btn.querySelector('.icon-system');
+
+      if (sun) sun.style.display = 'none';
+      if (moon) moon.style.display = 'none';
+      if (sys) sys.style.display = 'none';
+
+      if (pref === 'light') {
+        if (sun) sun.style.display = 'inline-block';
+        if (text) text.textContent = '明亮模式';
+        btn.setAttribute('title', '当前: 明亮模式 (点击切换为暗黑模式)');
+        btn.style.background = '#ffffff';
+        btn.style.color = '#000000';
+      } else if (pref === 'dark') {
+        if (moon) moon.style.display = 'inline-block';
+        if (text) text.textContent = '暗黑模式';
+        btn.setAttribute('title', '当前: 暗黑模式 (点击切换为跟随系统)');
+        btn.style.background = 'var(--color-yellow)';
+        btn.style.color = '#ffffff';
+      } else {
+        // system (跟随系统)
+        if (sys) sys.style.display = 'inline-block';
+        const sysLabel = activeTheme === 'dark' ? '暗' : '亮';
+        if (text) text.textContent = `跟随系统 (${sysLabel})`;
+        btn.setAttribute('title', `当前: 跟随系统 [当前系统为${activeTheme === 'dark' ? '深色' : '浅色'}] (点击切换为明亮模式)`);
+        if (activeTheme === 'dark') {
+          btn.style.background = 'var(--color-cyan)';
+          btn.style.color = '#ffffff';
+        } else {
+          btn.style.background = 'var(--color-mint)';
+          btn.style.color = '#000000';
+        }
+      }
+    }
+
+    // 三态轮流切换：light -> dark -> system -> light
+    function cycleNextTheme() {
+      if (currentThemePref === 'light') {
+        applyTheme('dark');
+      } else if (currentThemePref === 'dark') {
+        applyTheme('system');
+      } else {
+        applyTheme('light');
+      }
+    }
+
+    // 初始化入口
     function init() {
-      // 1. 优先使用内置全局数据 (完全自包含，无外部依赖)
-      if (window.FC_NES_DATA && window.FC_NES_DATA.games) {
+      // 启动并应用主题偏好
+      applyTheme(currentThemePref);
+
+      // 动态监听系统明暗变化：当用户选择“跟随系统”时，系统主题改变页面立刻自动跟随
+      if (window.matchMedia) {
+        const mql = window.matchMedia('(prefers-color-scheme: dark)');
+        const onSysThemeChange = () => {
+          if (currentThemePref === 'system') {
+            applyTheme('system');
+          }
+        };
+        if (mql.addEventListener) {
+          mql.addEventListener('change', onSysThemeChange);
+        } else if (mql.addListener) {
+          mql.addListener(onSysThemeChange);
+        }
+      }
+
+      if (window.FC_NES_DATA) {
         renderWithData(window.FC_NES_DATA);
       } else {
-        // 2. Fallback: 尝试使用 fetch 加载同目录下的 json
         fetch('fc_nes_games.json')
-          .then(resp => resp.json())
+          .then(res => res.json())
           .then(data => renderWithData(data))
           .catch(err => {
-            console.error('加载数据失败:', err);
-            document.getElementById('emptyState').style.display = 'block';
-            document.getElementById('emptyState').innerHTML = `
-              <h3 style="color: var(--nintendo-red);">数据加载失败</h3>
-              <p>未找到数据源，请确认数据文件完整。</p>
-            `;
+            console.error('加载本地 JSON 失败:', err);
+            document.getElementById('statTotalGames').textContent = '错误';
           });
       }
     }
 
-    function renderWithData(dataset) {
-      allGames = dataset.games || [];
-      const stats = dataset.metadata.statistics;
+    function renderWithData(data) {
+      allGames = data.games || [];
+      const stats = data.statistics || {};
 
-      // 渲染统计看板
-      document.getElementById('statTotalGames').textContent = Number(stats.total_unified_games || allGames.length).toLocaleString();
-      document.getElementById('statCrossRegion').textContent = Number(stats.cross_region_games || 0).toLocaleString();
-      document.getElementById('statNesOnly').textContent = Number(stats.nes_exclusive_games || 0).toLocaleString();
-      document.getElementById('statJpOnly').textContent = Number(stats.japan_exclusive_games || 0).toLocaleString();
-      document.getElementById('statRawTotal').textContent = Number(stats.raw_records ? stats.raw_records.total : 0).toLocaleString();
+      // 填充统计看板
+      document.getElementById('statTotalGames').textContent = (stats.total_games || allGames.length).toLocaleString();
+      document.getElementById('statCrossRegion').textContent = (stats.cross_region_games || 0).toLocaleString();
+      document.getElementById('statNesOnly').textContent = (stats.nes_exclusive_games || 0).toLocaleString();
+      document.getElementById('statJpOnly').textContent = (stats.japan_exclusive_games || 0).toLocaleString();
+      document.getElementById('statRawTotal').textContent = (stats.total_wiki_records || 0).toLocaleString();
+      document.getElementById('statVideoCount').textContent = (stats.matched_bilibili_videos || 0).toLocaleString();
 
-      const videoMatchedCount = stats.bilibili_videos_matched || allGames.filter(g => g.video).length;
-      document.getElementById('statVideoCount').textContent = Number(videoMatchedCount).toLocaleString();
-
-      // 更新跨区 Pill 与 B站解说 Pill 数量
-      const crossPill = document.querySelector('[data-filter="cross"]');
-      if (crossPill) {
-        crossPill.textContent = `美日同款跨区 (${stats.cross_region_games})`;
-      }
-      const videoPill = document.querySelector('[data-filter="video"]');
-      if (videoPill) {
-        videoPill.textContent = `📺 B站编年史解说 (${videoMatchedCount})`;
-      }
-
-      // 初始化发行商下拉框
-      populatePublishers();
-
-      // 触发初始筛选与渲染
+      populatePublishers(allGames);
       applyFilters();
     }
 
     // 填充发行商选项
-    function populatePublishers() {
-      const pubSelect = document.getElementById('publisherSelect');
-      const pubCounts = {};
-
-      allGames.forEach(g => {
+    function populatePublishers(games) {
+      const pubMap = new Map();
+      games.forEach(g => {
         (g.publishers || []).forEach(p => {
-          if (p) pubCounts[p] = (pubCounts[p] || 0) + 1;
+          if (p && p.trim()) {
+            const pub = p.trim();
+            pubMap.set(pub, (pubMap.get(pub) || 0) + 1);
+          }
         });
       });
 
-      // 按游戏数量排序
-      const sortedPubs = Object.entries(pubCounts).sort((a, b) => b[1] - a[1]);
+      const sortedPubs = Array.from(pubMap.entries()).sort((a, b) => b[1] - a[1]);
+      const pubSelect = document.getElementById('publisherSelect');
       sortedPubs.forEach(([name, count]) => {
-        if (count >= 3) {
+        if (count >= 2) {
           const opt = document.createElement('option');
           opt.value = name;
           opt.textContent = `${name} (${count})`;
@@ -2124,24 +2599,21 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       });
     }
 
-    // 过滤与排序（默认按发售日由早到晚时间线）
+    // 过滤与排序
     function applyFilters() {
       const searchKeyword = document.getElementById('searchInput').value.trim().toLowerCase();
       const selectedPub = document.getElementById('publisherSelect').value;
       const sortOrder = document.getElementById('sortSelect').value;
 
       filteredGames = allGames.filter(game => {
-        // 平台标签过滤
         if (activeFilter === 'cross' && !game.is_cross_region) return false;
         if (activeFilter === 'video' && !game.video) return false;
         if (activeFilter === 'nes' && !game.platforms.includes('NES')) return false;
         if (activeFilter === 'fc' && !game.platforms.includes('FC')) return false;
         if (activeFilter === 'fds' && !game.platforms.includes('FDS')) return false;
 
-        // 发行商过滤
         if (selectedPub && !(game.publishers || []).includes(selectedPub)) return false;
 
-        // 搜索过滤
         if (searchKeyword) {
           const matchZh = (game.title_zh || '').toLowerCase().includes(searchKeyword);
           const matchEn = (game.title_en || '').toLowerCase().includes(searchKeyword);
@@ -2155,7 +2627,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         return true;
       });
 
-      // 排序（默认按发售日先后顺序由早到晚）
       filteredGames.sort((a, b) => {
         if (sortOrder === 'date_asc') {
           const v1 = parseGameDateNum(a);
@@ -2191,6 +2662,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         document.getElementById('tableContainer').style.display = 'none';
         document.getElementById('emptyState').style.display = 'block';
         document.getElementById('paginationBar').innerHTML = '';
+        document.getElementById('paginationBarTop').innerHTML = '';
         document.getElementById('pageInfoSpan').textContent = '';
         return;
       }
@@ -2220,12 +2692,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       renderPagination(totalPages);
     }
 
-    // 渲染网格视图
+    // 渲染网格视图 (俏皮野兽派轻微旋转与彩色硬投影)
     function renderGridView(games) {
       const grid = document.getElementById('gamesGrid');
       grid.innerHTML = '';
 
-      games.forEach(game => {
+      games.forEach((game) => {
         const card = document.createElement('div');
         card.className = 'game-card' + (game.is_cross_region ? ' is-cross' : '');
         card.onclick = () => openGameDetail(game);
@@ -2240,11 +2712,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           if (p === 'FDS') badgesHtml += `<span class="badge badge-fds">FDS</span>`;
         });
 
-        const titleZh = game.title_zh ? game.title_zh : `<span class="empty">未定中文译名</span>`;
+        const titleZh = game.title_zh ? escapeHtml(game.title_zh) : `<span class="empty">未定中文译名</span>`;
         const titleEn = game.title_en || 'Unknown Title';
         const titleJa = game.title_ja ? `<div class="game-title-ja">${escapeHtml(game.title_ja)}</div>` : '';
 
-        const dateStr = game.release_dates.japan || game.release_dates.north_america || '未知发售日';
+        const dateStr = (game.release_dates && (game.release_dates.japan || game.release_dates.north_america)) || '未知发售日';
         const publishersStr = (game.publishers || []).join(', ') || '未知发行商';
 
         card.innerHTML = `
@@ -2257,7 +2729,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           <div class="card-meta">
             <div class="meta-row">
               <span class="meta-label">首发日期</span>
-              <span>${escapeHtml(dateStr)}</span>
+              <span style="font-weight: 800;">${escapeHtml(dateStr)}</span>
             </div>
             <div class="meta-row">
               <span class="meta-label">主要发行商</span>
@@ -2266,9 +2738,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             ${game.video ? `
             <div class="meta-row" style="margin-top:6px;">
               <span class="meta-label">视频解说</span>
-              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn bili-tag" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 1a.5.5 0 0 1 .4.2L6.8 3h2.4l1.9-1.8a.5.5 0 1 1 .7.7L10.3 3.4c1.6.4 2.7 1.8 2.7 3.6v5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7c0-1.8 1.1-3.2 2.7-3.6L4.1 1.9a.5.5 0 0 1 .4-.9zm-.5 6v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2zm2 1.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm4 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>
-                视频介绍 by 雷文
+              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                视频介绍 BY 雷文
               </a>
             </div>` : ''}
           </div>
@@ -2286,33 +2758,26 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         const tr = document.createElement('tr');
         tr.onclick = () => openGameDetail(game);
 
-        const badges = (game.platforms || []).map(p => {
-          if (p === 'NES') return '<span class="badge badge-nes">NES</span>';
-          if (p === 'FC') return '<span class="badge badge-fc">FC</span>';
-          if (p === 'FDS') return '<span class="badge badge-fds">FDS</span>';
-          return '';
-        }).join(' ');
-
         const enName = game.title_en || '-';
         const jaName = game.title_ja || '-';
         const naDate = (game.release_dates && game.release_dates.north_america) ? game.release_dates.north_america : '-';
         const jpDate = (game.release_dates && game.release_dates.japan) ? game.release_dates.japan : '-';
         const publishersStr = (game.publishers || []).join(', ') || '-';
 
-        let videoCell = '<td style="text-align: center; color: var(--text-muted);">-</td>';
+        let videoCell = '<td style="text-align: center; color: var(--text-sub);">-</td>';
         if (game.video) {
           videoCell = `
             <td style="text-align: center; white-space: nowrap;">
-              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn bili-tag" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 1a.5.5 0 0 1 .4.2L6.8 3h2.4l1.9-1.8a.5.5 0 1 1 .7.7L10.3 3.4c1.6.4 2.7 1.8 2.7 3.6v5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7c0-1.8 1.1-3.2 2.7-3.6L4.1 1.9a.5.5 0 0 1 .4-.9zm-.5 6v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2zm2 1.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm4 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>
-                by 雷文
+              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                BY 雷文
               </a>
             </td>`;
         }
 
         tr.innerHTML = `
           <td>
-            <strong style="color:var(--text-main);font-size:0.95rem;">${escapeHtml(game.title_zh || '-')}</strong>
+            <strong style="font-family:var(--font-heading);font-weight:900;font-size:1.02rem;color:var(--text-black);">${escapeHtml(game.title_zh || '-')}</strong>
           </td>
           ${videoCell}
           <td>
@@ -2350,7 +2815,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       });
     }
 
-    // 渲染分页器
+    // 渲染分页器 (无 Emoji，纯文本或 SVG)
     function renderPagination(totalPages) {
       const bars = [
         document.getElementById('paginationBarTop'),
@@ -2363,7 +2828,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
         const prevBtn = document.createElement('button');
         prevBtn.className = 'page-btn';
-        prevBtn.innerHTML = '&laquo;';
+        prevBtn.innerHTML = '&lt;';
         prevBtn.disabled = (currentPage === 1);
         prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); } };
         bar.appendChild(prevBtn);
@@ -2384,7 +2849,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           if (startPage > 2) {
             const span = document.createElement('span');
             span.textContent = '...';
-            span.style.color = 'var(--text-muted)';
+            span.style.fontWeight = '900';
+            span.style.padding = '0 4px';
             bar.appendChild(span);
           }
         }
@@ -2401,7 +2867,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           if (endPage < totalPages - 1) {
             const span = document.createElement('span');
             span.textContent = '...';
-            span.style.color = 'var(--text-muted)';
+            span.style.fontWeight = '900';
+            span.style.padding = '0 4px';
             bar.appendChild(span);
           }
           const lastBtn = document.createElement('button');
@@ -2413,7 +2880,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
         const nextBtn = document.createElement('button');
         nextBtn.className = 'page-btn';
-        nextBtn.innerHTML = '&raquo;';
+        nextBtn.innerHTML = '&gt;';
         nextBtn.disabled = (currentPage === totalPages);
         nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderCurrentPage(); window.scrollTo({top: 280, behavior: 'smooth'}); } };
         bar.appendChild(nextBtn);
@@ -2426,9 +2893,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       document.getElementById('modalTitleEn').textContent = game.title_en || '';
       document.getElementById('modalTitleJa').textContent = game.title_ja || '';
 
-      document.getElementById('modalDateJp').textContent = game.release_dates.japan || '未在日本发售';
-      document.getElementById('modalDateNa').textContent = game.release_dates.north_america || '未在北美发售';
-      document.getElementById('modalDatePal').textContent = game.release_dates.europe || '未在欧洲发售';
+      document.getElementById('modalDateJp').textContent = (game.release_dates && game.release_dates.japan) || '未在日本发售';
+      document.getElementById('modalDateNa').textContent = (game.release_dates && game.release_dates.north_america) || '未在北美发售';
+      document.getElementById('modalDatePal').textContent = (game.release_dates && game.release_dates.europe) || '未在欧洲发售';
 
       const badgesContainer = document.getElementById('modalBadges');
       badgesContainer.innerHTML = '';
@@ -2456,7 +2923,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         vCard.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <span class="badge ${badgeClass}" style="font-size:0.75rem;">${escapeHtml(v.platform_name || pKey)}</span>
-            <span style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(v.region || '')}</span>
+            <span style="font-size:0.78rem; font-weight:800; color:var(--text-sub);">${escapeHtml(v.region || '')}</span>
           </div>
           <div class="version-field-label">版本标题 (原名)</div>
           <div class="version-field-val"><strong>${escapeHtml(v.title_zh || v.title_en || v.title_ja || '-')}</strong></div>
@@ -2470,7 +2937,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           ` : ''}
 
           <div class="version-field-label">发行商</div>
-          <div class="version-field-val" style="color:var(--accent-cyan)">${escapeHtml(v.publisher || '未知')}</div>
+          <div class="version-field-val" style="color:var(--text-black);">${escapeHtml(v.publisher || '未知')}</div>
 
           <div class="version-field-label">发售日期</div>
           <div class="version-field-val">${escapeHtml(v.release_date || v.release_date_na || v.release_date_pal || '-')}</div>
@@ -2488,7 +2955,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       let linksHtml = '';
       if (game.wiki_url) {
         linksHtml += `
-          <a href="${escapeHtml(game.wiki_url)}" target="_blank" rel="noopener" class="wiki-link-btn" style="background:rgba(230,0,18,0.15);color:#ff4d5a;border:1px solid rgba(230,0,18,0.3);">
+          <a href="${escapeHtml(game.wiki_url)}" target="_blank" rel="noopener" class="wiki-link-btn" style="background:var(--color-yellow);color:#000000;padding:8px 14px;font-size:0.85rem;margin-bottom:12px;">
             访问主维基百科页面 &nearr;
           </a>
         `;
@@ -2497,19 +2964,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         linksHtml += `
           <div class="bili-card">
             <div>
-              <div style="color: #fb7299; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 1a.5.5 0 0 1 .4.2L6.8 3h2.4l1.9-1.8a.5.5 0 1 1 .7.7L10.3 3.4c1.6.4 2.7 1.8 2.7 3.6v5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7c0-1.8 1.1-3.2 2.7-3.6L4.1 1.9a.5.5 0 0 1 .4-.9zm-.5 6v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2zm2 1.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm4 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>
+              <div style="color: var(--color-red); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 B站红白机游戏编年史对应解说
               </div>
-              <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-main); margin-top: 4px;">
+              <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 900; margin-top: 4px;">
                 ${escapeHtml(game.video.video_title)}
               </div>
-              <div style="font-size: 0.82rem; color: var(--text-sub); margin-top: 2px;">
-                分段章节: <strong style="color: #fb7299;">${escapeHtml(game.video.chapter_name)}</strong> (起播时间点: ${game.video.timestamp})
+              <div style="font-size: 0.82rem; font-weight: 800; color: var(--text-sub); margin-top: 2px;">
+                分段章节: <strong style="color: var(--color-red);">${escapeHtml(game.video.chapter_name)}</strong> (起播时间点: ${game.video.timestamp})
               </div>
             </div>
-            <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" style="padding: 8px 18px; font-size: 0.88rem; border-radius: 6px; box-shadow: 0 4px 12px rgba(251,114,153,0.3);">
-              📺 视频介绍 by 雷文 &nearr;
+            <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" style="padding: 10px 20px; font-size: 0.88rem;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              视频介绍 BY 雷文 &nearr;
             </a>
           </div>
         `;
@@ -2542,6 +3010,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     document.addEventListener('DOMContentLoaded', () => {
       init();
 
+      // 主题切换按钮监听 (三态循环：明亮 -> 暗黑 -> 跟随系统)
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', cycleNextTheme);
+      }
+
       // 搜索输入防抖
       let debounceTimer = null;
       document.getElementById('searchInput').addEventListener('input', () => {
@@ -2568,29 +3042,32 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
           e.currentTarget.classList.add('active');
           activeFilter = e.currentTarget.getAttribute('data-filter');
+          currentPage = 1;
           applyFilters();
         });
       });
 
-      // 视图切换按钮
-      const btnGrid = document.getElementById('viewBtnGrid');
-      const btnTable = document.getElementById('viewBtnTable');
+      // 视图切换（表格 / 卡片）
+      const viewBtnTable = document.getElementById('viewBtnTable');
+      const viewBtnGrid = document.getElementById('viewBtnGrid');
 
-      btnGrid.addEventListener('click', () => {
-        currentView = 'grid';
-        btnGrid.classList.add('active');
-        btnTable.classList.remove('active');
-        renderCurrentPage();
-      });
-
-      btnTable.addEventListener('click', () => {
+      viewBtnTable.addEventListener('click', () => {
+        if (currentView === 'table') return;
         currentView = 'table';
-        btnTable.classList.add('active');
-        btnGrid.classList.remove('active');
+        viewBtnTable.classList.add('active');
+        viewBtnGrid.classList.remove('active');
         renderCurrentPage();
       });
 
-      // 打开与关闭下载中心
+      viewBtnGrid.addEventListener('click', () => {
+        if (currentView === 'grid') return;
+        currentView = 'grid';
+        viewBtnGrid.classList.add('active');
+        viewBtnTable.classList.remove('active');
+        renderCurrentPage();
+      });
+
+      // 下载弹窗开关
       document.getElementById('openDownloadModalBtn').addEventListener('click', openDownloadModal);
       document.getElementById('downloadModalCloseBtn').addEventListener('click', closeModal);
       document.getElementById('downloadModalBackdrop').addEventListener('click', (e) => {
