@@ -2561,15 +2561,45 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     function renderWithData(data) {
       allGames = data.games || [];
-      const stats = data.statistics || {};
+      // 兼顾 data.metadata.statistics 与顶层 data.statistics
+      const stats = (data.metadata && data.metadata.statistics) || data.statistics || {};
 
-      // 填充统计看板
-      document.getElementById('statTotalGames').textContent = (stats.total_games || allGames.length).toLocaleString();
-      document.getElementById('statCrossRegion').textContent = (stats.cross_region_games || 0).toLocaleString();
-      document.getElementById('statNesOnly').textContent = (stats.nes_exclusive_games || 0).toLocaleString();
-      document.getElementById('statJpOnly').textContent = (stats.japan_exclusive_games || 0).toLocaleString();
-      document.getElementById('statRawTotal').textContent = (stats.total_wiki_records || 0).toLocaleString();
-      document.getElementById('statVideoCount').textContent = (stats.matched_bilibili_videos || 0).toLocaleString();
+      // 1. 整合后独立游戏总数
+      const totalGames = stats.total_unified_games || stats.total_games || allGames.length;
+
+      // 2. 美日同款跨区（已合并）
+      const crossRegion = stats.cross_region_games !== undefined 
+        ? stats.cross_region_games 
+        : allGames.filter(g => g.is_cross_region).length;
+
+      // 3. NES 欧美独占游戏
+      const nesOnly = stats.nes_exclusive_games !== undefined 
+        ? stats.nes_exclusive_games 
+        : allGames.filter(g => {
+            const plats = g.platforms || [];
+            return plats.length === 1 && plats[0] === 'NES';
+          }).length;
+
+      // 4. 日本地区独占 (FC/FDS)
+      const jpOnly = stats.japan_exclusive_games !== undefined 
+        ? stats.japan_exclusive_games 
+        : allGames.filter(g => !(g.platforms || []).includes('NES')).length;
+
+      // 5. 维基百科原始记录总计
+      const rawTotal = stats.raw_records_total || stats.total_wiki_records || (stats.raw_records && stats.raw_records.total) || 1961;
+
+      // 6. B站编年史解说视频
+      const videoCount = stats.bilibili_videos_matched !== undefined 
+        ? stats.bilibili_videos_matched 
+        : (stats.matched_bilibili_videos !== undefined ? stats.matched_bilibili_videos : allGames.filter(g => g.video).length);
+
+      // 填充统计看板数值
+      document.getElementById('statTotalGames').textContent = Number(totalGames).toLocaleString();
+      document.getElementById('statCrossRegion').textContent = Number(crossRegion).toLocaleString();
+      document.getElementById('statNesOnly').textContent = Number(nesOnly).toLocaleString();
+      document.getElementById('statJpOnly').textContent = Number(jpOnly).toLocaleString();
+      document.getElementById('statRawTotal').textContent = Number(rawTotal).toLocaleString();
+      document.getElementById('statVideoCount').textContent = Number(videoCount).toLocaleString();
 
       populatePublishers(allGames);
       applyFilters();
