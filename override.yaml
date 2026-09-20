@@ -15,14 +15,14 @@
 #   或 游戏ID: 新中文名     (例如 basic-family: 家用BASIC语言)
 # ------------------------------------------------------------------------------
 title_zh:
-  # bilibili没有的
+  # wiki和bilibili的名称不同的, 使用bilibili里的名称
   "track-field": "超级奥林匹克"
+  "hyper-olympic": "超级奥林匹克"
   "m-u-s-c-l-e": "筋肉人摔跤大赛"
   "kinniku-man-muscle-tag-match": "筋肉人摔跤大赛"
   "burger-time": "汉堡时间"
   "burgertime": "汉堡时间"
-
-  # bilibili里的
+  "super-dimension-fortress-macross": "超时空要塞"
   "donkey-kong-jr": "大金刚2/小金刚"
   "gomoku-narabe-renju": "五子棋"
   "mario-bros": "马里奥兄弟"
@@ -119,9 +119,37 @@ title_zh:
   "dirty-pair-project-eden": "搞怪拍档"
   "rush-n-attack": "绿色兵团"
   "green-beret": "绿色兵团"
+  "higemaru-makaijima-nanatsu-no-shima-dai-bouken": "魔界岛 七岛大冒险"
+  "renegade": "热血硬派国夫君"
+  "nekketsu-kouha-kunio-kun": "热血硬派国夫君"
+  "rygar": "阿格斯战士"
+  "argos-no-senshi": "阿格斯战士"
+  "tantei-jinguuji-saburou-shinjuku-chuuou-kouen-satsujin-jik": "神宫寺三郎 新宿中央公园杀人事件"
+  "kineko-kinetic-connection-the-monitor-puzzle-vol-ii": "解谜拼图2"
+  "kinnikuman-kinnikusei-oui-soudatsusen": "筋肉人 筋肉星王位争夺战"
+  "fuuun-shourinken": "风云少林拳"
+  "fuuun-shourinken-ankoku-no-maou": "风云少林拳2 黑暗魔王"
+  "seiken-saikokaribaa-majuu-no-mori-densetsu": "圣剑除魔"
+  "pro-golfer-saru-kage-no-tournament": "高尔夫猿"
+  "family-trainer-no-4-jogging-race": "家庭教练系列4-慢跑锦标赛"
+  "deep-dungeon-2-yuushi-no-monshou": "深入地下城2-勇士的纹章"
+  "smash-ping-pong": "乒乓球"
+  "herakles-no-eikou-toujin-makyou-den": "斗人魔境传 海格力斯的荣光"
+  "dr-chaos-jigoku-no-tobira": "混沌先生 地狱之门"
+  "ring-king": "家庭拳击"
+  "family-boxing": "家庭拳击"
+  "moero-pro-yakyuu": "燃烧吧！！职业棒球"
+  "yume-koujou-doki-doki-panic": "梦工场 悸动恐慌"
+  "fantasy-zone": "幻想地带"
+  "titanic-mystery-ao-no-senritsu": "泰坦尼克号沉没记"
+  "karaoke-studio": "卡拉OK"
+  "rad-racer": "立体赛车"
+  "erunaaku-no-zaihou": "艾鲁娜财宝" #第5页完成
 
-  # bilibili里有，但是名称不好
+  # bilibili里有，但是名称不好，这里的项目要在video_mappings也有相同的项目
   "ganbare-goemon-karakuri-douchuu": "大盗伍佑卫门"
+  "exciting-billiard": "科乐美台球"
+  "family-trainer-no-5-meiro-dai-sakusen": "家庭教练系列5-迷宫大作战"
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -130,14 +158,22 @@ title_zh:
 #   目标游戏中文名（或游戏ID）: 视频分段章节名
 # ------------------------------------------------------------------------------
 video_mappings:
-  "算术一年级": "算数一年级~算数三年级"
-  "算术二年级": "算数一年级~算数三年级"
-  "算术三年级": "算数一年级~算数三年级"
-  "ganbare-goemon-karakuri-douchuu": "大盗五右卫门"
+  # 使用wiki的名字
+  "sansuu-1-nen-keisan-game": "算数一年级~算数三年级"
+  "sansuu-2-nen-keisan-game": "算数一年级~算数三年级"
+  "sansuu-3-nen-keisan-game": "算数一年级~算数三年级"
   "king-kong-2-ikari-no-megaton-punch": "金刚2 愤怒的百万拳头"
   "hokuto-no-ken": "北斗之拳"
   "sansuu-4-nen-keisan-game": "算数四年级"
   "sansuu-5-6-nen-keisan-game": "算数五六年级"
+  "fist-of-the-north-star": "北斗之拳2 世纪末救世主传说"
+  "hokuto-no-ken-2-seikimatsu-kyuuseishu-densetsu": "北斗之拳2 世纪末救世主传说"
+  "exciting-basketball": "KONAMI篮球"
+
+  # 不使用wiki的名称，也不使用bilibili的，使用title_zh里定义的名字
+  "ganbare-goemon-karakuri-douchuu": "大盗五右卫门"
+  "exciting-billiard": "KONAMI台球"
+  "family-trainer-no-5-meiro-dai-sakusen": "家庭教练系列5-迷路大作战"
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -166,4 +202,6 @@ merge_games:
   "Family Computer Robot Block Set": "Stack-Up"
   "Kinniku Man - Muscle Tag Match": "M.U.S.C.L.E."
   "Dragon Quest 2": "Dragon Warrior II"
+  "moero-pro-yakyuu": "bases-loaded"
+  "family-trainer-no-1-athletic-world": "athletic-world"
 

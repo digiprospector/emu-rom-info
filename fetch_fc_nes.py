@@ -101,20 +101,40 @@ def fetch_json_with_retry(url: str, retries: int = 3, timeout: int = 10) -> Dict
     return {}
 
 
-def collect_bilibili_season_videos(cache_dir: str = "cache/bilibili") -> List[Dict[str, Any]]:
-    """获取合集中的所有视频基本信息"""
+def collect_bilibili_season_videos(cache_dir: str = "cache/bilibili", refresh_season: bool = False) -> List[Dict[str, Any]]:
+    """获取合集中的所有视频基本信息 (支持动态计算页数与增量刷新)"""
     os.makedirs(cache_dir, exist_ok=True)
     all_archives = []
     
-    # 98 个视频，每页 30 条，共 4 页
-    for pn in range(1, 5):
+    # 1. 首先拉取第 1 页以动态确定合集总视频数与总页数
+    page_1_cache = os.path.join(cache_dir, "page_1.json")
+    if os.path.exists(page_1_cache) and not refresh_season:
+        with open(page_1_cache, "r", encoding="utf-8") as f:
+            pdata = json.load(f)
+    else:
+        url = f'https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={MID}&season_id={SEASON_ID}&page_num=1&page_size=30'
+        logger.info("正在拉取 B 站合集第 1 页视频列表...")
+        pdata = fetch_json_with_retry(url)
+        with open(page_1_cache, "w", encoding="utf-8") as f:
+            json.dump(pdata, f, ensure_ascii=False, indent=2)
+        time.sleep(0.3)
+        
+    archives = pdata.get('data', {}).get('archives', [])
+    all_archives.extend(archives)
+
+    total = pdata.get('data', {}).get('page', {}).get('total', len(archives))
+    page_size = pdata.get('data', {}).get('page', {}).get('page_size', 30)
+    total_pages = max(1, (total + page_size - 1) // page_size)
+
+    # 2. 依次获取后续各页
+    for pn in range(2, total_pages + 1):
         page_cache = os.path.join(cache_dir, f"page_{pn}.json")
-        if os.path.exists(page_cache):
+        if os.path.exists(page_cache) and not refresh_season:
             with open(page_cache, "r", encoding="utf-8") as f:
                 pdata = json.load(f)
         else:
             url = f'https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={MID}&season_id={SEASON_ID}&page_num={pn}&page_size=30'
-            logger.info(f"正在拉取合集第 {pn} 页视频列表...")
+            logger.info(f"正在拉取 B 站合集第 {pn}/{total_pages} 页视频列表...")
             pdata = fetch_json_with_retry(url)
             with open(page_cache, "w", encoding="utf-8") as f:
                 json.dump(pdata, f, ensure_ascii=False, indent=2)
@@ -123,7 +143,7 @@ def collect_bilibili_season_videos(cache_dir: str = "cache/bilibili") -> List[Di
         archives = pdata.get('data', {}).get('archives', [])
         all_archives.extend(archives)
 
-    logger.info(f"成功获取合集视频总数: {len(all_archives)} 个")
+    logger.info(f"成功获取合集视频总数: {len(all_archives)} 个 (共 {total_pages} 页)")
     return all_archives
 
 
@@ -150,6 +170,7 @@ def fetch_all_video_details(archives: List[Dict[str, Any]], cache_dir: str = "ca
         if not vd or vd.get('code') != 0:
             view_url = f'https://api.bilibili.com/x/web-interface/view?bvid={bvid}'
             try:
+                logger.info(f"检测到新视频，正在抓取详情与分段 [{idx+1}/{len(archives)}]: 《{title}》({bvid})")
                 vd = fetch_json_with_retry(view_url)
                 with open(v_cache, "w", encoding="utf-8") as f:
                     json.dump(vd, f, ensure_ascii=False, indent=2)
@@ -4142,6 +4163,15 @@ def save_raw_data(
     logger.info(f"已保存按 ID 合并的维基游戏 JSON: {wiki_merged_json_path} (共 {merged_dataset['total_games']} 款游戏)")
 
     # 4. 保存 B 站原始分段章节 JSON
+    save_bilibili_raw_data(bilibili_segments, raw_dir=raw_dir)
+
+
+def save_bilibili_raw_data(
+    bilibili_segments: List[Dict[str, Any]], 
+    raw_dir: str = "data/raw"
+) -> str:
+    """持久化保存 B 站原始分段章节 JSON 到 data/raw/bilibili_segments_raw.json"""
+    os.makedirs(raw_dir, exist_ok=True)
     bili_json_path = os.path.join(raw_dir, "bilibili_segments_raw.json")
     with open(bili_json_path, "w", encoding="utf-8") as f:
         json.dump({
@@ -4150,6 +4180,20 @@ def save_raw_data(
             "segments": bilibili_segments
         }, f, ensure_ascii=False, indent=2)
     logger.info(f"已保存 B 站原始分段 JSON: {bili_json_path} (共 {len(bilibili_segments)} 条)")
+    return bili_json_path
+
+
+def fetch_bilibili_raw_data(
+    cache_dir: Optional[str] = "cache",
+    raw_dir: str = "data/raw",
+    refresh_season: bool = True
+) -> List[Dict[str, Any]]:
+    """仅增量抓取 B 站合集新视频与分段章节，保存到 cache 并更新持久化至 data/raw/bilibili_segments_raw.json"""
+    bili_cache = os.path.join(cache_dir, "bilibili") if cache_dir else "cache/bilibili"
+    archives = collect_bilibili_season_videos(cache_dir=bili_cache, refresh_season=refresh_season)
+    segments = fetch_all_video_details(archives, cache_dir=bili_cache)
+    save_bilibili_raw_data(segments, raw_dir=raw_dir)
+    return segments
 
 
 def load_raw_data(raw_dir: str = "data/raw") -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
@@ -4202,9 +4246,7 @@ def fetch_raw_data(
     all_raw_list.extend(fc_records)
 
     # 4. 抓取与解析 B 站合集视频分段
-    bili_cache = os.path.join(cache_dir, "bilibili") if cache_dir else "cache/bilibili"
-    archives = collect_bilibili_season_videos(cache_dir=bili_cache)
-    segments = fetch_all_video_details(archives, cache_dir=bili_cache)
+    segments = fetch_bilibili_raw_data(cache_dir=cache_dir, raw_dir=raw_dir, refresh_season=force_refresh)
 
     # 5. 持久化保存到 data/raw 目录
     save_raw_data(all_raw_list, segments, raw_dir=raw_dir)
@@ -4850,8 +4892,7 @@ def main():
         help="网页与 API 缓存目录 (默认: cache/)"
     )
     parser.add_argument(
-        "--override", "--adjustments", "--adjust",
-        dest="adjustments",
+        "--override",
         default="override.yaml",
         help="用户可编辑的自定义调整规则 YAML 文件路径 (默认: override.yaml)"
     )
@@ -4887,9 +4928,10 @@ def main():
         help="执行 10 项深度标准库数据完整性断言校验"
     )
     parser.add_argument(
-        "--fetch-bilibili-only",
+        "--fetch-bilibili", "--fetch-bilibili-only",
+        dest="fetch_bilibili",
         action="store_true",
-        help="仅重新抓取 B 站《红白机游戏编年史系列》合集章节分段"
+        help="仅增量抓取 B 站合集新视频与分段章节并对齐发布 (跳过 Wiki 抓取)"
     )
 
     args = parser.parse_args()
@@ -4906,15 +4948,7 @@ def main():
         print(f"\n[OK] 前端可视化页面已更新生成: {html_path}")
         return
 
-    # 3. 独立抓取 B 站合集分段模式
-    if args.fetch_bilibili_only:
-        bili_cache = os.path.join(args.cache_dir, "bilibili")
-        archives = collect_bilibili_season_videos(cache_dir=bili_cache)
-        fetch_all_video_details(archives, cache_dir=bili_cache)
-        print(f"\n[OK] B 站合集视频章节已全量抓取更新至: {bili_cache}")
-        return
-
-    # 4. 判断是否需要抓取 Raw 原始数据
+    # 3. 判断是否需要抓取 Raw 原始数据
     wiki_raw_file = os.path.join(args.raw_dir, "wiki_games_raw.json")
     bili_raw_file = os.path.join(args.raw_dir, "bilibili_segments_raw.json")
     raw_exists = os.path.exists(wiki_raw_file) and os.path.exists(bili_raw_file)
@@ -4922,7 +4956,27 @@ def main():
     raw_records = None
     segments = None
 
-    if (args.fetch_raw or args.refresh or not raw_exists) and not args.build:
+    if args.fetch_bilibili:
+        print("=" * 65)
+        print("【模式】仅增量抓取 B 站合集新视频与分段章节 (跳过 Wiki 抓取)...")
+        print("=" * 65)
+        segments = fetch_bilibili_raw_data(
+            cache_dir=args.cache_dir,
+            raw_dir=args.raw_dir,
+            refresh_season=True
+        )
+        print(f"[OK] B 站视频分段原始数据已成功持久化至: {bili_raw_file} (共 {len(segments)} 条分段)")
+
+        # 读取本地已有 Wiki raw 数据
+        if not os.path.exists(wiki_raw_file):
+            print(f"[错误] 未找到本地 Wiki 原始数据: {wiki_raw_file}，请先执行一次 python fetch_fc_nes.py --fetch-raw")
+            return
+        with open(wiki_raw_file, "r", encoding="utf-8") as f:
+            w_data = json.load(f)
+            raw_records = w_data.get("records", w_data) if isinstance(w_data, dict) else w_data
+        print(f"[OK] 已成功加载本地 Wiki 原始数据: {len(raw_records)} 条记录")
+
+    elif (args.fetch_raw or args.refresh or not raw_exists) and not args.build:
         print("=" * 65)
         print("【阶段一】开始从网络抓取原始数据并保存为 Raw 格式 (JSON/CSV)...")
         print("=" * 65)
@@ -4936,14 +4990,14 @@ def main():
 
     # 5. 基于 Raw 原始数据与用户自定义 override.yaml 执行构建与全格式导出
     print("=" * 65)
-    print(f"【阶段二】从 Raw 数据出发，结合调整配置 ({args.adjustments}) 生成全格式数据...")
+    print(f"【阶段二】从 Raw 数据出发，结合调整配置 ({args.override}) 生成全格式数据...")
     print(" (融合 No-Intro DAT、rom-name-cn 与 B站编年史视频)")
     print("=" * 65)
 
     dataset = build_from_raw(
         raw_dir=args.raw_dir,
         output_dir=args.output_dir,
-        yaml_adjust_path=args.adjustments,
+        yaml_adjust_path=args.override,
         raw_records=raw_records,
         bilibili_segments=segments
     )

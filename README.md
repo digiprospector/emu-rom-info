@@ -234,7 +234,7 @@ python fetch_fc_nes.py
 # 2. 仅基于 Raw 数据构建 (无网络请求，极速响应，适合调整 override.yaml 后使用)
 python fetch_fc_nes.py --build
 
-# 3. 指定外部调整规则配置文件 (支持 --override 或 --adjustments)
+# 3. 指定外部调整规则配置文件 (支持 --override)
 python fetch_fc_nes.py --override my_adjust.yaml
 
 # 4. 强制重新抓取网络原始数据并持久化到 data/raw/
@@ -249,6 +249,6 @@ python fetch_fc_nes.py --html-only
 # 7. 强制刷新：忽略本地网页与 B 站 API 缓存重新从网络下载
 python fetch_fc_nes.py --refresh
 
-# 8. 仅更新 B 站合集视频章节分段
-python fetch_fc_nes.py --fetch-bilibili-only
+# 8. 增量抓取 B 站数据 (跳过 Wiki 网络请求，仅增量拉取 B 站新视频并对齐发布)
+python fetch_fc_nes.py --fetch-bilibili
 ```

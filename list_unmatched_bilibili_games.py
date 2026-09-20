@@ -198,7 +198,7 @@ def main():
         help="指定游戏库数据 json 文件路径（默认自动查找 data/fc_nes_games.json）"
     )
     parser.add_argument(
-        "--override", "--adjustments", "--adjust",
+        "--override",
         dest="override",
         default="override.yaml",
         help="指定调整规则配置文件路径（默认为 override.yaml）"
