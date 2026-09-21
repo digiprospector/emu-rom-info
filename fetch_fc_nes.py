@@ -2452,16 +2452,46 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     let activeFilter = 'all';
 
     // 日期排序辅助解析
-    function parseGameDateNum(game) {
-      const dStr = (game.release_dates && (game.release_dates.japan || game.release_dates.north_america || game.release_dates.europe)) || '';
-      const match = dStr.match(/(\d{4})(?:[-年/](\d{1,2}))?(?:[-月/](\d{1,2}))?/);
+    function parseDateToNum(dStr) {
+      if (!dStr) return null;
+      const match = String(dStr).match(/(\d{4})(?:[-年/](\d{1,2}))?(?:[-月/](\d{1,2}))?/);
       if (match) {
         const y = parseInt(match[1], 10);
         const m = match[2] ? parseInt(match[2], 10) : 1;
         const d = match[3] ? parseInt(match[3], 10) : 1;
         return y * 10000 + m * 100 + d;
       }
-      return 99999999;
+      return null;
+    }
+
+    // 提取全部地区版本中最早的有效发售日及数值
+    function getEarliestReleaseInfo(game) {
+      const rd = game.release_dates || {};
+      const candidates = [
+        rd.japan,
+        rd.north_america,
+        rd.europe
+      ].filter(s => s && String(s).trim());
+
+      if (candidates.length === 0) {
+        return { num: 99999999, str: '未知发售日' };
+      }
+
+      let best = null;
+      for (const s of candidates) {
+        const num = parseDateToNum(s);
+        if (num !== null) {
+          if (!best || num < best.num) {
+            best = { num, str: s };
+          }
+        }
+      }
+
+      return best || { num: 99999999, str: candidates[0] };
+    }
+
+    function parseGameDateNum(game) {
+      return getEarliestReleaseInfo(game).num;
     }
 
     // --------------------------------------------------------------------------
@@ -2767,7 +2797,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         const titleEn = game.title_en || 'Unknown Title';
         const titleJa = game.title_ja ? `<div class="game-title-ja">${escapeHtml(game.title_ja)}</div>` : '';
 
-        const dateStr = (game.release_dates && (game.release_dates.japan || game.release_dates.north_america)) || '未知发售日';
+        const dateStr = getEarliestReleaseInfo(game).str;
         const publishersStr = (game.publishers || []).join(', ') || '未知发行商';
 
         card.innerHTML = `
@@ -3917,8 +3947,19 @@ def merge_fc_nes_records(
                 wiki_url = v["wiki_url"]
                 break
 
+        # 收集日版发售日候选 (FC卡带与FDS磁碟机)，选取其中更早的有效发售日
+        jp_candidates = []
+        for v in [fc_ver, fds_ver]:
+            if v and v.get("release_date"):
+                d_str = str(v["release_date"]).strip()
+                if d_str:
+                    t = parse_date_tuple(d_str)
+                    jp_candidates.append((t if t else (9999, 99, 99), d_str))
+
+        japan_date = min(jp_candidates, key=lambda x: x[0])[1] if jp_candidates else ""
+
         release_dates = {
-            "japan": (fc_ver.get("release_date") if fc_ver else "") or (fds_ver.get("release_date") if fds_ver else ""),
+            "japan": japan_date,
             "north_america": nes_ver.get("release_date_na", "") if nes_ver else "",
             "europe": nes_ver.get("release_date_pal", "") if nes_ver else "",
         }
@@ -4359,7 +4400,7 @@ def build_from_raw(
     csv_path = os.path.join(output_dir, "fc_nes_games.csv")
     excel_path = os.path.join(output_dir, "fc_nes_games.xlsx")
     html_path = os.path.join(output_dir, "fc_nes_games.html")
-    bili_match_path = os.path.join(output_dir, "bilibili_match.yaml")
+    bili_match_path = os.path.join("temp", "bilibili_match.yaml")
 
     save_to_json(dataset, json_path)
     save_to_pickle(dataset, pickle_path)
@@ -4626,8 +4667,8 @@ def save_to_html(data: Dict[str, Any] = None, filepath: str = "data/fc_nes_games
     logger.info(f"已保存 HTML 交互式前端页面: {filepath}")
 
 
-def save_to_bilibili_match_yaml(games: List[Dict[str, Any]], filepath: str = "data/bilibili_match.yaml") -> None:
-    """保存成功匹配到 B 站解说视频的游戏 ID 与对应分段章节名称清单至 YAML 文件"""
+def save_to_bilibili_match_yaml(games: List[Dict[str, Any]], filepath: str = "temp/bilibili_match.yaml") -> None:
+    """保存成功匹配到 B 站解说视频的游戏 ID 与对应分段章节名称清单至 YAML 文件 (默认存放至 temp 目录)"""
     os.makedirs(os.path.dirname(os.path.abspath(filepath)), exist_ok=True)
 
     match_dict: Dict[str, str] = OrderedDict()
@@ -4654,7 +4695,7 @@ def save_to_bilibili_match_yaml(games: List[Dict[str, Any]], filepath: str = "da
 
     lines = [
         "# ==============================================================================",
-        "# Bilibili 视频分段章节对齐清单 (bilibili_match.yaml)",
+        "# Bilibili 视频分段章节对齐清单 (temp/bilibili_match.yaml)",
         "# 自动生成于 build 构建阶段，记录所有成功匹配到 B 站解说视频的游戏 ID 与对应章节名称",
         f"# 生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
         f"# 游戏总数: {matched_games_count} 款 (含各版本原始 ID 共 {len(match_dict)} 条规则)",
@@ -4670,15 +4711,6 @@ def save_to_bilibili_match_yaml(games: List[Dict[str, Any]], filepath: str = "da
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(content)
     logger.info(f"已保存 B 站视频匹配清单 YAML: {filepath} (共 {len(match_dict)} 条规则)")
-
-    # 同步在项目根目录下生成一份 bilibili_match.yaml，方便直接查阅
-    root_filepath = "bilibili_match.yaml"
-    if os.path.abspath(filepath) != os.path.abspath(root_filepath):
-        try:
-            with open(root_filepath, "w", encoding="utf-8") as f:
-                f.write(content)
-        except Exception as e:
-            logger.debug(f"在根目录同步 bilibili_match.yaml 失败: {e}")
 
 
 # ==============================================================================
@@ -4836,10 +4868,10 @@ def run_verifications():
     assert os.path.exists(bili_raw_json), "缺少 data/raw/bilibili_segments_raw.json 原始分段数据"
     print("  [OK] Raw 原始数据持久化校验通过 (data/raw/*.json, *.csv)")
         
-    assert "bili-tag" in html_content, "HTML 应包含 B 站视频徽章样式 bili-tag"
+    assert "bili-btn" in html_content, "HTML 应包含 B 站视频按钮样式 bili-btn"
     assert "bili-card" in html_content, "HTML 应包含详情弹窗中的 B 站解说卡片 bili-card"
-    assert "视频介绍 by 雷文" in html_content, "HTML 应包含 '视频介绍 by 雷文' 链接文本"
-    print("  [OK] 前端页面 B 站视频徽章、'视频介绍 by 雷文' 跳转按钮与弹窗卡片校验通过")
+    assert "视频介绍 BY 雷文" in html_content, "HTML 应包含 '视频介绍 BY 雷文' 链接文本"
+    print("  [OK] 前端页面 B 站视频按钮、'视频介绍 BY 雷文' 跳转按钮与弹窗卡片校验通过")
     
     # 10. 验证 data/fc_nes_games.xlsx 结构与样式完整性
     import openpyxl
@@ -5028,7 +5060,7 @@ def main():
     csv_path = os.path.join(out_dir, "fc_nes_games.csv")
     excel_path = os.path.join(out_dir, "fc_nes_games.xlsx")
     html_path = os.path.join(out_dir, "fc_nes_games.html")
-    bili_match_path = os.path.join(out_dir, "bilibili_match.yaml")
+    bili_match_path = os.path.join("temp", "bilibili_match.yaml")
 
     print("\n所有 FC/NES 整合数据与前端页面已成功保存！")
     print(f"1. Raw 原始数据目录:  {args.raw_dir} (wiki_games_raw.json/csv, wiki_games_merged.json, bilibili_segments_raw.json)")
@@ -5038,7 +5070,7 @@ def main():
     print(f"5. CSV 表格导出:      {csv_path} (含 B站视频时间轴)")
     print(f"6. Excel 格式文件:    {excel_path} (富样式、首行冻结、含超链接)")
     print(f"7. HTML 交互式前端:   {html_path} (自包含内嵌数据，含资源下载中心)")
-    print(f"8. B站匹配清单 YAML:  {bili_match_path} (已同步生成根目录 bilibili_match.yaml)")
+    print(f"8. B站匹配清单 YAML:  {bili_match_path}")
 
 
 if __name__ == "__main__":
