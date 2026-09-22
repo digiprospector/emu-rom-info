@@ -20,12 +20,21 @@ title_zh:
   "exerion": "火凤凰/凤凰战机"
   "family-basic-v3": "家用BASIC语言V3"
   "flappy": "顽皮精灵"
-  "hyper-olympic": "超级奥林匹克"
+  "track-field": "超级奥林匹克"
   "elevator-action": "电梯大战"
   "road-fighter": "公路战士/火箭车"
   "zippy-race": "极速摩托车/美国摩托赛"
   "family-computer-robot-block-set": "机器人方块套件"
-  "front-line": "前线" #完成第一页
+  "front-line": "前线" #完成第1页
+  "gyromite": "机器人陀螺套件"
+  "kinniku-man-muscle-tag-match": "筋肉人摔跤大赛"
+  "burgertime": "汉堡时间"
+  "karateka": "空手道"
+  "obake-no-q-tarou-wanwan-panic": "小鬼Q太郎 汪汪恐慌"
+  "thexder": "变形战机"
+  "son-son": "孙孙"
+  "ninja-hattori-kun-ninja-wa-shuugyou-de-gozaru-no-maki": "忍者服部君-忍者修行之卷"
+  "the-legend-of-zelda": "塞尔达传说" #完成第1页
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -37,6 +46,12 @@ video_mappings:
   "clu-clu-land": "咕噜咕噜世界/豆豆迷魂阵"
   "excite-bike": "越野摩托"
   "astro-robo-sasa": "漂浮枪手"
+  "pac-land": "吃豆人乐园"
+  "volguard-ii": "高机动战斗2"
+  "dig-dug-ii": "打空气2/小叮当2"
+  "sansuu-1-nen-keisan-game": "算数一年级~算数三年级"
+  "sansuu-2-nen-keisan-game": "算数一年级~算数三年级"
+  "sansuu-3-nen-keisan-game": "算数一年级~算数三年级"
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -62,10 +77,13 @@ video_mappings:
 #   4. 使用游戏 ID：   "family-computer-robot-block-set": "stack-up"
 # ------------------------------------------------------------------------------
 merge_games:
-  "Family Computer Robot Block Set": "Stack-Up"
-  "Kinniku Man - Muscle Tag Match": "M.U.S.C.L.E."
-  "Dragon Quest 2": "Dragon Warrior II"
+  "family-computer-robot-block-set": "stack-up"
+  "kinniku-man-muscle-tag-match": "m-u-s-c-l-e"
+  "dragon-quest-2": "dragon-warrior-ii"
   "moero-pro-yakyuu": "bases-loaded"
   "family-trainer-no-1-athletic-world": "athletic-world"
   "puroresu-famicom-wrestling-association": "pro-wrestling"
+  "burger-time": "burgertime"
+  "lunar-pool": "lunar-ball"
+  "obake-no-q-tarou-wanwan-panic": "chubby-cherub"
 

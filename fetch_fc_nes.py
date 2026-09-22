@@ -1356,6 +1356,35 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       transform: rotate(-1.5deg);
     }
 
+    /* 仅显示本页无视频游戏复选框 (Neo-Brutalism 野兽派设计) */
+    .no-video-checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.88rem;
+      user-select: none;
+      background: #ffffff;
+      border: 2px solid var(--border-black);
+      box-shadow: 2px 2px 0 0 var(--border-black);
+      padding: 4px 10px;
+      transition: all 0.12s ease;
+      color: var(--text-black);
+    }
+
+    .no-video-checkbox-label:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 0 var(--color-coral);
+    }
+
+    .no-video-checkbox-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--color-red);
+    }
+
     /* 徽章 Badge 规范系统 */
     .badge {
       display: inline-flex;
@@ -2262,9 +2291,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     <!-- 结果统计与切换栏 -->
     <div class="results-info-bar">
-      <div>
-        找到 <span id="filteredCount" class="result-count-highlight">0</span> 款游戏
-        <span id="pageInfoSpan" style="margin-left: 8px; font-weight: 800;">(第 1 / 1 页)</span>
+      <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+        <div>
+          找到 <span id="filteredCount" class="result-count-highlight">0</span> 款游戏
+          <span id="pageInfoSpan" style="margin-left: 8px; font-weight: 800;">(第 1 / 1 页)</span>
+        </div>
+        <label class="no-video-checkbox-label" title="保持当前分页不变，仅显示当前页中未收录视频的游戏">
+          <input type="checkbox" id="onlyNoVideoInPage">
+          <span>仅显示本页无视频游戏</span>
+        </label>
       </div>
       <div>
         每页显示：
@@ -2450,6 +2485,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     let currentPage = 1;
     let pageSize = 60;
     let activeFilter = 'all';
+    let onlyNoVideoInPage = false;
 
     // 日期排序辅助解析
     function parseDateToNum(dStr) {
@@ -2754,20 +2790,25 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       if (currentPage > totalPages) currentPage = totalPages;
       if (currentPage < 1) currentPage = 1;
 
-      document.getElementById('pageInfoSpan').textContent = `(第 ${currentPage} / ${totalPages} 页)`;
-
       const start = (currentPage - 1) * pageSize;
       const end = start + pageSize;
       const pageData = filteredGames.slice(start, end);
+      const displayData = onlyNoVideoInPage ? pageData.filter(g => !g.video) : pageData;
+
+      if (onlyNoVideoInPage) {
+        document.getElementById('pageInfoSpan').textContent = `(第 ${currentPage} / ${totalPages} 页 · 本页显示 ${displayData.length} 款无视频游戏)`;
+      } else {
+        document.getElementById('pageInfoSpan').textContent = `(第 ${currentPage} / ${totalPages} 页)`;
+      }
 
       if (currentView === 'grid') {
         document.getElementById('gamesGrid').style.display = 'grid';
         document.getElementById('tableContainer').style.display = 'none';
-        renderGridView(pageData);
+        renderGridView(displayData);
       } else {
         document.getElementById('gamesGrid').style.display = 'none';
         document.getElementById('tableContainer').style.display = 'block';
-        renderTableView(pageData);
+        renderTableView(displayData);
       }
 
       renderPagination(totalPages);
@@ -2777,6 +2818,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     function renderGridView(games) {
       const grid = document.getElementById('gamesGrid');
       grid.innerHTML = '';
+
+      if (games.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 48px 16px; background: #fff; border: 3px solid var(--border-black); box-shadow: 4px 4px 0 0 var(--border-black); font-weight: 800; font-size: 1rem; color: var(--text-sub);">本页游戏均已收录 B 站解说视频</div>`;
+        return;
+      }
 
       games.forEach((game) => {
         const card = document.createElement('div');
@@ -2834,6 +2880,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     function renderTableView(games) {
       const tbody = document.getElementById('gamesTableBody');
       tbody.innerHTML = '';
+
+      if (games.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 40px 16px; font-weight: 800; color: var(--text-sub); font-size: 0.95rem;">本页游戏均已收录 B 站解说视频</td></tr>`;
+        return;
+      }
 
       games.forEach(game => {
         const tr = document.createElement('tr');
@@ -3116,6 +3167,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         currentPage = 1;
         renderCurrentPage();
       });
+
+      // 仅显示本页无视频游戏复选框
+      const noVideoCheckbox = document.getElementById('onlyNoVideoInPage');
+      if (noVideoCheckbox) {
+        noVideoCheckbox.addEventListener('change', (e) => {
+          onlyNoVideoInPage = e.target.checked;
+          renderCurrentPage();
+        });
+      }
 
       // 分类过滤器 Pills
       document.querySelectorAll('.filter-pill').forEach(btn => {
