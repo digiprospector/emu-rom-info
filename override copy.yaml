@@ -15,17 +15,41 @@
 #   或 游戏ID: 新中文名     (例如 basic-family: 家用BASIC语言)
 # ------------------------------------------------------------------------------
 title_zh:
+  # wiki和bilibili的名称不同的, 使用bilibili里的名称
+  "track-field": "超级奥林匹克"
+  "hyper-olympic": "超级奥林匹克"
+  "m-u-s-c-l-e": "筋肉人摔跤大赛"
+  "kinniku-man-muscle-tag-match": "筋肉人摔跤大赛"
+  "burger-time": "汉堡时间"
+  "burgertime": "汉堡时间"
+  "super-dimension-fortress-macross": "超时空要塞"
+  "donkey-kong-jr": "大金刚2/小金刚"
   "gomoku-narabe-renju": "五子棋"
+  "mario-bros": "马里奥兄弟"
+  "小金刚算数": "小金刚学算术"
+  "wild-gunman": "西部快枪手/荒野枪手"
+  "duck-hunt": "打猎/打鸭子"
+  "hogan-s-alley": "狙击犯罪/警技射击"
   "basic-family": "家用BASIC语言"
+  "nuts-milk": "爱的小屋"
+  "mappy": "猫捉老鼠/MAPPY"
+  "urban-champion": "街头格斗/街头小子"
+  "clu-clu-land": "咕噜咕噜世界/豆豆迷魂阵"
+  "excite-bike": "越野摩托"
+  "ice-climber": "敲冰块/冰山攀登者"
   "exerion": "火凤凰/凤凰战机"
   "family-basic-v3": "家用BASIC语言V3"
+  "ninja-kun-majou-no-bouken": "忍者君魔城的冒险"
+  "dig-dug": "打空气/小叮当"
   "flappy": "顽皮精灵"
   "wrecking-crew": "拆屋工"
   "hyper-olympic": "超级奥林匹克"
   "star-force": "星际力量"
   "elevator-action": "电梯大战"
   "road-fighter": "公路战士/火箭车"
+  "warpman": "太空青蛙"
   "zippy-race": "极速摩托车/美国摩托赛"
+  "super-arabian": "超级阿拉伯大冒险"
   "family-computer-robot-block-set": "机器人方块套件"
   "front-line": "前线"
   "astro-robo-sasa": "漂浮枪手"
@@ -120,12 +144,21 @@ title_zh:
   "titanic-mystery-ao-no-senritsu": "泰坦尼克号沉没记"
   "karaoke-studio": "卡拉OK"
   "rad-racer": "立体赛车"
-  "erunaaku-no-zaihou": "艾鲁娜财宝" #第5页完成
-
+  "erunaaku-no-zaihou": "艾鲁娜财宝"
+  "saint-seiya-ougon-densetsu": "圣斗士星矢 黄金传说"
+  "moero-twinbee-cinnamon-hakase-wo-sukue": "兵蜂2-拯救辛纳蒙博士"
+  "arkanoid": "打砖块"
   # bilibili里有，但是名称不好，这里的项目要在video_mappings也有相同的项目
   "ganbare-goemon-karakuri-douchuu": "大盗伍佑卫门"
   "exciting-billiard": "科乐美台球"
   "family-trainer-no-5-meiro-dai-sakusen": "家庭教练系列5-迷宫大作战"
+  "supet-lode-runner-2": "超级淘金者2"
+  "dracula-ii-noroi-no-fuuin": "恶魔城2-诅咒的封印"
+  "castlevania-ii-simon-s-quest": "恶魔城2-诅咒的封印"
+  "family-trainer-no-6-manhattan-police": "家庭教练系列6-曼哈顿警察"
+  "famicom-mukashi-banashi-shin-onigashima-zenhan": "红白机名作童话 新鬼岛-前篇"
+  "famicom-mukashi-banashi-shin-onigashima-kouhan": "红白机名作童话 新鬼岛-后篇"
+  "spelunker-2-yuusha-heno-chousen": "探险家斯皮兰卡2 勇者的挑战"
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -175,9 +208,10 @@ video_mappings:
 #   4. 使用游戏 ID：   "family-computer-robot-block-set": "stack-up"
 # ------------------------------------------------------------------------------
 merge_games:
-  "family-computer-robot-block-set": "stack-up"
-  "kinniku-man-muscle-tag-match": "m-u-s-c-l-e"
-  "dragon-quest-2": "dragon-warrior-ii"
+  "Family Computer Robot Block Set": "Stack-Up"
+  "Kinniku Man - Muscle Tag Match": "M.U.S.C.L.E."
+  "Dragon Quest 2": "Dragon Warrior II"
   "moero-pro-yakyuu": "bases-loaded"
   "family-trainer-no-1-athletic-world": "athletic-world"
+  "puroresu-famicom-wrestling-association": "pro-wrestling"
 
