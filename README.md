@@ -169,6 +169,19 @@ video_mappings:
 # 作用：当美版与日版标题差异过大导致未自动识别为同款游戏时，强制合并为一个跨区游戏条目
 merge_games:
   "Family Computer Robot Block Set": "Stack-Up"   # 亦可反向以美版为主名："Stack-Up": "Family Computer Robot Block Set"
+
+# 5. 互斥游戏强制隔离/禁止合并 (separate_games)：防止不同游戏误合并
+separate_games:
+  "abadox": "section-z"
+
+# 6. 自定义 B站视频与显示文本 (bilibili_video)：自定义视频 URL 与 Web 显示文字 (option)
+# 作用：指定特定游戏的 B 站视频链接，并可选用自定义文字替换网页上的默认按钮文字
+bilibili_video:
+  "super-mario-bros":
+    url: "https://www.bilibili.com/video/BV1xx411c7mD"
+    text: "马里奥兄弟解说"   # 可选，若省略则在 Web 上使用默认显示文字 ("视频介绍 BY 雷文" 等)
+  # 也支持直接写 URL 简写形式：
+  # "gomoku-narabe-renju": "https://www.bilibili.com/video/BV1xx411c7mD"
 ```
 
 修改保存后直接运行 `python fetch_fc_nes.py` 或 `python fetch_fc_nes.py --build`，程序会纯从本地 `data/raw` 原始数据读取，并在秒级内根据您的修改重新生成全格式发布数据！

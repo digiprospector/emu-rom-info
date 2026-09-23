@@ -45,7 +45,52 @@ title_zh:
   "karate-champ": "空手道冠军赛"
   "family-trainer-no-1-athletic-world": "家庭教练系列-田径世界"
   "meikyuu-kumikyoku": "迷宫组曲" #完成第3页
-
+  "kid-icarus": "光神话 帕鲁蒂纳之镜"
+  "family-trainer-no-2-running-stadium": "家庭教练系列 田径竞技场"
+  "arkanoid": "打砖块"
+  "gauntlet": "圣铠传说/地牢冒险"
+  "the-legend-of-zelda-2-link-no-bouken": "塞尔达传说2 林克的冒险"
+  "dragon-quest-2": "勇者斗恶龙2 恶灵之神"
+  "ultraman-kaijuu-teikoku-no-gyakushuu": "奥特曼 怪兽帝国的逆袭"
+  "family-trainer-no-3-aerobics-studio": "家庭教练系列3-韵律体操中心"
+  "esper-dream": "超能梦"
+  "super-lode-runner": "超级淘金者"
+  "city-adventure-touch-mystery-of-triangle": "棒球英豪" #完成第4页
+  "higemaru-makaijima-nanatsu-no-shima-dai-bouken": "魔界岛 七岛大冒险"
+  "fuuun-shourinken": "风云少林拳"
+  "kineko-kinetic-connection-the-monitor-puzzle-vol-ii": "解谜拼图2"
+  "kinnikuman-kinnikusei-oui-soudatsusen": "筋肉人 筋肉星王位争夺战"
+  "smash-ping-pong": "乒乓球"
+  "moero-pro-yakyuu": "燃烧吧！！职业棒球"
+  "fantasy-zone": "幻想地带"
+  "dirty-pair-project-eden": "搞怪拍档"
+  "family-trainer-no-4-jogging-race": "家庭教练系列4-慢跑锦标赛"
+  "ring-king": "家庭拳击" #完成第5页
+  "karaoke-studio": "卡拉OK"
+  "family-trainer-no-5-meiro-dai-sakusen": "家庭教练系列5-迷宫大作战"
+  "rad-racer": "立体赛车"
+  "erunaaku-no-zaihou": "艾鲁娜财宝"
+  "supet-lode-runner-2": "超级淘金者2"
+  "moero-twinbee-cinnamon-hakase-wo-sukue": "兵蜂2-拯救辛纳蒙博士"
+  "famicom-mukashi-banashi-shin-onigashima-zenhan": "红白机名作童话 新鬼岛-前篇"
+  "famicom-mukashi-banashi-shin-onigashima-kouhan": "红白机名作童话 新鬼岛-后篇"
+  "mike-tyson-s-punch-out": "迈克泰森的拳击热斗"
+  "karaoke-studio-senyou-cassette-set-top-hits-20-vol-1": "卡拉OK 专用带1"
+  "famicom-grand-prix-f1-race": "红白机大奖赛 F1赛车" #完成第6页
+  "gotcha-the-sport": "陆战运动"
+  "the-goonies-2-fratelli-saigo-no-chousen": "七宝奇谋2 弗雷泰利最后的挑战"
+  "the-karate-kid": "空手道小子"
+  "tanigawa-kouji-no-shougi-shinan-2": "谷川浩司的将棋指南2"
+  "wizardry-proving-grounds-of-the-mad-overlord": "巫师与骑士"
+  "family-trainer-no-7-dai-undoukai": "家庭教练系列7-大运动会"
+  "rambo": "第一滴血"
+  "jj-tobidase-daisakusen-part-2": "JJ大作战"
+  "golf-club-birdy-rush": "高尔夫俱乐部"
+  "mezase-pachi-pro-pachio-kun": "柏青夫君"
+  "pro-yakyuu-family-stadium-87": "职业棒球 家庭竞技场87"
+  "family-trainer-no-8-totsugeki-fuuun-takeshi-jou": "家庭教练系列8-突击！风云武城"
+  "gun-smoke": "荒野大镖客" 
+  "r-c-pro-am": "遥控赛车" #完成第7页
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
 # 作用：当 B 站解说视频的分段名称与游戏库正式名称存在差异时，强制指定绑定关系。
@@ -70,7 +115,20 @@ video_mappings:
   "aigiina-no-yogen-from-the-legend-of-balubalouk": "世纪大预言"
   "moero-twinbee-cinnamon-hakase-wo-sukue": "兵蜂2-拯救辛纳蒙博士"
   "kineko-kinetic-connection-the-monitor-puzzle": "解谜拼图" #完成第3页
-
+  "king-kong-2-ikari-no-megaton-punch": "金刚2 愤怒的百万拳头" #完成第4页
+  "fist-of-the-north-star": "北斗之拳2 世纪末救世主传说"
+  "exciting-billiard": "KONAMI台球"
+  "exciting-basketball": "KONAMI篮球"
+  "titanic-mystery-ao-no-senritsu": "泰坦尼克号沉没记" #完成第5页
+  "family-trainer-no-5-meiro-dai-sakusen": "家庭教练系列5-迷路大作战"
+  "indora-no-hikari": "光之器"
+  "haja-no-fuuin": "霸王封印"
+  "momotarou-densetsu": "桃太郎传奇" #完成第6页
+  "nakayama-miho-no-tokimeki-high-school": "中山美惠入学记"
+  "doremikko": "KONAMI作曲家"
+  "exciting-baseball": "KONAMI棒球"
+  "exciting-boxing": "刺激拳击"
+  "family-circuit": "家庭赛车" #完成第7页
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
 # 作用：支持按 ID 或中文名直接覆盖游戏字典中的任意字段（如 publishers、release_dates 等）。
@@ -104,4 +162,37 @@ merge_games:
   "burger-time": "burgertime"
   "lunar-pool": "lunar-ball"
   "obake-no-q-tarou-wanwan-panic": "chubby-cherub"
+  "moero-twinbee-cinnamon-hakase-wo-sukue": "stinger"
+  "tobidase-daisakusen": "3-d-worldrunner"
+  "the-goonies-2-fratelli-saigo-no-chousen": "the-goonies-ii"
+# ------------------------------------------------------------------------------
+# 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
+# 作用：当不同游戏因中文译名相同、别名冲突或算法误判被合并时，显式声明它们不是同款游戏，禁止合并。
+# 语法支持（支持游戏 ID、英文名、中文名或日文名）：
+#   写法 1（键值对）：
+#     "游戏A": "游戏B"
+#   写法 2（列表组，支持 2 个或多个游戏两两互斥）：
+#     - ["游戏A", "游戏B"]
+# ------------------------------------------------------------------------------
+separate_games:
+  "abadox": "section-z"
+
+# ------------------------------------------------------------------------------
+# 调整方式 6: 自定义 B站视频与显示文本 (bilibili_video)
+# 作用：手动指定游戏的 Bilibili 视频链接 (url) 以及在网页前端显示的自定义文字 (text，可选)。
+#       适用于未被编年史收录的游戏、需要指定特定独立解说/攻略/TAS/通关视频，或需要自定义按钮文本的情况。
+# 语法支持（键名支持游戏 ID、中文名、英文名或日文名）：
+#   写法 1（包含 url 与自定义文字）：
+#     "游戏ID或名称":
+#       url: "https://www.bilibili.com/video/BVxxxxxx/"
+#       text: "视频解说"   # 可选，若省略则在 Web 上使用默认显示文字 ("视频介绍 BY 雷文" 等)
+#   写法 2（仅指定 url，使用默认显示文字）：
+#     "游戏ID或名称": "https://www.bilibili.com/video/BVxxxxxx/"
+# ------------------------------------------------------------------------------
+bilibili_video:
+  # "super-mario-bros":
+  #   url: "https://www.bilibili.com/video/BV1xx411c7mD"
+  #   text: "马里奥兄弟解说"
+  "star-wars-namco":
+    url: "https://www.bilibili.com/video/BV1VigSzME8z?t=631"
 

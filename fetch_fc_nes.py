@@ -403,12 +403,91 @@ def load_adjustments_config(yaml_path: str = "override.yaml") -> Dict[str, Any]:
                             merge_pairs.append((str(target).strip(), str(sources).strip()))
         config["merge_games"] = merge_pairs
 
+        # 4.1 提取互斥/禁止合并规则 (separate_games)
+        raw_separates = (
+            data.get("separate_games") or 
+            data.get("separates") or 
+            data.get("separate") or 
+            data.get("split_games") or 
+            data.get("split") or 
+            data.get("exclude_merges") or 
+            data.get("prevent_merges") or 
+            data.get("disjoint_games") or 
+            {}
+        )
+        separate_pairs: List[Tuple[str, str]] = []
+        if isinstance(raw_separates, dict):
+            for k, v in raw_separates.items():
+                if isinstance(v, list):
+                    for item in v:
+                        if item:
+                            separate_pairs.append((str(k).strip(), str(item).strip()))
+                elif v:
+                    separate_pairs.append((str(k).strip(), str(v).strip()))
+        elif isinstance(raw_separates, list):
+            for item in raw_separates:
+                if isinstance(item, (list, tuple)) and len(item) >= 2:
+                    items_clean = [str(x).strip() for x in item if str(x).strip()]
+                    for idx_a in range(len(items_clean)):
+                        for idx_b in range(idx_a + 1, len(items_clean)):
+                            separate_pairs.append((items_clean[idx_a], items_clean[idx_b]))
+                elif isinstance(item, dict):
+                    g1 = item.get("game1") or item.get("a") or item.get("target")
+                    g2 = item.get("game2") or item.get("b") or item.get("source") or item.get("with")
+                    if g1 and g2:
+                        separate_pairs.append((str(g1).strip(), str(g2).strip()))
+        config["separate_games"] = separate_pairs
+
+        # 4.2 提取自定义 B站视频规则 (bilibili_video)
+        raw_custom_bili = (
+            data.get("bilibili_video") or 
+            data.get("bilibili_videos") or 
+            data.get("custom_videos") or 
+            data.get("custom_video") or 
+            {}
+        )
+        custom_bili_dict: Dict[str, Dict[str, Any]] = {}
+        if isinstance(raw_custom_bili, dict):
+            for k, v in raw_custom_bili.items():
+                if not v:
+                    continue
+                ident = str(k).strip()
+                if isinstance(v, str):
+                    custom_bili_dict[ident] = {"url": v.strip(), "text": None}
+                elif isinstance(v, dict):
+                    url = v.get("url") or v.get("link") or v.get("bilibili_url") or ""
+                    text = v.get("text") or v.get("label") or v.get("title") or v.get("web_text")
+                    if url:
+                        custom_bili_dict[ident] = {
+                            "url": str(url).strip(),
+                            "text": str(text).strip() if text is not None else None
+                        }
+        elif isinstance(raw_custom_bili, list):
+            for item in raw_custom_bili:
+                if isinstance(item, dict):
+                    ident = (
+                        item.get("id") or item.get("match") or 
+                        item.get("name") or item.get("game") or 
+                        item.get("title_zh")
+                    )
+                    url = item.get("url") or item.get("link") or item.get("bilibili_url") or ""
+                    text = item.get("text") or item.get("label") or item.get("title") or item.get("web_text")
+                    if ident and url:
+                        custom_bili_dict[str(ident).strip()] = {
+                            "url": str(url).strip(),
+                            "text": str(text).strip() if text is not None else None
+                        }
+        config["bilibili_video"] = custom_bili_dict
+
         # 5. 兼容顶层扁平字典 (若用户没有写分类标签)
         known_sections = {
             "title_zh", "rename_title_zh", "titles", "rename", 
             "video_mappings", "videos", "video_mapping", "chapters", 
             "chapter_to_game", "games", "merge_games", "merges", "merge", 
-            "game_merges", "alias_games"
+            "game_merges", "alias_games", "separate_games", "separates", 
+            "separate", "split_games", "split", "exclude_merges", 
+            "prevent_merges", "disjoint_games",
+            "bilibili_video", "bilibili_videos", "custom_videos", "custom_video"
         }
         top_level_pairs = {
             str(k).strip(): str(v).strip() 
@@ -486,6 +565,103 @@ def apply_game_adjustments(games: List[Dict[str, Any]], yaml_path: str = "overri
         logger.info(f"已成功应用 override.yaml 中的调整规则，共修改 {modified_count} 处游戏属性")
 
     return modified_count
+
+
+def apply_bilibili_video_adjustments(games: List[Dict[str, Any]], yaml_path: str = "override.yaml") -> int:
+    """基于 override.yaml 中的 bilibili_video 类别，自定义指定游戏的 Bilibili 视频链接与前端显示文字"""
+    config = load_adjustments_config(yaml_path)
+    if not config:
+        return 0
+
+    bili_rules = config.get("bilibili_video", {})
+    if not bili_rules:
+        return 0
+
+    game_by_id = {g["id"]: g for g in games}
+    game_by_title_zh = {g["title_zh"]: g for g in games if g.get("title_zh")}
+    game_by_title_en = {g["title_en"]: g for g in games if g.get("title_en")}
+    game_by_title_ja = {g["title_ja"]: g for g in games if g.get("title_ja")}
+
+    norm_index: Dict[str, Dict[str, Any]] = {}
+    for g in games:
+        for key in [g.get("id"), g.get("title_zh"), g.get("title_en"), g.get("title_ja")]:
+            nk = normalize_text(key)
+            if nk and nk not in norm_index:
+                norm_index[nk] = g
+        for v in g.get("versions", {}).values():
+            for key in [v.get("id"), v.get("title_zh"), v.get("title_en"), v.get("title_ja")]:
+                nk = normalize_text(key)
+                if nk and nk not in norm_index:
+                    norm_index[nk] = g
+
+    applied_count = 0
+    for ident, info in bili_rules.items():
+        url = info.get("url")
+        custom_text = info.get("text")
+        if not url:
+            continue
+
+        target_game = (
+            game_by_id.get(ident) or
+            game_by_title_zh.get(ident) or
+            game_by_title_en.get(ident) or
+            game_by_title_ja.get(ident) or
+            norm_index.get(normalize_text(ident))
+        )
+
+        if not target_game:
+            logger.warning(f"bilibili_video 自定义规则中未找到目标游戏: '{ident}'")
+            continue
+
+        # 从 url 中尝试提取 bvid 与时间戳
+        bvid_match = re.search(r'(BV[0-9a-zA-Z]+)', url, re.IGNORECASE)
+        extracted_bvid = bvid_match.group(1) if bvid_match else ""
+
+        t_match = re.search(r'[?&]t=(\d+)', url)
+        extracted_seconds = int(t_match.group(1)) if t_match else 0
+        if extracted_seconds > 0:
+            m = extracted_seconds // 60
+            s = extracted_seconds % 60
+            h = m // 60
+            if h > 0:
+                extracted_timestamp = f"{h:02d}:{m % 60:02d}:{s:02d}"
+            else:
+                extracted_timestamp = f"{m:02d}:{s:02d}"
+        else:
+            extracted_timestamp = "00:00"
+
+        # 如果已有视频信息，覆盖/更新
+        if target_game.get("video"):
+            v = target_game["video"]
+            v["url"] = url
+            if custom_text:
+                v["text"] = custom_text
+            if extracted_bvid and not v.get("bvid"):
+                v["bvid"] = extracted_bvid
+            if extracted_seconds > 0:
+                v["seconds"] = extracted_seconds
+                v["timestamp"] = extracted_timestamp
+        else:
+            # 原本没有视频，构造新视频对象
+            target_game["video"] = {
+                "bvid": extracted_bvid,
+                "aid": None,
+                "video_title": custom_text or f"{target_game.get('title_zh') or target_game.get('title_en')} 视频解说",
+                "chapter_name": custom_text or target_game.get("title_zh") or target_game.get("title_en") or "",
+                "timestamp": extracted_timestamp,
+                "seconds": extracted_seconds,
+                "url": url,
+                "text": custom_text
+            }
+
+        applied_count += 1
+        disp_name = target_game.get('title_zh') or target_game.get('title_en') or ident
+        logger.info(f"已应用自定义 B 站视频规则: 《{disp_name}》 -> {url} (显示文字: {custom_text})")
+
+    if applied_count > 0:
+        logger.info(f"已成功应用 override.yaml 中的 bilibili_video 规则，共配置 {applied_count} 款游戏视频")
+
+    return applied_count
 
 
 class BilibiliMatcher:
@@ -2737,7 +2913,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           const matchJa = (game.title_ja || '').toLowerCase().includes(searchKeyword);
           const matchId = (game.id || '').toLowerCase().includes(searchKeyword);
           const matchPub = (game.publishers || []).some(p => p.toLowerCase().includes(searchKeyword));
-          const matchVideo = game.video ? (game.video.chapter_name || '').toLowerCase().includes(searchKeyword) : false;
+          const matchVideo = game.video ? (
+            (game.video.chapter_name || '').toLowerCase().includes(searchKeyword) ||
+            (game.video.text || '').toLowerCase().includes(searchKeyword) ||
+            (game.video.video_title || '').toLowerCase().includes(searchKeyword)
+          ) : false;
           if (!matchZh && !matchEn && !matchJa && !matchId && !matchPub && !matchVideo) return false;
         }
 
@@ -2846,6 +3026,21 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         const dateStr = getEarliestReleaseInfo(game).str;
         const publishersStr = (game.publishers || []).join(', ') || '未知发行商';
 
+        let videoBtnHtml = '';
+        if (game.video) {
+          const btnLabel = game.video.text
+            ? (game.video.text.startsWith('视频介绍') ? game.video.text : ('视频介绍 ' + game.video.text))
+            : '视频介绍 BY 雷文';
+          videoBtnHtml = `
+            <div class="meta-row" style="margin-top:6px;">
+              <span class="meta-label">视频解说</span>
+              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title || '')} | 分段: ${escapeHtml(game.video.chapter_name || '')} (起播时间: ${game.video.timestamp || '00:00'})">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                ${escapeHtml(btnLabel)}
+              </a>
+            </div>`;
+        }
+
         card.innerHTML = `
           <div class="card-top">
             <div class="badges-row">${badgesHtml}</div>
@@ -2862,14 +3057,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               <span class="meta-label">主要发行商</span>
               <span class="publisher-tag" title="${escapeHtml(publishersStr)}">${escapeHtml(publishersStr)}</span>
             </div>
-            ${game.video ? `
-            <div class="meta-row" style="margin-top:6px;">
-              <span class="meta-label">视频解说</span>
-              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                视频介绍 BY 雷文
-              </a>
-            </div>` : ''}
+            ${videoBtnHtml}
           </div>
         `;
         grid.appendChild(card);
@@ -2898,11 +3086,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
         let videoCell = '<td style="text-align: center; color: var(--text-sub);">-</td>';
         if (game.video) {
+          const btnText = (game.video.text) ? escapeHtml(game.video.text) : 'BY 雷文';
           videoCell = `
             <td style="text-align: center; white-space: nowrap;">
-              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title)} | 分段: ${escapeHtml(game.video.chapter_name)} (起播时间: ${game.video.timestamp})">
+              <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" onclick="event.stopPropagation();" title="${escapeHtml(game.video.video_title || '')} | 分段: ${escapeHtml(game.video.chapter_name || '')} (起播时间: ${game.video.timestamp || '00:00'})">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                BY 雷文
+                ${btnText}
               </a>
             </td>`;
         }
@@ -3093,23 +3282,32 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         `;
       }
       if (game.video) {
+        const modalLabel = game.video.text
+          ? (game.video.text.startsWith('视频介绍') ? game.video.text : ('视频介绍 ' + game.video.text))
+          : '视频介绍 BY 雷文';
+        const modalBtnText = `${escapeHtml(modalLabel)} &nearr;`;
+        const cardHeader = game.video.text ? 'B站精选视频介绍' : 'B站红白机游戏编年史对应解说';
+        const vTitle = game.video.video_title || game.video.text || 'B站解说视频';
+        const chapInfo = game.video.chapter_name
+          ? `分段章节: <strong style="color: var(--color-red);">${escapeHtml(game.video.chapter_name)}</strong> (起播时间点: ${game.video.timestamp || '00:00'})`
+          : `直达链接: <strong style="color: var(--color-red);">${escapeHtml(game.video.url)}</strong>`;
         linksHtml += `
           <div class="bili-card">
             <div>
               <div style="color: var(--color-red); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                B站红白机游戏编年史对应解说
+                ${cardHeader}
               </div>
               <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 900; margin-top: 4px;">
-                ${escapeHtml(game.video.video_title)}
+                ${escapeHtml(vTitle)}
               </div>
               <div style="font-size: 0.82rem; font-weight: 800; color: var(--text-sub); margin-top: 2px;">
-                分段章节: <strong style="color: var(--color-red);">${escapeHtml(game.video.chapter_name)}</strong> (起播时间点: ${game.video.timestamp})
+                ${chapInfo}
               </div>
             </div>
             <a href="${escapeHtml(game.video.url)}" target="_blank" rel="noopener" class="bili-btn" style="padding: 10px 20px; font-size: 0.88rem;">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              视频介绍 BY 雷文 &nearr;
+              ${modalBtnText}
             </a>
           </div>
         `;
@@ -3833,10 +4031,12 @@ class UnionFind:
 def merge_fc_nes_records(
     raw_records: List[Dict[str, Any]],
     helper: RomNameCnHelper,
-    custom_merges: Optional[List[Tuple[str, str]]] = None
+    custom_merges: Optional[List[Tuple[str, str]]] = None,
+    custom_separates: Optional[List[Tuple[str, str]]] = None
 ) -> List[Dict[str, Any]]:
     """
-    结合 DAT 克隆关系、rom-name-cn 以及用户自定义 override.yaml，将美版 (NES) 与日版 (FC/FDS) 同款游戏聚类合并
+    结合 DAT 克隆关系、rom-name-cn 以及用户自定义 override.yaml，将美版 (NES) 与日版 (FC/FDS) 同款游戏聚类合并，
+    并严格应用 separate_games 规则阻断非同款游戏的误合并。
     """
     indexed_records = []
     enriched_zh_count = 0
@@ -3893,9 +4093,23 @@ def merge_fc_nes_records(
                 custom_merge_links.setdefault(k2, set()).update(k1_set)
                 target_preferences[k2] = target_str
 
+    # 构建用户自定义互斥隔离规则映射 (separate_games)
+    custom_separate_links: Dict[str, Set[str]] = {}
+    if custom_separates:
+        for t1, t2 in custom_separates:
+            target_str = str(t1).strip()
+            source_str = str(t2).strip()
+            k1_set = gen_lookup_keys(target_str)
+            k2_set = gen_lookup_keys(source_str)
+            for k1 in k1_set:
+                custom_separate_links.setdefault(k1, set()).update(k2_set)
+            for k2 in k2_set:
+                custom_separate_links.setdefault(k2, set()).update(k1_set)
+        logger.info(f"已加载互斥隔离规则 (separate_games): 共构建 {len(custom_separates)} 组游戏隔离约束")
+
     def get_record_lookup_keys(r: Dict[str, Any]) -> Set[str]:
         keys = set()
-        for f in ("title_en", "title_zh", "title_ja"):
+        for f in ("id", "title_en", "title_zh", "title_ja"):
             keys.update(gen_lookup_keys(r.get(f)))
         return keys
 
@@ -3903,6 +4117,7 @@ def merge_fc_nes_records(
 
     # 执行并查集两两比对合并
     uf = UnionFind([it["_uid"] for it in indexed_records])
+    cluster_keys: Dict[str, Set[str]] = {it["_uid"]: set(record_keys_list[idx]) for idx, it in enumerate(indexed_records)}
     n = len(indexed_records)
 
     for i in range(n):
@@ -3911,6 +4126,19 @@ def merge_fc_nes_records(
         for j in range(i + 1, n):
             r2 = indexed_records[j]
             if r1["platform"] != r2["platform"]:
+                # 0. 优先检查用户在 override.yaml 中声明的互斥隔离规则 (separate_games)
+                is_custom_separated = False
+                if custom_separate_links:
+                    r2_keys = record_keys_list[j]
+                    for k1 in r1_keys:
+                        if k1 in custom_separate_links and custom_separate_links[k1].intersection(r2_keys):
+                            is_custom_separated = True
+                            break
+
+                if is_custom_separated:
+                    # 命中互斥规则，绝对不合并
+                    continue
+
                 # 优先检查用户在 override.yaml 中声明的自定义合并规则
                 is_custom_merged = False
                 matched_rule = ""
@@ -3931,7 +4159,22 @@ def merge_fc_nes_records(
                     root1 = uf.find(r1["_uid"])
                     root2 = uf.find(r2["_uid"])
                     if root1 != root2:
+                        # 检查两分组是否因间接传递违反互斥隔离规则
+                        if custom_separate_links:
+                            keys1 = cluster_keys.get(root1, set())
+                            keys2 = cluster_keys.get(root2, set())
+                            has_conflict = False
+                            for k1 in keys1:
+                                if k1 in custom_separate_links and custom_separate_links[k1].intersection(keys2):
+                                    has_conflict = True
+                                    break
+                            if has_conflict:
+                                logger.info(f"阻断间接合并: 分组包含互斥规则 (《{r1.get('title_en')}》与《{r2.get('title_en')}》拒绝连通)")
+                                continue
+
                         uf.union(r1["_uid"], r2["_uid"])
+                        new_root = uf.find(r1["_uid"])
+                        cluster_keys[new_root] = cluster_keys.get(root1, set()) | cluster_keys.get(root2, set())
                         if is_custom_merged:
                             logger.info(f"应用 adjustments 自定义合并规则: 《{r1.get('title_en')}》({r1['platform']}) 与 《{r2.get('title_en')}》({r2['platform']}) 成功合并为同一游戏")
 
@@ -4381,13 +4624,19 @@ def build_from_raw(
         except Exception as e:
             logger.warning(f"生成 wiki_games_merged.json 失败: {e}")
 
-    # 加载用户自定义调整配置中的游戏合并规则 (merge_games)
+    # 加载用户自定义调整配置中的游戏合并与隔离规则 (merge_games, separate_games)
     adjust_config = load_adjustments_config(yaml_adjust_path)
     custom_merges = adjust_config.get("merge_games", [])
+    custom_separates = adjust_config.get("separate_games", [])
 
     # 执行深度多维合并
     logger.info(f"正在基于 DAT 克隆树、rom-name-cn 及自定义调整配置 ({yaml_adjust_path}) 对齐合并美版与日版游戏...")
-    unified_games = merge_fc_nes_records(raw_records, helper, custom_merges=custom_merges)
+    unified_games = merge_fc_nes_records(
+        raw_records, 
+        helper, 
+        custom_merges=custom_merges,
+        custom_separates=custom_separates
+    )
 
     # 执行游戏属性调整 (应用用户自定义 override.yaml 中的 title_zh 等修改)
     logger.info(f"正在结合用户自定义调整配置 ({yaml_adjust_path}) 调整游戏属性...")
@@ -4400,6 +4649,11 @@ def build_from_raw(
         segments=bilibili_segments,
         yaml_mapping_path=yaml_adjust_path
     )
+
+    # 应用用户自定义 bilibili_video 规则 (覆盖/添加自定义视频 URL 与前端显示文本)
+    logger.info(f"正在结合用户自定义调整配置 ({yaml_adjust_path}) 应用 bilibili_video 自定义视频规则...")
+    apply_bilibili_video_adjustments(unified_games, yaml_path=yaml_adjust_path)
+    total_matched_videos = sum(1 for g in unified_games if g.get("video"))
 
     cross_region_games = [g for g in unified_games if g["is_cross_region"]]
     multi_platform_games = [g for g in unified_games if len(g["platforms"]) > 1]
@@ -4442,7 +4696,7 @@ def build_from_raw(
                 "multi_platform_games": len(multi_platform_games),
                 "nes_exclusive_games": len(nes_only_games),
                 "japan_exclusive_games": len(japan_only_games),
-                "bilibili_videos_matched": video_stats.get("matched_games_count", 0),
+                "bilibili_videos_matched": total_matched_videos,
                 "raw_records_total": len(raw_records),
                 "raw_records": raw_records_stat
             }
@@ -4566,7 +4820,7 @@ def save_to_csv(games: List[Dict[str, Any]], filepath: str) -> None:
                 "north_america_release": g["release_dates"]["north_america"],
                 "europe_release": g["release_dates"]["europe"],
                 "wiki_url": g["wiki_url"],
-                "bilibili_video_title": v_info.get("video_title", ""),
+                "bilibili_video_title": v_info.get("text") or v_info.get("video_title", ""),
                 "bilibili_timestamp": v_info.get("timestamp", ""),
                 "bilibili_url": v_info.get("url", ""),
             })
@@ -4618,6 +4872,13 @@ def save_to_excel(data: Dict[str, Any], filepath: str) -> None:
     for idx, g in enumerate(games, 1):
         v = g.get("video") or {}
         row_num = idx + 1
+        link_text = ""
+        if v.get("url"):
+            if v.get("text"):
+                custom_t = str(v.get("text")).strip()
+                link_text = custom_t if custom_t.startswith("视频介绍") else f"视频介绍 {custom_t}"
+            else:
+                link_text = "视频介绍 by 雷文"
         row_values = [
             idx,
             g["id"],
@@ -4631,10 +4892,10 @@ def save_to_excel(data: Dict[str, Any], filepath: str) -> None:
             g["release_dates"]["north_america"] or "",
             g["release_dates"]["europe"] or "",
             g["wiki_url"] or "",
-            v.get("video_title", ""),
+            v.get("text") or v.get("video_title", ""),
             v.get("chapter_name", ""),
             v.get("timestamp", ""),
-            "视频介绍 by 雷文" if v.get("url") else ""
+            link_text
         ]
         ws_games.append(row_values)
         ws_games.row_dimensions[row_num].height = 20
