@@ -209,10 +209,12 @@ def export_to_file(missing_games: List[Dict[str, Any]], output_path: str, lang: 
 
     elif ext in (".yaml", ".yml"):
         with open(output_path, "w", encoding="utf-8") as f:
-            f.write("missing:\n")
             for g in missing_games:
+                game_id = g.get("id") or ""
+                escaped_id = game_id.replace("\\", "\\\\").replace('"', '\\"')
                 name = get_game_display_name(g, lang=lang)
                 escaped_name = name.replace("\\", "\\\\").replace('"', '\\"')
+                f.write(f'  "{escaped_id}": ""\n')
                 f.write(f'  "{escaped_name}": ""\n')
 
     elif ext == ".csv":

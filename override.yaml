@@ -91,6 +91,20 @@ title_zh:
   "family-trainer-no-8-totsugeki-fuuun-takeshi-jou": "家庭教练系列8-突击！风云武城"
   "gun-smoke": "荒野大镖客" 
   "r-c-pro-am": "遥控赛车" #完成第7页
+  "town-country-surf-designs-wood-water-rage": "冲浪高手/T&C冲浪"
+  "dragon-warrior-iii": "勇者斗恶龙3 传说的起点"
+  "karaoke-studio-senyou-cassette-set-top-hits-20-vol-2": "卡拉OK 专用带2"
+  "replicart": "蛇形龙"
+  "tetsuwan-atom": "铁臂阿童木"
+  "druid-kyoufu-no-tobira": "德鲁伊 恐怖之门"
+  "19-neunzehn": "19"
+  "arkanoid-ii-revenge-of-doh": "打砖块2"
+  "aspic-majaou-no-noroi": "魔蛇王的诅咒"
+  "freedom-force": "自由战士/自由力量"
+  "ikari-warriors-ii-victory-road": "怒Ⅱ 怒号层圈"
+  "famicom-grand-prix-ii-3d-hot-rally": "红白机大奖赛2 3D热拉力赛"
+  "fuuun-shourinken-ankoku-no-maou": "风云少林拳 暗黑的魔王" #完成第8页
+
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
 # 作用：当 B 站解说视频的分段名称与游戏库正式名称存在差异时，强制指定绑定关系。
@@ -129,6 +143,11 @@ video_mappings:
   "exciting-baseball": "KONAMI棒球"
   "exciting-boxing": "刺激拳击"
   "family-circuit": "家庭赛车" #完成第7页
+  "exciting-soccer": "KONAMI足球"
+  "tetsuwan-atom": "铁壁阿童木"
+  "namco-classic": " NAMCO高尔夫"
+  "famicom-tantei-club-kieta-koukeisha-kouhen": "红白机侦探俱乐部 消失的继任者 后篇" #完成第8页
+
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
 # 作用：支持按 ID 或中文名直接覆盖游戏字典中的任意字段（如 publishers、release_dates 等）。
@@ -165,6 +184,8 @@ merge_games:
   "moero-twinbee-cinnamon-hakase-wo-sukue": "stinger"
   "tobidase-daisakusen": "3-d-worldrunner"
   "the-goonies-2-fratelli-saigo-no-chousen": "the-goonies-ii"
+  "tanigawa-kouji-no-shougi-shinan-2": "tanigawa-kouji-no-shougi-shinan-ii-meijin-heno-michi"
+  "ikari-warriors-ii-victory-road": "ikari-2-dogosoken"
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
 # 作用：当不同游戏因中文译名相同、别名冲突或算法误判被合并时，显式声明它们不是同款游戏，禁止合并。
