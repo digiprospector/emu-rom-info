@@ -123,7 +123,22 @@ title_zh:
   "ys": "伊苏"
   "kick-and-run": "太东足球"
   "best-play-pro-yakyuu-shin-data": "ASCII职业棒球 新资料版" #完成第9页
-
+  "ultraman-club-chikyuu-dakkan-sakusen": "奥特曼俱乐部"
+  "touhou-kenbun-roku": "东方见闻录"
+  "pachinko-gp": "柏青哥GP"
+  "kaettekita-mario-bros": "马里奥兄弟回归"
+  "platoon": "野战排/丛林之狐"
+  "skate-or-die": "滑板生死斗/生死滑板"
+  "michael-andretti-s-world-gp": "中岛悟F1英雄"
+  "tantei-jinguuji-saburou-kikenna-futari-zenhen": "侦探神宫寺三郎 危险的二人 前篇"
+  "89-dennou-kyuusei-uranai": "神宫馆89电脑九星占卜"
+  "gradius-2": "宇宙巡航机2"
+  "kyuukyoku-harikiri-stadium-88-shin-senshu-data-version": "究极棒球88"
+  "final-fantasy-2": "最终幻想2"
+  "family-trainer-no-9-fuuun-takeshi-jou-2": "家庭教练系列9-风云武城"
+  "rollerball": "弹珠台"
+  "fantasy-zone-2-the-teardrop-of-opa-opa": "幻想地带2"
+  "pro-yakyuu-family-stadium-88": "职业棒球家庭竞技场88" #完成第10页
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
 # 作用：当 B 站解说视频的分段名称与游戏库正式名称存在差异时，强制指定绑定关系。
@@ -169,6 +184,7 @@ video_mappings:
   "konamic-ice-hockey": "KONAMI冰上曲棍球"
   "konamic-tennis": "KONAMI网球"
   "track-field-ii": "KONAMI首尔奥运会" #完成第9页
+  "touch-down-fever": "美式足球" #完成第10页
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -214,7 +230,10 @@ merge_games:
   "golgo-13-dai-1-shou-kamigami-no-tasogare": "golgo-13-top-secret-episode"
   "meikyuu-kumikyoku": "milon-s-secret-castle"
   "the-legend-of-zelda-2-link-no-bouken": "zelda-ii-the-adventure-of-link"
-  
+  "dr-chaos-jigoku-no-tobira": "dr-chaos"
+  "family-trainer-no-7-dai-undoukai": "super-team-games"
+  "konamic-ice-hockey": "blades-of-steel"
+
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
 # 作用：当不同游戏因中文译名相同、别名冲突或算法误判被合并时，显式声明它们不是同款游戏，禁止合并。
