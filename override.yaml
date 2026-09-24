@@ -104,6 +104,25 @@ title_zh:
   "ikari-warriors-ii-victory-road": "怒Ⅱ 怒号层圈"
   "famicom-grand-prix-ii-3d-hot-rally": "红白机大奖赛2 3D热拉力赛"
   "fuuun-shourinken-ankoku-no-maou": "风云少林拳 暗黑的魔王" #完成第8页
+  "best-play-pro-yakyuu": "ASCII职业棒球"
+  "jarinko-chie-bakudan-musume-no-shiawase-sagashi": "小麻烦千惠 浪花爆破娘"
+  "bionic-commando": "生化尖兵/希魔复活"
+  "kakefu-kun-no-jump-tengoku-speed-jigoku": "天堂与地狱"
+  "konamic-ice-hockey": "科乐美冰上曲棍球"
+  "sangokushi-chuugen-no-hasha": "三国志 中原的霸者"
+  "eggerland-meikyuu-no-fukkatsu": "蛋王子 迷宫的复活"
+  "big-challenge-juudou-senshuken": "大挑战！柔道选手权"
+  "soccer-league-winner-s-cup": "胜者杯足球赛"
+  "eggerland-souzou-heno-tabidachi": "蛋王子2 向创造出发"
+  "super-pinball": "超级弹珠台"
+  "wheel-of-fortune": "幸运轮盘"
+  "famicom-meijin-sen": "红白机名人战"
+  "matou-no-houkai-the-hero-of-babel": "魔塔崩坏"
+  "8-eyes": "八只眼"
+  "erika-to-satoru-no-yume-bouken": "梦冒险"
+  "ys": "伊苏"
+  "kick-and-run": "太东足球"
+  "best-play-pro-yakyuu-shin-data": "ASCII职业棒球 新资料版" #完成第9页
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -147,6 +166,9 @@ video_mappings:
   "tetsuwan-atom": "铁壁阿童木"
   "namco-classic": " NAMCO高尔夫"
   "famicom-tantei-club-kieta-koukeisha-kouhen": "红白机侦探俱乐部 消失的继任者 后篇" #完成第8页
+  "konamic-ice-hockey": "KONAMI冰上曲棍球"
+  "konamic-tennis": "KONAMI网球"
+  "track-field-ii": "KONAMI首尔奥运会" #完成第9页
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -186,6 +208,13 @@ merge_games:
   "the-goonies-2-fratelli-saigo-no-chousen": "the-goonies-ii"
   "tanigawa-kouji-no-shougi-shinan-2": "tanigawa-kouji-no-shougi-shinan-ii-meijin-heno-michi"
   "ikari-warriors-ii-victory-road": "ikari-2-dogosoken"
+  "great-tank": "iron-tank"
+  "family-trainer-no-2-running-stadium": "stadium-events"
+  "family-trainer-no-2-running-stadium": "world-class-track-meet"
+  "golgo-13-dai-1-shou-kamigami-no-tasogare": "golgo-13-top-secret-episode"
+  "meikyuu-kumikyoku": "milon-s-secret-castle"
+  "the-legend-of-zelda-2-link-no-bouken": "zelda-ii-the-adventure-of-link"
+  
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
 # 作用：当不同游戏因中文译名相同、别名冲突或算法误判被合并时，显式声明它们不是同款游戏，禁止合并。
