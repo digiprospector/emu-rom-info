@@ -163,6 +163,7 @@ title_zh:
   "monster-party": "怪物派对"
   "shooting-range": "万代射击场"
   "big-challenge-go-go-bowling": "大挑战！GOGO保龄球"
+  "famicom-tantei-club-part-ii-ushiro-ni-tatsu-shoujo-zenhen": "红白机侦探俱乐部2 站在身后的少女 前篇"
   "famicom-tantei-club-part-ii-ushiro-ni-tatsu-shoujo-kouhen": "红白机侦探俱乐部2 站在身后的少女 后篇"
   "murder-club": "谍杀俱乐部"
   "meimon-dai-san-yakyuu-bu": "名门！第三棒球部"
@@ -190,7 +191,7 @@ title_zh:
   "power-soccer": "力量足球"
   "double-dare": "万代高尔夫 圆石海岸挑战赛"
   "snake-s-revenge": "合金装备2-斯内克的复仇"
-  "tecmo-world-wrestling": "激斗摔跤！斗魂传说"
+  "gekitou-puroresu-toukon-densetsu": "激斗摔跤！斗魂传说"
   "digital-devil-story-megami-tensei-2": "数码恶魔物语-女神转生2"
   "ultraman-club-2-kaettekita-ultraman-club": "奥特曼俱乐部2-归来吧奥特曼俱乐部"
   "final-fantasy-iii": "最终幻想3"
@@ -233,10 +234,47 @@ title_zh:
   "nantettatte-baseball-ko-game-set-91-kaimakuban": "SUNSOFT棒球 子卡带 91开幕篇"
   "ninja-ryukenden-3-yomi-no-hakobune": "忍者龙剑传3 黄泉的方舟"
   "family-circuit-91": "家庭赛车91"
-  "time-twist-rekishi-no-katasumi-de-zenhen": "时空扭曲 不为人知的历史角落"
+  "time-twist-rekishi-no-katasumi-de-zenhen": "时空扭曲 不为人知的历史角落 前篇"
+  "time-twist-rekishi-no-katasumi-de-kouhen": "时空扭曲 不为人知的历史角落 后篇"
   "hyaku-no-sekai-no-monogatari-the-tales-on-a-watery-wildern": "百世界物语"
   "dragon-ball-z-2-gekishin-freeza": "龙珠Z2 激神弗利沙"
   "wurm-journey-to-the-center-of-the-earth": "JJ大作战"
+  "dynowarz-destruction-of-spondylus": "恐龙战争 毁灭斯庞迪卢斯"
+  "the-lone-ranger": "独行侠/孤胆游侠"
+  "base-wars": "机器人棒球"
+  "the-three-stooges": "三傻行大运"
+  "720": "720°极限滑板"
+  "the-uncanny-x-men": "X战警"
+  "kings-of-the-beach": "沙滩排球王"
+  "miracle-piano-teaching-system": "神奇钢琴教学系统"
+  "pin-bot": "星际弹珠台"
+  "the-last-starfighter": "最后的星空战士"
+  "the-adventures-of-gilligan-s-island": "吉利根岛的冒险"
+  "a-nightmare-on-elm-street": "猛鬼街/半夜鬼上床"
+  "game-FDS_898": "行星阿屯外传"
+  "arch-rivals": "篮球对抗赛"
+  "the-immortal": "不死传说"
+  "the-punisher": "惩罚者"
+  "digger-t-rock-legend-of-the-lost-city": "矿工 失落之城的传奇"
+  "dirty-harry-the-war-against-drugs": "肮脏的哈里"
+  "the-adventures-of-rad-gravity": "拉德的冒险"
+  "parasol-stars-the-story-of-bubble-bobble-3": "彩虹岛（欧版）/遮阳伞之星"
+  "peter-pan-and-the-pirates": "彼得潘与海盗"
+  "conan-the-mysteries-of-time": "蛮王柯南"
+  "galaxy-5000": "银河系5000 狂飙51世纪"
+  "the-last-ninja": "最后的忍者"
+  "the-rocketeer": "火箭手/火箭人"
+  "the-simpsons-bart-vs-the-space-mutants": "辛普森一家 巴特对抗太空变种人"
+  "the-simpsons-bart-vs-the-world": "辛普森一家 巴特环游世界"
+  "the-simpsons-bartman-meets-radioactive-man": "辛普森一家 巴特侠大战放射人"
+  "parasol-henbee": "阳伞亨比/笨蛋王子大冒险"
+  "archon": "执政官 光明与黑暗"
+  "shin-satomi-hakken-den-hikari-to-yami-no-tatakai": "新里见八犬传"
+  "chessmaster": "国际象棋大师"
+  "knight-move": "国际象棋 骑士移动"
+  "nintendo-world-championships": "任天堂世界锦标赛"
+  "castle-of-dragon": "战龙者"
+  "ys-2-ancient-ys-vanished-the-final-chapter": "伊苏2"
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -260,7 +298,6 @@ video_mappings:
   "sansuu-5-6-nen-keisan-game": "算数五六年级"
   "dead-zone": "死亡界限"
   "aigiina-no-yogen-from-the-legend-of-balubalouk": "世纪大预言"
-  "moero-twinbee-cinnamon-hakase-wo-sukue": "兵蜂2-拯救辛纳蒙博士"
   "kineko-kinetic-connection-the-monitor-puzzle": "解谜拼图" #完成第3页
   "king-kong-2-ikari-no-megaton-punch": "金刚2 愤怒的百万拳头" #完成第4页
   "fist-of-the-north-star": "北斗之拳2 世纪末救世主传说"
@@ -286,6 +323,98 @@ video_mappings:
   "touch-down-fever": "美式足球" #完成第10页
   "hokuto-no-ken-3-shin-seiki-souzou-seiken-restuden": "北斗之拳3 新世纪创造 凄拳列传"
   "quarter-back-scramble": "美式足球四分卫"
+
+  # --- 1989年欧美独占及未对齐视频章节映射 ---
+  "fester-s-quest": "亚当斯一家 费斯特叔叔的冒险"
+  "hollywood-squares": "好莱坞问答游戏"
+  "sky-shark": "飞翔鲛"
+  "to-the-earth": "飞向地球"
+
+  # --- 1990年欧美独占及未对齐视频章节映射 ---
+  "dash-galaxy-in-the-alien-asylum": "银河避难所"
+  "destination-earthstar": "地球行星射击"
+  "fisher-price-i-can-remember": "费雪-记忆游戏"
+  "fisher-price-perfect-fit": "费雪-完美匹配"
+  "magic-johnson-s-fast-break": "魔术师约翰逊的快攻"
+  "win-lose-or-draw": "赢,输或平局"
+  "heavy-barrel": "霹雳神兵/重武器"
+  "double-dare": "双重挑战/你能我也能"
+  "dynowarz-destruction-of-spondylus": "毁灭的斯邦迪那斯"
+  "ghostbusters-ii": "捉鬼敢死队Ⅱ/ 魔鬼克星Ⅱ"
+  "remote-control": "遥控"
+  "arkista-s-ring": "异域诛魂-阿基斯塔之戒"
+  "captain-skyhawk": "天鹰上尉/空鹰队长"
+  "heavy-shreddin": "高山滑雪"
+  "jeopardy-25th-anniversary-edition": "电视问答游戏 危险边缘-25周年版"
+  "the-adventures-of-gilligan-s-island": "吉利根岛的冒险‌"
+  "mad-max": "疯狂的麦克斯"
+  "barker-bill-s-trick-shooting": "巴克比尔的射击"
+  "mission-impossible": "不可能的任务/虎胆妙算"
+  "pipe-dream": "水管之梦"
+  "rollergames": "溜冰格斗/旱冰勇士"
+  "solar-jetman-hunt-for-the-golden-warpship": "太阳能杰盟 寻找黄金飞船"
+  "time-lord": "时间领主"
+  "orb-3d": "球体3D"
+  "formula-one-built-to-win": "一级方程式 为赢而生"
+  "muppet-adventure-chaos-at-the-carnival": "木偶历险记 狂欢夜"
+  "cross-fire": "交叉火力"
+
+  # --- 1991年欧美独占及未对齐视频章节映射 ---
+  "aussie-rules-footy": "澳洲橄榄球大赛"
+  "attack-of-the-killer-tomatoes": "番茄杀手"
+  "elite": "太空精英"
+  "parasol-stars-the-story-of-bubble-bobble-3": "彩虹岛（欧版）"
+  "dark-lord": "黑暗领主"
+  "bill-elliott-s-nascar-challenge": "比尔·埃利奥特的NASCAR挑战赛"
+  "over-horizon": "飞跃地平线"
+  "family-feud": "家庭问答"
+  "videomation": "小画板/动画大师"
+  "frankenstein-the-monster-returns": "弗兰肯斯坦 怪物回归"
+  "klashball": "机器人手球赛"
+  "where-s-waldo": "寻找沃尔多"
+  "die-hard": "虎胆龙威"
+  "bill-ted-s-excellent-video-game-adventure": "比尔和特德的电子游戏世界冒险"
+
+  # --- 第二轮：覆盖期未匹配视频章节对齐（1989-1991年） ---
+  "p-o-w-prisoners-of-war": "脱狱"
+  "shin-moero-pro-yakyuu": "新燃烧职业棒球"
+  "marusa-no-onna": "女查察官"
+  "famicom-mukashi-banashi-yuu-yuu-ki-kouhen": "红白机名作童话 游游记 后篇"
+  "cosmic-epsilon": "太空立体战争"
+  "square-no-tom-sawyer": "汤姆历险记"
+  "meimon-takonishi-ouendan-kouha-6-nin-shuu": "名门！多古西应援团"
+  "famicom-yakyuu-ban": "红白机棒球盘"
+  "famista-90": "家庭棒球90"
+  "i-love-softball": "我爱垒球"
+  "infiltrator": "渗透者"
+  "astyanax": "斧王/王之霸者"
+  "adventures-of-lolo-2": "罗罗大冒险2/罗罗大冒险(JP)"
+  "captain-tsubasa-vol-2-super-striker": "队长小翼2 超级前锋"
+  "happy-birthday-bugs": "兔八哥生日快乐"
+  "little-magic": "魔道士的阴谋"
+  "nantettatte-baseball": "Sunsoft 棒球"
+  "wwf-wrestlemania-challenge": "世界摔跤联合会 狂热摔跤挑战"
+  "last-armageddon": "世界末日"
+  "famista-91": "家庭棒球91"
+  "championship-rally": "冠军拉力赛"
+  "mahjong-rpg-dora-dora-dora": "麻将RPG"
+  "famimaga-disk-vol-3-all-one": "全 1 大挑战"
+  "grand-master": "剑之达人/救世主"
+  "magical-taruruuto-kun-fantastic-world": "幻法小魔星"
+  "obocchama-kun": "天才少爷"
+  "vice-project-doom": "火炮"
+  "bomberman-ii": "炸弹人2"
+  "doki-doki-yuuenchi": "刺激乐园"
+  "thundercade": "雷电节奏/特殊部队"
+  "who-framed-roger-rabbit": "谁陷害了兔子罗杰"
+  "g-i-joe-a-real-american-hero": "特种部队"
+  "time-twist-rekishi-no-katasumi-de-zenhen": "时空扭曲 不为人知的历史角落"
+  "time-twist-rekishi-no-katasumi-de-kouhen": "时空扭曲 不为人知的历史角落"
+  "the-simpsons-bart-vs-the-space-mutants": "辛普森一家 巴特与外星人"
+  "parasol-henbee": "笨蛋王子大冒险/彩虹小子"
+  "nantettatte-baseball-kogame-set-ob-all-star-hen": "SUNSOFT棒球 子卡带全明星篇"
+  "nantettatte-baseball-ko-game-set-91-kaimakuban": "SUNSOFT棒球 子卡带 91开幕篇"
+  "knight-move": "国际象棋 Knight Move"
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -326,8 +455,9 @@ merge_games:
   "tanigawa-kouji-no-shougi-shinan-2": "tanigawa-kouji-no-shougi-shinan-ii-meijin-heno-michi"
   "ikari-warriors-ii-victory-road": "ikari-2-dogosoken"
   "great-tank": "iron-tank"
-  "family-trainer-no-2-running-stadium": "stadium-events"
-  "family-trainer-no-2-running-stadium": "world-class-track-meet"
+  "family-trainer-no-2-running-stadium":
+    - "stadium-events"
+    - "world-class-track-meet"
   "golgo-13-dai-1-shou-kamigami-no-tasogare": "golgo-13-top-secret-episode"
   "meikyuu-kumikyoku": "milon-s-secret-castle"
   "the-legend-of-zelda-2-link-no-bouken": "zelda-ii-the-adventure-of-link"
@@ -335,6 +465,157 @@ merge_games:
   "family-trainer-no-7-dai-undoukai": "super-team-games"
   "konamic-ice-hockey": "blades-of-steel"
   "family-trainer-no-3-aerobics-studio": "dance-aerobics"
+
+  # --- 新增：无视频仅美版游戏与对应日版 FC 游戏合并规则 ---
+  # 1. 曼哈顿警察（美版改名为 Street Cop 街头警察，万代跳跳板系列第6作，No-Intro DAT 记录为克隆版本）
+  "family-trainer-no-6-manhattan-police": "street-cop"
+
+  # 2. 全美职业篮球（美版名为 All-Pro Basketball，Vic Tokai 发行，日版原名为 Zenbei!! Pro Basketball）
+  "zenbei-pro-basketball": "all-pro-basketball"
+
+  # 3. 新魔鬼克星2（HAL 研究所制作，因罗马数字 II 与阿拉伯数字 2 命名差异导致条目分裂，两者实为同一款游戏）
+  "new-ghostbusters-2": "new-ghostbusters-ii"
+
+  # 4. 龙魂：新的传说（Bandai/Namco 纵版飞行射击，美版副标题 The New Legend，日美同款跨区版本）
+  "dragon-spirit-aratanaru-densetsu": "dragon-spirit"
+
+  # 5. 铁鹰战士3 / 终极空战（动视出品3D飞行射击，美版定名 Ultimate Air Combat，日版引进电影IP改名 Aces: Iron Eagle III）
+  "aces-iron-eagle-3": "ultimate-air-combat"
+
+  # 6. F1赛车（科乐美出品竞速游戏，日版录入为 F-1 Sensation，欧美版维基录入为 Formula One Sensation）
+  "f-1-sensation": "formula-one-sensation"
+
+  # 7. 突然君 / 突然！猛男（Vic Tokai 出品横版动作射击，美版改名为 Amagon 荒岛落难记，日版名为 Totsuzen! Machoman）
+  "totsuzen-machoman": "amagon"
+
+  # 8. 天堂与地狱 / 挂布君的跳跃天国与速度地狱（Vic Tokai 出品，美版改名为 Kid Kool，DAT 记录为同一游戏克隆版本）
+  "kakefu-kun-no-jump-tengoku-speed-jigoku": "kid-kool"
+
+  # 9. 金钱游戏2 兜町的奇迹（SOFEL 出品股市模拟与养成游戏，美版改编为 Wall Street Kid 华尔街小子）
+  "the-money-game-2-kabutochou-no-kiseki": "wall-street-kid"
+
+  # 10. 世界拳击（SOFEL 出品拳击竞技游戏，日版名为 Rush Up，美版名为 World Champ）
+  "rush-up": "world-champ"
+
+  # 11. 太阳神殿 阿兹特克2（东京书籍发行之名作探险RPG，日版原名 Taiyou no Shinden，美版名为 Tombs & Treasure 坟墓与宝藏）
+  "taiyou-no-shinden-asteka-2": "tombs-treasure"
+
+  # 12. 米老鼠3 梦想气球（Kemco 出品，美版因失去米老鼠版权换皮为原创主角 Kid Klown in Night Mayor World 小丑王子大冒险）
+  "mickey-mouse-3-yume-fuusen": "kid-klown-in-night-mayor-world"
+
+  # 13. 沙滩排球（Technos 出品，日版名为 V'Ball: U.S. Championship，美版名为 Super Spike V'Ball）
+  "v-ball-us-championship": "super-spike-v-ball"
+
+  # 14. 忍者龙剑传2 暗黑的邪神剑（Tecmo 动作名作，美版副标题为 The Dark Sword of Chaos，因中英文标题差异分裂）
+  "ninja-ryukenden-2-ankoku-no-jashin-ken": "ninja-gaiden-ii-the-dark-sword-of-chaos"
+
+  # 15. 忍者龙剑传3 黄泉的方舟（Tecmo 动作名作，美版副标题为 The Ancient Ship of Doom，因标题命名差异分裂）
+  "ninja-ryukenden-3-yomi-no-hakobune": "ninja-gaiden-iii-the-ancient-ship-of-doom"
+
+  # 16. 2010街头快打（卡普空出品科幻动作游戏，美版副标题增加 The Final Fight，因标题差异分裂）
+  "street-fighter-2010": "street-fighter-2010-the-final-fight"
+
+  # 17. 忍者神龟 曼哈顿计划（科乐美出品，日版标题为 Teenage Mutant Ninja Turtles 2，美版标题为 TMNT III: The Manhattan Project）
+  "teenage-mutant-ninja-turtles-2": "teenage-mutant-ninja-turtles-iii-the-manhattan-project"
+
+  # 18. 哥斯拉（东宝出品经典怪兽动作游戏，日版原名 Godzilla，美版定名为 Godzilla: Monster of Monsters）
+  "godzilla": "godzilla-monster-of-monsters"
+
+  # 19. 魔城奇兵：三次元迷宫的狂兽（CSK综合研究所/Epic出品经典3D斜视动作解谜，美版定名为 Solstice: The Quest for the Staff of Demnos）
+  "solstice-sanjigen-meikyu-no-kyoju": "solstice-the-quest-for-the-staff-of-demnos"
+
+  # 20. 兔宝宝历险记2 欢迎来到蒙大拿乐园（科乐美名作，美版定名为 Tiny Toon Adventures 2: Trouble in Wackyland）
+  "tiny-toon-adventures-2-montana-land-he-youkoso": "tiny-toon-adventures-2-trouble-in-wackyland"
+
+  # 21. 魔鬼终结者2（LJN 出品，美版因 judgement 与 judgment 拼写差异分裂）
+  "terminator-2-judgement-day": "terminator-2-judgment-day"
+
+  # 22. 郝君的奇妙之旅 / 不可思议之旅（Carry Lab 开发，日版由 Square/DOG 旗下于 1987 年在 FDS 磁碟机发行，美版由 Taxan 于 1989 年在 NES 卡带发行并改名为 Mystery Quest）
+  "hao-kun-no-fushigina-tabi": "mystery-quest"
+
+  # 23. 嘉蒂外传 / 守护者传说（Compile 开发神作，Irem 发行日版 Guardic Gaiden，Broderbund 发行北美版 The Guardian Legend）
+  "guardic-gaiden": "the-guardian-legend"
+
+  # 24. 奥林帕斯之战 爱的传说（Infinity 开发、Broderbund 发行，日版名为 Olympus no Tatakai: Ai no Densetsu，欧美版定名 The Battle of Olympus）
+  "olympus-no-tatakai": "the-battle-of-olympus"
+
+  # 25. 阿拉伯之梦 一千零一夜（Culture Brain 出品经典 ARPG，日版名为 Arabian Dream Scheherazade，美版定名 The Magic of Scheherazade）
+  "arabian-dream-sherazaado": "the-magic-of-scheherazade"
+
+  # 26. 生日快乐 兔八哥（Kemco 出品庆祝兔八哥50周年动作名作，日版原名 Happy Birthday Bugs，美版定名 The Bugs Bunny Birthday Blowout）
+  "happy-birthday-bugs": "the-bugs-bunny-birthday-blowout"
+
+  # 27. 超级职业摔跤（Pony Canyon/Nichibutsu 出品，美版由 FCI 发行获官方授权更名 WCW Wrestling，更换为 WCW 选手）
+  "superstar-pro-wrestling": "wcw-wrestling"
+
+  # 28. 疯城狂怒 / 鳄鱼先生（科乐美动作射击竞速大作，日版原名 Mad City，欧美版更名为 The Adventures of Bayou Billy）
+  "mad-city": "the-adventures-of-bayou-billy"
+
+  # 29. 汤姆索亚的冒险（SETA 出品横版卷轴动作游戏，日版名为 Tom Sawyer no Bouken，美版定名 The Adventures of Tom Sawyer）
+  "tom-sawyer-no-bouken": "the-adventures-of-tom-sawyer"
+
+  # 30. 能量开拓者 / 力量之刃（Taito 硬派动作名作，日版原名 Power Blazer，美版重绘施瓦辛格硬汉主角并更名为 Power Blade）
+  "power-blazer": "power-blade"
+
+  # 31. 长靴猫环游世界80天（东映动画名作，美版由 Electro Brain 于北美发行改名为 Puss 'n Boots: Pero's Great Adventure）
+  "nagagutsu-wo-haita-neko-sekai-isshuu-80-nichi-dai-bouken": "puss-n-boots-pero-s-great-adventure"
+
+  # 32. 飞龙之拳3 五人的龙战士（Culture Brain 经典格斗动作名作，北美版定名为 Flying Warriors）
+  "hiryuu-no-ken-iii-5-nin-no-ryuu-senshi": "flying-warriors"
+
+  # 33. 骷髅13 第二章：伊卡尔斯之谜（Vic Tokai 出品，北美版定名为 The Mafat Conspiracy 马法特阴谋）
+  "golgo-13-the-riddle-of-icarus": "the-mafat-conspiracy"
+
+  # 34. 小魔女多萝琵（VIC东海发行、初代动作名作，北美版更名为 The Krion Conquest）
+  "magical-doropie": "the-krion-conquest"
+
+  # 35. 心跳游乐园 / 游园地（TOSE开发、VAP发行，欧版换皮为 The Trolls in Crazyland 疯狂乐园的巨怪）
+  "doki-doki-yuuenchi": "the-trolls-in-crazyland"
+
+  # 36. 怒3（SNK 经典射击游戏第三代，美版定名为 Ikari Warriors III: The Rescue）
+  "ikari-3": "ikari-warriors-iii-the-rescue"
+
+  # 37. 金属装甲（Hal研究所/SETA出品机甲科幻动作射击，美版定名为 Metal Mech）
+  "metal-flame-psybuster": "metal-mech"
+
+  # 38. 封印之剑 / 法利亚（Game Arts开发、Hi-Score Media Work发行ARPG，美版定名 Faria: A World of Mystery and Danger）
+  "faria": "faria-a-world-of-mystery-and-danger"
+
+  # 39. 小美人鱼（卡普空出品迪士尼名作，美版录入 Disney's The Little Mermaid，日版录入 Little Mermaid: Ningyo Hime）
+  "little-mermaid-ningyo-hime": "disney-s-the-little-mermaid"
+
+  # 40. F1世界冠军杯赛车（Data East 经典F1赛车，北美由 Al Unser Jr. 代言更名为 Al Unser Jr.'s Turbo Racing）
+  "world-grand-prix-pole-to-finish": "al-unser-jr-s-turbo-racing"
+
+  # 41. 世界杯网球赛（Asmik 出品网球游戏，北美由美泰发售定名 Top Players' Tennis）
+  "world-super-tennis": "top-players-tennis"
+
+  # 42. 双截龙2 复仇（Technos 经典横版清版格斗神作，美版因罗马数字 II 与阿拉伯数字 2 命名分裂）
+  "double-dragon-2-the-revenge": "double-dragon-ii-the-revenge"
+
+  # 43. 死神之吻 似曾相识（Kemco 经典文字冒险侦探名作 Déjà Vu，美版因特殊重音字符 é 转写为 d-j-vu 造成分裂）
+  "deja-vu": "d-j-vu"
+
+  # 44. 男孩与泡泡怪 / 神奇软泥（David Crane 经典创意冒险游戏，美版为 A Boy and His Blob，日版由 Jaleco 发行命名为ふしぎなブロビー / Fushigina Bloby）
+  "fushigina-bloby-blobania-no-kiki": "a-boy-and-his-blob-trouble-on-blobolonia"
+
+  # 45. 终极战士 / 铁血战士（同名好莱坞科幻动作电影改编，日版由 Pack-In-Video 于 1989 年 3 月发行，美版由动视在 1989 年 4 月发行附带副标题 Soon the Hunt Will Begin）
+  "predator": "predator-soon-the-hunt-will-begin"
+
+  # 46. 科乐美篮球 / 运球高手（科乐美经典体育游戏，日版于 1987 年 7 月在 FDS 磁碟机以 Exciting Basketball 发行，北美于 1987 年 9 月在 NES 卡带以 Double Dribble 发行）
+  "exciting-basketball": "double-dribble"
+
+  # 47. 谜之壁 砖块消除 / 爆裂打砖块（科乐美经典打砖块，日版于 1986 年 12 月在 FDS 磁碟机发行 Nazo no Kabe，欧版由科乐美旗下 Palcom 移植到 NES 卡带定名 Crackout）
+  "nazo-no-kabe-block-kuzushi": "crackout"
+
+  # 48. 罗杰兔 / 兔八哥疯狂城堡（Kemco 出品横版解谜名作，日版由 Kemco 于 1989 年 2 月在 FDS 磁碟机发行并取得迪士尼电影授权名为 Roger Rabbit；美版因北美授权变更将主角替换为兔八哥更名为 The Bugs Bunny Crazy Castle）
+  "roger-rabbit": "the-bugs-bunny-crazy-castle"
+
+  # 49. 激斗摔角 斗魂传说（特库摩 Tecmo 于 1989 年 9 月在 FC 发行，北美于 1990 年 4 月更名为 Tecmo World Wrestling 发行，同款跨区版本）
+  "gekitou-puroresu-toukon-densetsu": "tecmo-world-wrestling"
+
+  # 50. 高桥名人的冒险岛2（Hudson 经典横版动作名作，北美于 1991 年 2 月在 NES 首发定名 Adventure Island II，日版于 1991 年 4 月在 FC 发行定名 Takahashi Meijin no Boukenjima 2，同款跨区版本）
+  "adventure-island-ii": "takahashi-meijin-no-boukenjima-2"
 
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
@@ -366,4 +647,7 @@ bilibili_video:
   #   text: "马里奥兄弟解说"
   "star-wars-namco":
     url: "https://www.bilibili.com/video/BV1VigSzME8z?t=631"
+  "nintendo-world-championships":
+    url: "https://www.bilibili.com/video/BV1Tx411w7Sc"
+    text: "喷神James解说"
 
