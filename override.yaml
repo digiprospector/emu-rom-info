@@ -139,6 +139,23 @@ title_zh:
   "rollerball": "弹珠台"
   "fantasy-zone-2-the-teardrop-of-opa-opa": "幻想地带2"
   "pro-yakyuu-family-stadium-88": "职业棒球家庭竞技场88" #完成第10页
+  "pro-yakyuu-satsujin-jiken": "职业棒球？杀人事件！"
+  "tecmo-baseball": "特库摩棒球"
+  "wwf-wrestlemania": "世界摔跤联盟 狂热摔跤"
+  "tecmo-bowl": "特库摩美式足球"
+  "ganbare-goemon-2": "大盗五右卫门2"
+  "family-trainer-no-10-rairai-kyonshiizu": "家庭教练系列10 未来小子僵尸大冒险"
+  "pachio-kun-2": "柏青哥君2"
+  "bandai-golf-challenge-pebble-beach": "万代高尔夫 圆石海岸挑战赛"
+  "friday-the-13th": "十三号星期五"
+  "tantei-jinguuji-saburou-kikenna-futari-kouhen": "侦探神宫寺三郎 危险的二人 后篇"
+  "marble-madness": "疯狂弹珠"
+  "sakigake-otoko-juku-shippuu-ichi-gou-sei": "魁！！男塾"
+  "bakushou-jinsei-gekijoh": "爆笑！人生剧场"
+  "rolling-thunder": "雷霆任务"
+  "big-challenge-gun-fighter": "大挑战！神枪手"
+  "operation-wolf": "野狼行动" #完成第11页
+
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
 # 作用：当 B 站解说视频的分段名称与游戏库正式名称存在差异时，强制指定绑定关系。
@@ -233,6 +250,7 @@ merge_games:
   "dr-chaos-jigoku-no-tobira": "dr-chaos"
   "family-trainer-no-7-dai-undoukai": "super-team-games"
   "konamic-ice-hockey": "blades-of-steel"
+  "family-trainer-no-3-aerobics-studio": "dance-aerobics"
 
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
