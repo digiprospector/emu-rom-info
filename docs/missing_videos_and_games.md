@@ -90,7 +90,7 @@
 | 36 | `space-shuttle-project` | 太空梭计划 | Space Shuttle Project | `NES` | 1991年11月 |
 | 37 | `star-wars` | 星际大战 | Star Wars | `NES` | 1991年11月 / 1992年3月26日 |
 | 38 | `the-bard-s-tale` | - | The Bard's Tale | `NES` | 1991年11月 |
-| 39 | `wurm-journey-to-the-center-of-the-earth` | JJ大作战 | Wurm: Journey to the Center of the Earth | `FC/NES` | 1991年11月15日 / 1991年11月 |
+| 39 | `wurm-journey-to-the-center-of-the-earth` | 地底大作战 | Wurm: Journey to the Center of the Earth | `FC/NES` | 1991年11月15日 / 1991年11月 |
 | 40 | `hammerin-harry` | 大力工头 | Hammerin' Harry | `FC/NES` | 1991年11月15日 / 1992年 |
 | 41 | `radia-senki-reimei-hen` | 拉迪亚战记：黎明篇 | Radia Senki - Reimei Hen | `FC` | 1991年11月15日 |
 | 42 | `shounen-ashibe-nepal-dai-bouken-no-maki` | 少年亚吉具：尼泊尔大冒险之卷 | Shounen Ashibe - Nepal Dai Bouken no Maki | `FC` | 1991年11月15日 |
@@ -164,7 +164,7 @@
 | 110 | `m-c-kids` | 麦当劳小子 | M.C. Kids | `NES` | 1992年2月 / 1993年5月19日 |
 | 111 | `sesame-street-countdown` | 芝麻街 - 倒计时 | Sesame Street: Countdown | `NES` | 1992年2月 |
 | 112 | `star-trek-25th-anniversary` | 星舰迷航记 25周年纪念版 | Star Trek: 25th Anniversary | `NES` | 1992年2月 |
-| 113 | `terminator-2-judgement-day` | 魔鬼终结者2 | Terminator 2 - Judgement Day | `FC/NES` | 1992年6月26日 / 1992年2月 |
+| 113 | `terminator-2-judgment-day` | 魔鬼终结者2 | Terminator 2: Judgment Day | `FC/NES` | 1992年6月26日 / 1992年2月 |
 | 114 | `f1-circus` | F1竞赛场 | F1 Circus | `FC` | 1992年2月7日 |
 | 115 | `ike-ike-nekketsu-hockey-bu-subette-koronde-dai-rantou` | 热血曲棍球 | Ike Ike! Nekketsu Hockey Bu - Subette Koronde Dai Rantou | `FC` | 1992年2月7日 |
 | 116 | `navy-blue` | 大海军战 | Navy Blue | `FC` | 1992年2月14日 |
@@ -188,10 +188,10 @@
 | 134 | `hook` | 虎克船长 | Hook | `FC/NES` | 1992年3月27日 / 1992年4月 |
 | 135 | `plasma-ball` | 机器人弹珠柜 | Plasma Ball | `FC` | 1992年3月27日 |
 | 136 | `honoo-no-toukyuuji-dodge-danpei` | 火炎斗球儿弹平 | Honoo no Toukyuuji - Dodge Danpei | `FC` | 1992年3月28日 |
-| 137 | `aces-iron-eagle-3` | 铁鹰战士 | Aces - Iron Eagle 3 | `FC/NES` | 1992年8月7日 / 1992年4月 |
-| 138 | `paperboy-2` | 送报童 2 | Paperboy 2 | `NES` | 1992年4月 |
-| 139 | `the-mutant-virus-crisis-in-a-computer-world` | - | The Mutant Virus: Crisis in a Computer World | `NES` | 1992年4月 |
-| 140 | `toxic-crusaders` | 毒魔侠 | Toxic Crusaders | `NES` | 1992年4月 |
+| 137 | `paperboy-2` | 送报童 2 | Paperboy 2 | `NES` | 1992年4月 |
+| 138 | `the-mutant-virus-crisis-in-a-computer-world` | - | The Mutant Virus: Crisis in a Computer World | `NES` | 1992年4月 |
+| 139 | `toxic-crusaders` | 毒魔侠 | Toxic Crusaders | `NES` | 1992年4月 |
+| 140 | `ultimate-air-combat` | 铁鹰战士 | Ultimate Air Combat | `FC/NES` | 1992年8月7日 / 1992年4月 |
 | 141 | `wizardry-ii-the-knight-of-diamonds` | 巫术II：钻石骑士 | Wizardry II: The Knight of Diamonds | `NES` | 1992年4月 |
 | 142 | `masuzoe-youichi-asa-made-famicom` | 舛添要一 | Masuzoe Youichi - Asa Made Famicom | `FC` | 1992年4月17日 |
 | 143 | `play-school-soft-hirake-ponkikki` | 幼儿教育软体：打开吧！朋基基 | Play School Soft - Hirake! Ponkikki | `FC` | 1992年4月17日 |
@@ -298,7 +298,7 @@
 | 244 | `batman-returns` | 蝙蝠侠 3 - 大显神威 | Batman Returns | `NES` | 1993年1月 |
 | 245 | `battleship` | 海战风云 | Battleship | `NES` | 1993年9月 / 1993年 |
 | 246 | `break-time-the-national-pool-tour` | 休闲时间 - 全国撞球巡回赛 | Break Time: The National Pool Tour | `NES` | 1993年1月 |
-| 247 | `f-1-sensation` | F1赛车 | F-1 Sensation | `FC/NES` | 1993年1月29日 / 1993年 |
+| 247 | `formula-one-sensation` | F1赛车 | Formula One Sensation | `FC/NES` | 1993年1月29日 / 1993年 |
 | 248 | `overlord` | 领主之战 | Overlord | `NES` | 1993年1月 |
 | 249 | `rackets-rivals` | 网球联赛 | Rackets & Rivals | `NES` | 1993年 |
 | 250 | `ultima-v-warriors-of-destiny` | - | Ultima V: Warriors of Destiny | `NES` | 1993年1月 |

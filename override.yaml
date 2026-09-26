@@ -189,7 +189,6 @@ title_zh:
   "president-no-sentaku": "总裁的选择"
   "best-play-pro-yakyuu-2": "ASCII职业棒球2"
   "power-soccer": "力量足球"
-  "double-dare": "万代高尔夫 圆石海岸挑战赛"
   "snake-s-revenge": "合金装备2-斯内克的复仇"
   "gekitou-puroresu-toukon-densetsu": "激斗摔跤！斗魂传说"
   "digital-devil-story-megami-tensei-2": "数码恶魔物语-女神转生2"
@@ -204,7 +203,6 @@ title_zh:
   "nihonichi-no-mei-kantoku": "日本第一名教练"
   "sd-gundam-gaiden-knight-gundam-monogatari": "SD高达外传 骑士高达物语"
   "back-to-the-future-part-ii-iii": "回到未来2&3"
-  "nes-play-action-football": "NFL美式足球"
   "rollergames": "寻宝大进击"
   "doraemon-gigazombie-no-gyakushuu": "哆啦A梦 大僵尸的逆袭"
   "ishin-no-arashi": "维新之风"
@@ -216,7 +214,7 @@ title_zh:
   "silver-surfer": "银影侠"
   "romance-of-the-three-kingdoms-ii": "三国志2"
   "startropics": "热带之星"
-  "game-FDS_897": "行星阿屯外传"
+  "game-FDS_897": "行星阿屯外传 前篇"
   "thunder-lightning": "家庭打砖块"
   "famicom-top-management": "红白机顶尖经营者"
   "best-play-pro-yakyuu-90": "ASCII职业棒球90"
@@ -239,7 +237,7 @@ title_zh:
   "time-twist-rekishi-no-katasumi-de-kouhen": "时空扭曲 不为人知的历史角落 后篇"
   "hyaku-no-sekai-no-monogatari-the-tales-on-a-watery-wildern": "百世界物语"
   "dragon-ball-z-2-gekishin-freeza": "龙珠Z2 激神弗利沙"
-  "wurm-journey-to-the-center-of-the-earth": "JJ大作战"
+  "wurm-journey-to-the-center-of-the-earth": "地底大作战"
   "dynowarz-destruction-of-spondylus": "恐龙战争 毁灭斯庞迪卢斯"
   "the-lone-ranger": "独行侠/孤胆游侠"
   "base-wars": "机器人棒球"
@@ -252,7 +250,7 @@ title_zh:
   "the-last-starfighter": "最后的星空战士"
   "the-adventures-of-gilligan-s-island": "吉利根岛的冒险"
   "a-nightmare-on-elm-street": "猛鬼街/半夜鬼上床"
-  "game-FDS_898": "行星阿屯外传"
+  "game-FDS_898": "行星阿屯外传 后篇"
   "arch-rivals": "篮球对抗赛"
   "the-immortal": "不死传说"
   "the-punisher": "惩罚者"
@@ -278,10 +276,9 @@ title_zh:
   "ys-2-ancient-ys-vanished-the-final-chapter": "伊苏2"
   "pictionary": "画图猜词/拼图工厂"
   "nintendo-campus-challenge": "任天堂校园挑战赛1991"
-  "moonball-magic": "月球弹珠台/魔法弹珠台"
+  "moonball-magic": "月球弹珠台"
   "race-america": "美国竞速/科尔维特ZR-1挑战"
   "kiwi-kraze": "新西兰故事/奇异鸟历险记"
-  "goal": "燃烧职业足球"
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -429,7 +426,6 @@ video_mappings:
   "pictionary": "拼图工厂"
   "nes-play-action-football": "任天堂橄榄球"
   "nintendo-world-cup": "热血高校躲避球部足球篇/热血足球2"
-  "startropics": "热带之星"
   "game-FDS_897": "行星阿屯外传"
   "moonball-magic": "魔法弹珠台"
   "super-mario-bros-2": "超级马里奥USA"
@@ -498,17 +494,17 @@ merge_games:
   # 2. 全美职业篮球（美版名为 All-Pro Basketball，Vic Tokai 发行，日版原名为 Zenbei!! Pro Basketball）
   "zenbei-pro-basketball": "all-pro-basketball"
 
-  # 3. 新魔鬼克星2（HAL 研究所制作，因罗马数字 II 与阿拉伯数字 2 命名差异导致条目分裂，两者实为同一款游戏）
-  "new-ghostbusters-2": "new-ghostbusters-ii"
+  # 3. 新魔鬼克星2（HAL 研究所制作，欧版 1990 年在先，日版 1990 年 12 月在后）
+  "new-ghostbusters-ii": "new-ghostbusters-2"
 
   # 4. 龙魂：新的传说（Bandai/Namco 纵版飞行射击，美版副标题 The New Legend，日美同款跨区版本）
   "dragon-spirit-aratanaru-densetsu": "dragon-spirit"
 
-  # 5. 铁鹰战士3 / 终极空战（动视出品3D飞行射击，美版定名 Ultimate Air Combat，日版引进电影IP改名 Aces: Iron Eagle III）
-  "aces-iron-eagle-3": "ultimate-air-combat"
+  # 5. 铁鹰战士3 / 终极空战（动视出品3D飞行射击，美版 1992年4月在先定名 Ultimate Air Combat，日版 1992年8月在后改名 Aces: Iron Eagle III）
+  "ultimate-air-combat": "aces-iron-eagle-3"
 
-  # 6. F1赛车（科乐美出品竞速游戏，日版录入为 F-1 Sensation，欧美版维基录入为 Formula One Sensation）
-  "f-1-sensation": "formula-one-sensation"
+  # 6. F1赛车（科乐美出品竞速游戏，欧美版 1993年首发录入为 Formula One Sensation，日版随后录入为 F-1 Sensation）
+  "formula-one-sensation": "f-1-sensation"
 
   # 7. 突然君 / 突然！猛男（Vic Tokai 出品横版动作射击，美版改名为 Amagon 荒岛落难记，日版名为 Totsuzen! Machoman）
   "totsuzen-machoman": "amagon"
@@ -546,14 +542,14 @@ merge_games:
   # 18. 哥斯拉（东宝出品经典怪兽动作游戏，日版原名 Godzilla，美版定名为 Godzilla: Monster of Monsters）
   "godzilla": "godzilla-monster-of-monsters"
 
-  # 19. 魔城奇兵：三次元迷宫的狂兽（CSK综合研究所/Epic出品经典3D斜视动作解谜，美版定名为 Solstice: The Quest for the Staff of Demnos）
-  "solstice-sanjigen-meikyu-no-kyoju": "solstice-the-quest-for-the-staff-of-demnos"
+  # 19. 魔城奇兵：三次元迷宫的狂兽（CSK综合研究所/Epic出品经典3D斜视动作解谜，美版 1990年6月在先，日版 1990年7月在后）
+  "solstice-the-quest-for-the-staff-of-demnos": "solstice-sanjigen-meikyu-no-kyoju"
 
   # 20. 兔宝宝历险记2 欢迎来到蒙大拿乐园（科乐美名作，美版定名为 Tiny Toon Adventures 2: Trouble in Wackyland）
   "tiny-toon-adventures-2-montana-land-he-youkoso": "tiny-toon-adventures-2-trouble-in-wackyland"
 
-  # 21. 魔鬼终结者2（LJN 出品，美版因 judgement 与 judgment 拼写差异分裂）
-  "terminator-2-judgement-day": "terminator-2-judgment-day"
+  # 21. 魔鬼终结者2（LJN 出品，美版 1992年2月在先定名 Terminator 2: Judgment Day，日版 1992年6月在后）
+  "terminator-2-judgment-day": "terminator-2-judgement-day"
 
   # 22. 郝君的奇妙之旅 / 不可思议之旅（Carry Lab 开发，日版由 Square/DOG 旗下于 1987 年在 FDS 磁碟机发行，美版由 Taxan 于 1989 年在 NES 卡带发行并改名为 Mystery Quest）
   "hao-kun-no-fushigina-tabi": "mystery-quest"
@@ -588,8 +584,8 @@ merge_games:
   # 32. 飞龙之拳3 五人的龙战士（Culture Brain 经典格斗动作名作，北美版定名为 Flying Warriors）
   "hiryuu-no-ken-iii-5-nin-no-ryuu-senshi": "flying-warriors"
 
-  # 33. 骷髅13 第二章：伊卡尔斯之谜（Vic Tokai 出品，北美版定名为 The Mafat Conspiracy 马法特阴谋）
-  "golgo-13-the-riddle-of-icarus": "the-mafat-conspiracy"
+  # 33. 骷髅13 第二章：伊卡尔斯之谜（Vic Tokai 出品，北美版 1990年6月在先定名 The Mafat Conspiracy，日版 1990年7月在后）
+  "the-mafat-conspiracy": "golgo-13-the-riddle-of-icarus"
 
   # 34. 小魔女多萝琵（VIC东海发行、初代动作名作，北美版更名为 The Krion Conquest）
   "magical-doropie": "the-krion-conquest"
@@ -606,8 +602,8 @@ merge_games:
   # 38. 封印之剑 / 法利亚（Game Arts开发、Hi-Score Media Work发行ARPG，美版定名 Faria: A World of Mystery and Danger）
   "faria": "faria-a-world-of-mystery-and-danger"
 
-  # 39. 小美人鱼（卡普空出品迪士尼名作，美版录入 Disney's The Little Mermaid，日版录入 Little Mermaid: Ningyo Hime）
-  "little-mermaid-ningyo-hime": "disney-s-the-little-mermaid"
+  # 39. 小美人鱼（卡普空出品迪士尼名作，美版 1991年7月初在先定名 Disney's The Little Mermaid，日版 1991年7月19日在后）
+  "disney-s-the-little-mermaid": "little-mermaid-ningyo-hime"
 
   # 40. F1世界冠军杯赛车（Data East 经典F1赛车，北美由 Al Unser Jr. 代言更名为 Al Unser Jr.'s Turbo Racing）
   "world-grand-prix-pole-to-finish": "al-unser-jr-s-turbo-racing"
@@ -621,8 +617,8 @@ merge_games:
   # 43. 死神之吻 似曾相识（Kemco 经典文字冒险侦探名作 Déjà Vu，美版因特殊重音字符 é 转写为 d-j-vu 造成分裂）
   "deja-vu": "d-j-vu"
 
-  # 44. 男孩与泡泡怪 / 神奇软泥（David Crane 经典创意冒险游戏，美版为 A Boy and His Blob，日版由 Jaleco 发行命名为ふしぎなブロビー / Fushigina Bloby）
-  "fushigina-bloby-blobania-no-kiki": "a-boy-and-his-blob-trouble-on-blobolonia"
+  # 44. 男孩与泡泡怪 / 神奇软泥（David Crane 经典创意冒险游戏，美版 1990年1月在先定名 A Boy and His Blob，日版 1990年11月在后）
+  "a-boy-and-his-blob-trouble-on-blobolonia": "fushigina-bloby-blobania-no-kiki"
 
   # 45. 终极战士 / 铁血战士（同名好莱坞科幻动作电影改编，日版由 Pack-In-Video 于 1989 年 3 月发行，美版由动视在 1989 年 4 月发行附带副标题 Soon the Hunt Will Begin）
   "predator": "predator-soon-the-hunt-will-begin"
@@ -648,8 +644,8 @@ merge_games:
   # 52. 越野机车 / 热战机车赛（任天堂经典，FC卡带版与FDS磁碟机双人对战增强版合并）
   "excitebike": "vs-excitebike"
 
-  # 53. 燃烧足球 / 进球（日版 FC Moero!! Pro Soccer 与美版 NES Goal! 合并）
-  "goal": "moero-pro-soccer"
+  # 53. 燃烧足球 / 进球（日版 FC Moero!! Pro Soccer 1988年12月在先，美版 NES Goal! 1989年10月在后）
+  "moero-pro-soccer": "goal"
 
   # 54. 足球得点王2 / 进球2（日版 FC GOAL!! 与美版 NES Goal! Two 合并）
   "goal-two": "Goal!!"
