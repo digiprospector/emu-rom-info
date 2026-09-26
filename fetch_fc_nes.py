@@ -4552,6 +4552,14 @@ def load_raw_data(raw_dir: str = "data/raw") -> Tuple[List[Dict[str, Any]], List
         w_data = json.load(f)
         raw_records = w_data.get("records", w_data) if isinstance(w_data, dict) else w_data
 
+    # 过滤掉维基抓取时混入的 Template 脏数据条目
+    if isinstance(raw_records, list):
+        raw_records = [
+            r for r in raw_records 
+            if not str(r.get("id", "")).startswith("template-") 
+            and not str(r.get("title_en", "")).lower().startswith("template:")
+        ]
+
     bilibili_segments = []
     if os.path.exists(bili_json_path):
         with open(bili_json_path, "r", encoding="utf-8") as f:

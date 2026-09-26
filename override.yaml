@@ -215,7 +215,8 @@ title_zh:
   "pachio-kun-3": "柏青夫君3"
   "silver-surfer": "银影侠"
   "romance-of-the-three-kingdoms-ii": "三国志2"
-  "startropics": "任天堂橄榄球"
+  "startropics": "热带之星"
+  "game-FDS_897": "行星阿屯外传"
   "thunder-lightning": "家庭打砖块"
   "famicom-top-management": "红白机顶尖经营者"
   "best-play-pro-yakyuu-90": "ASCII职业棒球90"
@@ -275,6 +276,8 @@ title_zh:
   "nintendo-world-championships": "任天堂世界锦标赛"
   "castle-of-dragon": "战龙者"
   "ys-2-ancient-ys-vanished-the-final-chapter": "伊苏2"
+  "pictionary": "画图猜词/拼图工厂"
+  "nintendo-campus-challenge": "任天堂校园挑战赛1991"
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -415,6 +418,15 @@ video_mappings:
   "nantettatte-baseball-kogame-set-ob-all-star-hen": "SUNSOFT棒球 子卡带全明星篇"
   "nantettatte-baseball-ko-game-set-91-kaimakuban": "SUNSOFT棒球 子卡带 91开幕篇"
   "knight-move": "国际象棋 Knight Move"
+  "breakthru": "强行突破/越野赛车"
+  "ivan-ironman-stewart-s-super-off-road": "伊凡超级越野赛车"
+  "metal-flame-psybuster": "金属战士"
+  "blodia-land-puzzle-quest": "香草王国"
+  "pictionary": "拼图工厂"
+  "nes-play-action-football": "任天堂橄榄球"
+  "nintendo-world-cup": "热血高校躲避球部足球篇/热血足球2"
+  "startropics": "热带之星"
+  "game-FDS_897": "行星阿屯外传"
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -617,6 +629,12 @@ merge_games:
   # 50. 高桥名人的冒险岛2（Hudson 经典横版动作名作，北美于 1991 年 2 月在 NES 首发定名 Adventure Island II，日版于 1991 年 4 月在 FC 发行定名 Takahashi Meijin no Boukenjima 2，同款跨区版本）
   "adventure-island-ii": "takahashi-meijin-no-boukenjima-2"
 
+  # 51. 特种部队（日版 SWAT 与美版 G.I. Joe 同名跨版本合并）
+  "swat-special-weapons-tactics": "g-i-joe-a-real-american-hero"
+
+  # 52. 越野机车 / 热战机车赛（任天堂经典，FC卡带版与FDS磁碟机双人对战增强版合并）
+  "excitebike": "vs-excitebike"
+
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
 # 作用：当不同游戏因中文译名相同、别名冲突或算法误判被合并时，显式声明它们不是同款游戏，禁止合并。
@@ -650,4 +668,7 @@ bilibili_video:
   "nintendo-world-championships":
     url: "https://www.bilibili.com/video/BV1Tx411w7Sc"
     text: "喷神James解说"
+  "nintendo-campus-challenge":
+    url: "https://www.bilibili.com/video/BV1Tx411w7Sc"
+    text: "喷神James解说(任天堂挑战赛特辑)"
 
