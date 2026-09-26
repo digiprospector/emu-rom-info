@@ -685,8 +685,17 @@ class BilibiliMatcher:
             target_games = []
             target_game = self.game_by_id.get(game_ident) or self.game_by_title_zh.get(game_ident)
             if not target_game:
+                norm_ident = normalize_text(game_ident)
                 for g in self.games:
-                    if game_ident in (g.get("title_en"), g.get("title_ja")):
+                    if game_ident in (g.get("title_en"), g.get("title_ja")) or (norm_ident and norm_ident in (normalize_text(g.get("id")), normalize_text(g.get("title_zh")), normalize_text(g.get("title_en")), normalize_text(g.get("title_ja")))):
+                        target_game = g
+                        break
+                    # 支持从合并前的各版本 (versions) 中匹配 ID 或名称
+                    if any(
+                        game_ident in (v.get("id"), v.get("title_en"), v.get("title_ja"), v.get("title_zh")) or
+                        (norm_ident and norm_ident in (normalize_text(v.get("id")), normalize_text(v.get("title_zh")), normalize_text(v.get("title_en")), normalize_text(v.get("title_ja"))))
+                        for v in g.get("versions", {}).values()
+                    ):
                         target_game = g
                         break
             if target_game:
@@ -699,8 +708,16 @@ class BilibiliMatcher:
                     if isinstance(cv, str):
                         tg = self.game_by_id.get(cv) or self.game_by_title_zh.get(cv)
                         if not tg:
+                            norm_cv = normalize_text(cv)
                             for g in self.games:
-                                if cv in (g.get("title_en"), g.get("title_ja")):
+                                if cv in (g.get("title_en"), g.get("title_ja")) or (norm_cv and norm_cv in (normalize_text(g.get("id")), normalize_text(g.get("title_zh")), normalize_text(g.get("title_en")), normalize_text(g.get("title_ja")))):
+                                    tg = g
+                                    break
+                                if any(
+                                    cv in (v.get("id"), v.get("title_en"), v.get("title_ja"), v.get("title_zh")) or
+                                    (norm_cv and norm_cv in (normalize_text(v.get("id")), normalize_text(v.get("title_zh")), normalize_text(v.get("title_en")), normalize_text(v.get("title_ja"))))
+                                    for v in g.get("versions", {}).values()
+                                ):
                                     tg = g
                                     break
                         if tg and tg not in target_games:

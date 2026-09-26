@@ -278,6 +278,10 @@ title_zh:
   "ys-2-ancient-ys-vanished-the-final-chapter": "伊苏2"
   "pictionary": "画图猜词/拼图工厂"
   "nintendo-campus-challenge": "任天堂校园挑战赛1991"
+  "moonball-magic": "月球弹珠台/魔法弹珠台"
+  "race-america": "美国竞速/科尔维特ZR-1挑战"
+  "kiwi-kraze": "新西兰故事/奇异鸟历险记"
+  "goal": "燃烧职业足球"
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -427,6 +431,15 @@ video_mappings:
   "nintendo-world-cup": "热血高校躲避球部足球篇/热血足球2"
   "startropics": "热带之星"
   "game-FDS_897": "行星阿屯外传"
+  "moonball-magic": "魔法弹珠台"
+  "super-mario-bros-2": "超级马里奥USA"
+  "moero-pro-soccer": "燃烧职业足球"
+  "adventures-of-lolo": "罗罗大冒险"
+  "race-america": "科尔维特ZR-1挑战/亚历克斯德梅奥的美国竞速(US)"
+  "teenage-mutant-ninja-turtles-ii-the-arcade-game": "忍者神龟(JP) / 忍者神龟2(US)"
+  "adventures-of-lolo-2": "罗罗大冒险3(US)/罗罗大冒险2(JP)"
+  "hiryuu-no-ken-iii-5-nin-no-ryuu-senshi": "飞龙之拳2（美版）"
+  "kiwi-kraze": "新西兰故事"
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -635,6 +648,12 @@ merge_games:
   # 52. 越野机车 / 热战机车赛（任天堂经典，FC卡带版与FDS磁碟机双人对战增强版合并）
   "excitebike": "vs-excitebike"
 
+  # 53. 燃烧足球 / 进球（日版 FC Moero!! Pro Soccer 与美版 NES Goal! 合并）
+  "goal": "moero-pro-soccer"
+
+  # 54. 足球得点王2 / 进球2（日版 FC GOAL!! 与美版 NES Goal! Two 合并）
+  "goal-two": "Goal!!"
+
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
 # 作用：当不同游戏因中文译名相同、别名冲突或算法误判被合并时，显式声明它们不是同款游戏，禁止合并。
@@ -646,6 +665,11 @@ merge_games:
 # ------------------------------------------------------------------------------
 separate_games:
   "abadox": "section-z"
+  # 避免《Moonball Magic》(FDS 魔法弹珠台) 与任天堂官方《Pinball》(弹珠台) 因中文译名误合并
+  "pinball": "moonball-magic"
+  # 避免一代《Goal!》(NES 1989 / Moero!! Pro Soccer) 与二代《GOAL!!》(FC 1993 / Goal! Two) 跨区误合并
+  "Goal!": "Goal!!"
+  "moero-pro-soccer": "goal-two"
 
 # ------------------------------------------------------------------------------
 # 调整方式 6: 自定义 B站视频与显示文本 (bilibili_video)
