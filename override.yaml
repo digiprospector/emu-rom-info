@@ -214,7 +214,6 @@ title_zh:
   "silver-surfer": "银影侠"
   "romance-of-the-three-kingdoms-ii": "三国志2"
   "startropics": "热带之星"
-  "game-FDS_897": "行星阿屯外传 前篇"
   "thunder-lightning": "家庭打砖块"
   "famicom-top-management": "红白机顶尖经营者"
   "best-play-pro-yakyuu-90": "ASCII职业棒球90"
@@ -250,7 +249,7 @@ title_zh:
   "the-last-starfighter": "最后的星空战士"
   "the-adventures-of-gilligan-s-island": "吉利根岛的冒险"
   "a-nightmare-on-elm-street": "猛鬼街/半夜鬼上床"
-  "game-FDS_898": "行星阿屯外传 后篇"
+  "game-FDS_897": "行星阿屯外传"
   "arch-rivals": "篮球对抗赛"
   "the-immortal": "不死传说"
   "the-punisher": "惩罚者"
@@ -279,6 +278,13 @@ title_zh:
   "moonball-magic": "月球弹珠台"
   "race-america": "美国竞速/科尔维特ZR-1挑战"
   "kiwi-kraze": "新西兰故事/奇异鸟历险记"
+  "captain-planet-and-the-planeteers": "地球超人"
+  "monster-truck-rally": "大脚车拉力赛"
+  "super-jeopardy": "电视问答游戏 危险边缘 超级版"
+  "nes-open-tournament-golf": "马里奥高尔夫公开赛"
+  "nakajima-satoru-f-1-hero-2": "中岛悟F-1英雄2"
+  "battle-formula": "方程式战斗赛车"
+  "ys-3-wanderers-from-ys": "伊苏3 来自伊苏的冒险者"
 
 # ------------------------------------------------------------------------------
 # 调整方式 2: B站解说视频章节对齐调整 (video_mappings)
@@ -426,7 +432,6 @@ video_mappings:
   "pictionary": "拼图工厂"
   "nes-play-action-football": "任天堂橄榄球"
   "nintendo-world-cup": "热血高校躲避球部足球篇/热血足球2"
-  "game-FDS_897": "行星阿屯外传"
   "moonball-magic": "魔法弹珠台"
   "super-mario-bros-2": "超级马里奥USA"
   "moero-pro-soccer": "燃烧职业足球"
@@ -436,6 +441,7 @@ video_mappings:
   "adventures-of-lolo-2": "罗罗大冒险3(US)/罗罗大冒险2(JP)"
   "hiryuu-no-ken-iii-5-nin-no-ryuu-senshi": "飞龙之拳2（美版）"
   "kiwi-kraze": "新西兰故事"
+  "battle-formula": "超级间谍猎人(US) / 方程式战斗赛车(JP)"
 
 # ------------------------------------------------------------------------------
 # 调整方式 3: 游戏属性通用修改 (games，高级微调，可选)
@@ -649,6 +655,9 @@ merge_games:
 
   # 54. 足球得点王2 / 进球2（日版 FC GOAL!! 与美版 NES Goal! Two 合并）
   "goal-two": "Goal!!"
+
+  # 55. 方程式战斗赛车 / 超级间谍猎人（日版 FC Battle Formula 1991年9月27日在先，美版 NES Super Spy Hunter 1992年2月在后，同款跨区版本）
+  "battle-formula": "super-spy-hunter"
 
 # ------------------------------------------------------------------------------
 # 调整方式 5: 互斥游戏强制隔离/禁止合并 (separate_games)
